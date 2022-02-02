@@ -1,0 +1,41 @@
+object Form3: TForm3
+  Left = 0
+  Top = 0
+  Caption = 'Form3'
+  ClientHeight = 531
+  ClientWidth = 744
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=MySQL'
+      'Database=hotelrsf'
+      'User_Name=root'
+      'Password=admin')
+    Connected = True
+    LoginPrompt = False
+    Left = 32
+    Top = 32
+  end
+  object FDTableHabitaciones: TFDTable
+    Active = True
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.habitaciones'
+    TableName = 'hotelrsf.habitaciones'
+    Left = 32
+    Top = 112
+  end
+  object DataSource1: TDataSource
+    DataSet = FDTableHabitaciones
+    Left = 144
+    Top = 112
+  end
+end

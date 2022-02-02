@@ -15,11 +15,17 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 464
-    Top = 40
-    Width = 97
-    Height = 13
+    Left = 400
+    Top = 32
+    Width = 169
+    Height = 23
     Caption = 'Fecha seleccionada:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
   end
   object Label2: TLabel
     Left = 232
@@ -34,6 +40,13 @@ object Form1: TForm1
     Width = 60
     Height = 13
     Caption = 'Saltar al d'#237'a:'
+  end
+  object Label4: TLabel
+    Left = 48
+    Top = 512
+    Width = 31
+    Height = 13
+    Caption = 'Label4'
   end
   object ScrollBox1: TScrollBox
     Left = 208
@@ -81,5 +94,18 @@ object Form1: TForm1
     Caption = 'Volver al d'#237'a de hoy'
     TabOrder = 4
     OnClick = Button1Click
+  end
+  object DBGrid1: TDBGrid
+    Left = 488
+    Top = 480
+    Width = 320
+    Height = 120
+    DataSource = Form3.DataSourceQuery
+    TabOrder = 5
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
   end
 end

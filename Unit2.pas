@@ -14,6 +14,7 @@ type
     Label2: TLabel;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    Label3: TLabel;
     procedure FormActivate(Sender: TObject);
     function DevolverDiasMes(): integer;
     function DevolverDiaSemana(): integer;
@@ -52,13 +53,15 @@ end;
 procedure TForm2.FormClose(Sender: TObject; var Action: TCloseAction);
 var
 I: integer;
-begin
-  for I := 0 to Length(PanelesDia)-1 do
-  begin
-     PanelesDia[I].Free; //debemos borrar los paneles de los días, si hemos creado uno de 31 y luego
-     //abrimos un mes de 30, se siguen viendo 31
-  end;
-
+begin{
+  if Length(PanelesDia) > 0 then
+      begin
+       for i := 0 to Length(PanelesDia)-1 do
+          begin
+          PanelesDia[i].Free;
+          end;
+      end;
+    }
 end;
 
 function TForm2.DevolverDiasMes(): Integer;
@@ -116,11 +119,13 @@ begin
       Label1.Caption:= 'Fecha seleccionada: '+ DateToStr(FechaSeleccionada1);
 
       //primero borrar el calendario
+      if Length(PanelesDia) > 0 then
+      begin
        for i := 0 to Length(PanelesDia)-1 do
           begin
           PanelesDia[i].Free;
           end;
-
+      end;
 
     //creación de los días
      dia:=1;
@@ -149,6 +154,10 @@ begin
         PanelDia.Top:=fila*100;
         PanelDia.Left:=diasemana*100;
         PanelDia.Caption:='Día '+Inttostr(dia);
+        if DayOfTheMonth(FechaSeleccionada) = dia then
+          begin
+            PanelDia.Font.Style := [fsBold];
+          end;
 
         BotonDia:=TButton.Create(self);
         BotonDia.Parent:=PanelDia;
@@ -156,7 +165,7 @@ begin
         BotonDia.Tag:=dia;
         BotonDia.Left:=1;
         BotonDia.Width:=98;
-        BotonDia.Height:=50;
+        BotonDia.Height:=40;
         BotonDia.Caption:='Día '+Inttostr(dia);
 
         dia := dia + 1;

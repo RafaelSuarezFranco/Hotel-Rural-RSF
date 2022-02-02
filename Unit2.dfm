@@ -17,25 +17,46 @@ object Form2: TForm2
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 288
+    Left = 168
     Top = 24
-    Width = 97
-    Height = 13
+    Width = 139
+    Height = 19
     Caption = 'Fecha seleccionada:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
   end
   object Label2: TLabel
-    Left = 520
+    Left = 472
     Top = 24
-    Width = 119
-    Height = 13
+    Width = 175
+    Height = 19
     Caption = 'Habitaci'#243'n Seleccionada:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 104
+    Top = 53
+    Width = 665
+    Height = 13
+    Caption = 
+      '            Lunes                      Martes                   ' +
+      ' Mi'#233'rcoles                  Jueves                       Viernes' +
+      '                     S'#225'bado                      Domingo'
   end
   object Panel1: TPanel
     Left = 96
-    Top = 64
+    Top = 72
     Width = 700
     Height = 600
-    Caption = 'Panel1'
     TabOrder = 0
   end
   object BitBtn1: TBitBtn
