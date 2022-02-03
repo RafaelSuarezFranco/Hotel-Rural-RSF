@@ -22,6 +22,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure cargarMes();
     procedure BitBtn2Click(Sender: TObject);
+    procedure ActualizarColores2();
   private
     { Private declarations }
   public
@@ -38,7 +39,7 @@ var
 implementation
 
 {$R *.dfm}
- uses Unit1;
+ uses Unit1, Unit3;
 
 procedure TForm2.FormActivate(Sender: TObject);
 begin
@@ -154,6 +155,7 @@ begin
         PanelDia.Top:=fila*100;
         PanelDia.Left:=diasemana*100;
         PanelDia.Caption:='Día '+Inttostr(dia);
+        PanelDia.ParentBackground:= false;
         if DayOfTheMonth(FechaSeleccionada) = dia then
           begin
             PanelDia.Font.Style := [fsBold];
@@ -178,6 +180,73 @@ begin
       begin
          //BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
       end;
+     ActualizarColores2();
+end;
+
+
+procedure TForm2.ActualizarColores2();
+var
+i: integer;
+fecha: TDate;
+stringFecha: String;
+mes: String;
+dia: String;
+begin
+   i:=0;
+   fecha:=FechaSeleccionada1;
+
+   mes:= IntToStr(MonthOfTheYear(fecha));
+   if length(mes) < 2 then  //hay que formatear dias y meses para que tengan 2 dígitos
+    mes:= '0'+ mes;
+
+   //construimos el año y mes, pero el dia se lo vamos pasando uno a uno
+   stringFecha := IntToStr(YearOf(fecha))+'-'+mes+'-';//+IntToStr(DayOfTheMonth(fecha));
+
+    //ponemos todos en verde (habitaciones libres)
+    for i := 0 to Length(PanelesDia)-1 do
+    begin
+      PanelesDia[i].Color:=clGreen;
+    end;
+
+
+
+    // COLOREAR RESERVAS
+    Form3.FDQuery1.Close;
+    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
+    Form3.FDQuery1.Open;
+    //Label4.Caption:=  quotedStr(stringFecha+'01');
+
+   for i := 0 to Length(PanelesDia)-1 do
+     begin
+        dia:= IntToStr(i+1); //hay que formatear dias y meses para que tengan 2 dígitos
+        if length(dia) < 2 then
+         dia:= '0'+ dia;
+
+      if Form3.FDQuery1.Locate('fecha', stringFecha+dia, []) then //recorremos cada dia del mes para la habitacion seleccionada
+       begin
+         PanelesDia[i].Color:=clYellow;
+       end;
+
+     end;
+
+     //COLOREAR OCUPACIONES
+    Form3.FDQuery1.Close;
+    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
+    Form3.FDQuery1.Open;
+
+
+   for i := 0 to Length(PanelesDia)-1 do
+     begin
+      dia:= IntToStr(i+1);
+        if length(dia) < 2 then
+          dia:= '0'+ dia;
+
+      if Form3.FDQuery1.Locate('fecha', stringFecha+dia, []) then //si la habitación esta ocupada para la habitacion seleccionada
+      begin
+         PanelesDia[i].Color:=clRed;
+      end;
+
+     end;
 
 end;
 

@@ -15,14 +15,12 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     Label3: TLabel;
-    Label4: TLabel;
     procedure FormActivate(Sender: TObject);
     function DevolverDiasMes(): integer;
     function DevolverDiaSemana(): integer;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn1Click(Sender: TObject);
     procedure cargarMes();
-    procedure actualizarColores2();
     procedure BitBtn2Click(Sender: TObject);
   private
     { Private declarations }
@@ -40,14 +38,14 @@ var
 implementation
 
 {$R *.dfm}
- uses Unit1, Unit3;
+ uses Unit1;
 
 procedure TForm2.FormActivate(Sender: TObject);
 begin
   FechaSeleccionada1:= Form1.DevolverFechaSeleccionada;
   HabitacionSeleccionada1:= Form1.DevolverHabitacionSeleccionada;
   Label1.Caption:= 'Fecha seleccionada: '+ DateToStr(FechaSeleccionada1);
-  Label2.Caption:= 'HabitaciÃ³n seleccionada: '+ IntToStr(HabitacionSeleccionada1);
+  Label2.Caption:= 'Habitación seleccionada: '+ IntToStr(HabitacionSeleccionada1);
 
   CargarMes();
 end;
@@ -70,12 +68,12 @@ function TForm2.DevolverDiasMes(): Integer;
 var
 mes: integer;
 mesnum: integer;
-aÃ±onum: integer;
+añonum: integer;
   begin
     mesnum:=MonthOfTheYear(FechaSeleccionada1);
-    aÃ±onum:=YearOf(FechaSeleccionada1);
+    añonum:=YearOf(FechaSeleccionada1);
 
-    mes:= DaysInAMonth(aÃ±onum, mesnum); //devuelve la cantidad de dÃ­as de cierto mes.
+    mes:= DaysInAMonth(añonum, mesnum); //devuelve la cantidad de días de cierto mes.
 
     DevolverDiasMes := mes;
   end;
@@ -86,11 +84,11 @@ function TForm2.DevolverDiaSemana(): Integer;
 var
 dia: integer;
 mesnum: integer;
-aÃ±onum: integer;
+añonum: integer;
 begin
     mesnum:=MonthOfTheYear(FechaSeleccionada1);
-    aÃ±onum:=YearOf(FechaSeleccionada1);
-    dia:= DayOfTheWeek(EncodeDate(aÃ±onum, mesnum, 1));//devuelve el Ã­ndice del dÃ­a de semana (1 = lunes) del primer dia de mes
+    añonum:=YearOf(FechaSeleccionada1);
+    dia:= DayOfTheWeek(EncodeDate(añonum, mesnum, 1));//devuelve el índice del día de semana (1 = lunes) del primer dia de mes
     //nos sirve para posicionar el primer dia en el calendario.
     DevolverDiaSemana := dia;
 end;
@@ -129,7 +127,7 @@ begin
           end;
       end;
 
-    //creaciÃ³n de los dÃ­as
+    //creación de los días
      dia:=1;
      i:= 1;
      fila := 0;
@@ -140,7 +138,7 @@ begin
      SetLength(BotonesDia, cantidadDias);
 
 
-    for i:= 0 to (cantidadDias-1) do   //la cantidad de dias se especifica aquÃ­
+    for i:= 0 to (cantidadDias-1) do   //la cantidad de dias se especifica aquí
      begin
       if (diasemana mod 7 = 0) and (i <> 0) then
         begin
@@ -155,9 +153,7 @@ begin
         PanelDia.Tag:=dia;
         PanelDia.Top:=fila*100;
         PanelDia.Left:=diasemana*100;
-        PanelDia.Caption:='DÃ­a '+Inttostr(dia);
-        PanelDia.ParentBackground:=false;
-
+        PanelDia.Caption:='Día '+Inttostr(dia);
         if DayOfTheMonth(FechaSeleccionada) = dia then
           begin
             PanelDia.Font.Style := [fsBold];
@@ -170,7 +166,7 @@ begin
         BotonDia.Left:=1;
         BotonDia.Width:=98;
         BotonDia.Height:=40;
-        BotonDia.Caption:='DÃ­a '+Inttostr(dia);
+        BotonDia.Caption:='Día '+Inttostr(dia);
 
         dia := dia + 1;
         diasemana:= diasemana +1;
@@ -182,75 +178,6 @@ begin
       begin
          //BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
       end;
-
-   ActualizarColores2();
-end;
-
-
-
-procedure TForm2.ActualizarColores2();
-var
-i: integer;
-fecha: TDate;
-stringFecha: String;
-mes: String;
-dia: String;
-begin
-   i:=0;
-   fecha:=FechaSeleccionada1;
-
-   mes:= IntToStr(MonthOfTheYear(fecha));
-   if length(mes) < 2 then  //hay que formatear dias y meses para que tengan 2 dÃ­gitos
-    mes:= '0'+ mes;
-
-   //construimos el aÃ±o y mes, pero el dia se lo vamos pasando uno a uno
-   stringFecha := IntToStr(YearOf(fecha))+'-'+mes+'-';//+IntToStr(DayOfTheMonth(fecha));
-
-    //ponemos todos en verde (habitaciones libres)
-    for i := 0 to Length(PanelesDia)-1 do
-    begin
-      PanelesDia[i].Color:=clGreen;
-    end;
-
-
-
-    // COLOREAR RESERVAS
-    Form3.FDQuery1.Close;
-    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
-    Form3.FDQuery1.Open;
-    Label4.Caption:=  quotedStr(stringFecha+'01');
-
-   for i := 0 to Length(PanelesDia)-1 do
-     begin
-        dia:= IntToStr(i+1); //hay que formatear dias y meses para que tengan 2 dÃ­gitos
-        if length(dia) < 2 then
-         dia:= '0'+ dia;
-
-      if Form3.FDQuery1.Locate('fecha', stringFecha+dia, []) then //recorremos cada dia del mes para la habitacion seleccionada
-       begin
-         PanelesDia[i].Color:=clYellow;
-       end;
-
-     end;
-
-     //COLOREAR OCUPACIONES
-    Form3.FDQuery1.Close;
-    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
-    Form3.FDQuery1.Open;
-
-
-   for i := 0 to Length(PanelesDia)-1 do
-     begin
-      dia:= IntToStr(i+1);
-        if length(dia) < 2 then
-          dia:= '0'+ dia;
-
-      if Form3.FDQuery1.Locate('fecha', stringFecha+dia, []) then //si la habitaciÃ³n esta ocupada para la habitacion seleccionada
-      begin
-         PanelesDia[i].Color:=clRed;
-      end;
-
-     end;
 
 end;
 
