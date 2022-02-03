@@ -131,14 +131,18 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Unit1.pas">
-            <Form>Form1</Form>
+            <Form>Principal</Form>
         </DCCReference>
         <DCCReference Include="Unit2.pas">
-            <Form>Form2</Form>
+            <Form>PantallaMes</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Unit3.pas">
-            <Form>Form3</Form>
+            <Form>Tablas</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Unit4.pas">
+            <Form>FormularioDiario</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Debug">

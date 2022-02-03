@@ -5,16 +5,18 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, System.DateUtils,
-  Vcl.Buttons;
+  Vcl.Buttons, Vcl.WinXPickers;
 
 type
-  TForm2 = class(TForm)
+  TPantallaMes = class(TForm)
     Panel1: TPanel;
     Label1: TLabel;
     Label2: TLabel;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     Label3: TLabel;
+    Label4: TLabel;
+    DatePicker1: TDatePicker;
     procedure FormActivate(Sender: TObject);
     function DevolverDiasMes(): integer;
     function DevolverDiaSemana(): integer;
@@ -23,6 +25,11 @@ type
     procedure cargarMes();
     procedure BitBtn2Click(Sender: TObject);
     procedure ActualizarColores2();
+    procedure DatePicker1Change(Sender: TObject);
+    procedure PulsarBotonDia(Sender: TObject);
+    function DevolverFechaSeleccionada1():TDate;
+    function DevolverDiaSeleccionado():Integer;
+    function DevolverHabitacionSeleccionada1():Integer;
   private
     { Private declarations }
   public
@@ -30,8 +37,9 @@ type
   end;
 
 var
-  Form2: TForm2;
+  PantallaMes: TPantallaMes;
   FechaSeleccionada1: TDate;
+  diaSeleccionado: integer;
   HabitacionSeleccionada1: integer;
   PanelesDia: Array of TPanel;
   BotonesDia: Array of TButton;
@@ -39,19 +47,19 @@ var
 implementation
 
 {$R *.dfm}
- uses Unit1, Unit3;
+ uses Unit1, Unit3, Unit4;
 
-procedure TForm2.FormActivate(Sender: TObject);
+procedure TPantallaMes.FormActivate(Sender: TObject);
 begin
-  FechaSeleccionada1:= Form1.DevolverFechaSeleccionada;
-  HabitacionSeleccionada1:= Form1.DevolverHabitacionSeleccionada;
+  FechaSeleccionada1:= Principal.DevolverFechaSeleccionada;
+  HabitacionSeleccionada1:= Principal.DevolverHabitacionSeleccionada;
   Label1.Caption:= 'Fecha seleccionada: '+ DateToStr(FechaSeleccionada1);
   Label2.Caption:= 'Habitación seleccionada: '+ IntToStr(HabitacionSeleccionada1);
 
   CargarMes();
 end;
 
-procedure TForm2.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TPantallaMes.FormClose(Sender: TObject; var Action: TCloseAction);
 var
 I: integer;
 begin{
@@ -63,9 +71,10 @@ begin{
           end;
       end;
     }
+
 end;
 
-function TForm2.DevolverDiasMes(): Integer;
+function TPantallaMes.DevolverDiasMes(): Integer;
 var
 mes: integer;
 mesnum: integer;
@@ -81,7 +90,7 @@ añonum: integer;
 
 
 
-function TForm2.DevolverDiaSemana(): Integer;
+function TPantallaMes.DevolverDiaSemana(): Integer;
 var
 dia: integer;
 mesnum: integer;
@@ -94,20 +103,26 @@ begin
     DevolverDiaSemana := dia;
 end;
 
-procedure TForm2.BitBtn1Click(Sender: TObject);
+procedure TPantallaMes.BitBtn1Click(Sender: TObject);
 begin
   FechaSeleccionada1:= IncMonth(FechaSeleccionada1, -1);
   CargarMes();
 end;
 
 
-procedure TForm2.BitBtn2Click(Sender: TObject);
+procedure TPantallaMes.BitBtn2Click(Sender: TObject);
 begin
   FechaSeleccionada1:= IncMonth(FechaSeleccionada1, 1);
   CargarMes();
 end;
 
-procedure TForm2.CargarMes();
+procedure TPantallaMes.DatePicker1Change(Sender: TObject);
+begin
+  FechaSeleccionada1:= DatePicker1.Date;
+  CargarMes();
+end;
+
+procedure TPantallaMes.CargarMes();
 var
 PanelDia: TPanel;
 BotonDia: TButton;
@@ -176,15 +191,26 @@ begin
         BotonesDia[i]:=BotonDia;
     end;
 
-      for i := 0 to (Length(BotonesHabitaciones) - 1) do
+      for i := 0 to (Length(BotonesDia) - 1) do
       begin
-         //BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
+         BotonesDia[i].OnClick := PulsarBotonDia;
       end;
      ActualizarColores2();
+     DatePicker1.Date := FechaSeleccionada1;
 end;
 
 
-procedure TForm2.ActualizarColores2();
+procedure TPantallaMes.PulsarBotonDia(Sender: TObject);
+var
+boton : TButton;
+begin
+  boton := TButton(Sender);
+  //Showmessage('Has clickado el día'+ IntToStr(boton.Tag));
+  diaSeleccionado := boton.Tag;
+  FormularioDiario.showmodal();
+end;
+
+procedure TPantallaMes.ActualizarColores2();
 var
 i: integer;
 fecha: TDate;
@@ -211,9 +237,9 @@ begin
 
 
     // COLOREAR RESERVAS
-    Form3.FDQuery1.Close;
-    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
-    Form3.FDQuery1.Open;
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
+    Tablas.FDQuery1.Open;
     //Label4.Caption:=  quotedStr(stringFecha+'01');
 
    for i := 0 to Length(PanelesDia)-1 do
@@ -222,7 +248,7 @@ begin
         if length(dia) < 2 then
          dia:= '0'+ dia;
 
-      if Form3.FDQuery1.Locate('fecha', stringFecha+dia, []) then //recorremos cada dia del mes para la habitacion seleccionada
+      if Tablas.FDQuery1.Locate('fecha', stringFecha+dia, []) then //recorremos cada dia del mes para la habitacion seleccionada
        begin
          PanelesDia[i].Color:=clYellow;
        end;
@@ -230,9 +256,9 @@ begin
      end;
 
      //COLOREAR OCUPACIONES
-    Form3.FDQuery1.Close;
-    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
-    Form3.FDQuery1.Open;
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and numerohabitacion='+quotedStr(IntToStr(HabitacionSeleccionada1));
+    Tablas.FDQuery1.Open;
 
 
    for i := 0 to Length(PanelesDia)-1 do
@@ -241,13 +267,28 @@ begin
         if length(dia) < 2 then
           dia:= '0'+ dia;
 
-      if Form3.FDQuery1.Locate('fecha', stringFecha+dia, []) then //si la habitación esta ocupada para la habitacion seleccionada
+      if Tablas.FDQuery1.Locate('fecha', stringFecha+dia, []) then //si la habitación esta ocupada para la habitacion seleccionada
       begin
          PanelesDia[i].Color:=clRed;
       end;
 
      end;
 
+end;
+
+function TPantallaMes.DevolverFechaSeleccionada1(): TDate;
+begin
+    DevolverFechaSeleccionada1 := FechaSeleccionada1;
+end;
+
+function TPantallaMes.DevolverDiaSeleccionado(): Integer;
+begin
+    DevolverDiaSeleccionado := diaSeleccionado;
+end;
+
+function TPantallaMes.DevolverHabitacionSeleccionada1(): Integer;
+begin
+    DevolverHabitacionSeleccionada1 := HabitacionSeleccionada1;
 end;
 
 end.

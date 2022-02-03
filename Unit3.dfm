@@ -1,7 +1,7 @@
-object Form3: TForm3
+object Tablas: TTablas
   Left = 0
   Top = 0
-  Caption = 'Form3'
+  Caption = 'Tablas'
   ClientHeight = 531
   ClientWidth = 744
   Color = clBtnFace
@@ -35,6 +35,7 @@ object Form3: TForm3
       FieldName = 'id'
       Origin = 'id'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object FDTableHabitacionesnumero: TIntegerField
       AutoGenerateValue = arDefault
@@ -69,6 +70,7 @@ object Form3: TForm3
       FieldName = 'id'
       Origin = 'id'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object FDTableEntradasnumerohabitacion: TIntegerField
       AutoGenerateValue = arDefault

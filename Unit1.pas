@@ -8,7 +8,7 @@ uses
   Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids;
 
 type
-  TForm1 = class(TForm)
+  TPrincipal = class(TForm)
     ScrollBox1: TScrollBox;
     Label1: TLabel;
     Label2: TLabel;
@@ -32,6 +32,7 @@ type
     procedure ActualizarColores();
     function DevolverFechaSeleccionada():TDate;
     function DevolverHabitacionSeleccionada():Integer;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
   private
     { Private declarations }
@@ -40,7 +41,7 @@ type
   end;
 
   var
-    Form1: TForm1;
+    Principal: TPrincipal;
     FechaActual: TDate;
     FechaSeleccionada: TDate;
     //arLbl : Array[1..8] of TLabel;
@@ -54,7 +55,7 @@ implementation
  uses  Unit2, Unit3;
 
 
-procedure TForm1.FormActivate(Sender: TObject);
+procedure TPrincipal.FormActivate(Sender: TObject);
 var
 PanelHabitacion: TPanel;
 BotonHabitacion: TButton;
@@ -66,23 +67,23 @@ cantidadHabitaciones: integer;
 
 begin
     //apertura de tablas
-    Form3.FDTableHabitaciones.Open;
-    Form3.FDTableEntradas.Open;
-    Form3.FDQuery1.Open;
+    Tablas.FDTableHabitaciones.Open;
+    Tablas.FDTableEntradas.Open;
+    Tablas.FDQuery1.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
 
     i:=0;
-    cantidadHabitaciones:= Form3.FDTableHabitaciones.RecordCount;  //esta variable recogera la cantidad de habitaciones de la bbdd
+    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;  //esta variable recogera la cantidad de habitaciones de la bbdd
     SetLength(HabitacionesBD, cantidadHabitaciones);
 
-    Form3.FDTableHabitaciones.First;
-      while not  Form3.FDTableHabitaciones.Eof do //guardamos los numero de habitacion para ponerselo a los paneles y botones
+    Tablas.FDTableHabitaciones.First;
+      while not  Tablas.FDTableHabitaciones.Eof do //guardamos los numero de habitacion para ponerselo a los paneles y botones
         begin
-          HabitacionesBD[i]:= Form3.FDTableHabitacionesnumero.Value;
+          HabitacionesBD[i]:= Tablas.FDTableHabitacionesnumero.Value;
           i:=i+1;
-          Form3.FDTableHabitaciones.Next;
+          Tablas.FDTableHabitaciones.Next;
         end;
 
 
@@ -136,9 +137,14 @@ begin
     CargarDia();
 end;
 
+procedure TPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    Tablas.FDTableHabitaciones.Close;
+    Tablas.FDTableEntradas.Close;
+    Tablas.FDQuery1.Close;
+end;
 
-
-procedure TForm1.CargarDia();
+procedure TPrincipal.CargarDia();
 begin
     Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
     Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
@@ -148,52 +154,52 @@ begin
 
 end;
 
-procedure TForm1.PulsarBotonHabitacion(Sender: TObject);
+procedure TPrincipal.PulsarBotonHabitacion(Sender: TObject);
 var
 boton : TButton;
 begin
   boton := TButton(Sender);
   //Showmessage('Has clickado la habitacion'+ IntToStr(boton.Tag));
   HabitacionSeleccionada := boton.Tag;
-  Form2.showmodal();
+  PantallaMes.showmodal();
 end;
 
- procedure TForm1.BitBtn1Click(Sender: TObject);
+ procedure TPrincipal.BitBtn1Click(Sender: TObject);
 begin
   FechaSeleccionada:= IncDay(FechaSeleccionada, 1); //nos permite navegar al día siguente
   CargarDia();
 end;
 
-procedure TForm1.BitBtn2Click(Sender: TObject);
+procedure TPrincipal.BitBtn2Click(Sender: TObject);
 begin
   FechaSeleccionada:= IncDay(FechaSeleccionada, -1); //nos permite navegar al día siguente
   CargarDia();
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TPrincipal.Button1Click(Sender: TObject);
 begin
   FechaSeleccionada:= FechaActual;
   CargarDia();
 end;
 
-procedure TForm1.DatePicker1Change(Sender: TObject);
+procedure TPrincipal.DatePicker1Change(Sender: TObject);
 begin
    FechaSeleccionada:= DatePicker1.Date;
    CargarDia();
 end;
 
-function TForm1.DevolverFechaSeleccionada(): TDate;  //usamos estas funciones para pasar la habitacion y fecha al otro form
+function TPrincipal.DevolverFechaSeleccionada(): TDate;  //usamos estas funciones para pasar la habitacion y fecha al otro form
 begin
     DevolverFechaSeleccionada := FechaSeleccionada;
 end;
 
-function TForm1.DevolverHabitacionSeleccionada(): Integer;
+function TPrincipal.DevolverHabitacionSeleccionada(): Integer;
 begin
     DevolverHabitacionSeleccionada := HabitacionSeleccionada;
 end;
 
 
-procedure TForm1.ActualizarColores();
+procedure TPrincipal.ActualizarColores();
 var
 i: integer;
 fecha: TDate;
@@ -212,14 +218,14 @@ begin
 
 
     // COLOREAR RESERVAS
-    Form3.FDQuery1.Close;
-    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and fecha='+quotedStr(stringFecha);
-    Form3.FDQuery1.Open;
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and fecha='+quotedStr(stringFecha);
+    Tablas.FDQuery1.Open;
 
-    Label4.Caption := Form3.FDQuery1.SQL.Text;
+    Label4.Caption := Tablas.FDQuery1.SQL.Text;
    for i := 0 to Length(HabitacionesBD)-1 do
      begin
-      if Form3.FDQuery1.Locate('numerohabitacion', HabitacionesBD[i], []) then //si la habitación esta reservada para la fecha seleccionada
+      if Tablas.FDQuery1.Locate('numerohabitacion', HabitacionesBD[i], []) then //si la habitación esta reservada para la fecha seleccionada
        begin
          PanelesHabitaciones[i].Color:=clYellow;
        end;
@@ -227,14 +233,14 @@ begin
      end;
 
      //COLOREAR OCUPACIONES
-    Form3.FDQuery1.Close;
-    Form3.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and fecha='+quotedStr(stringFecha);
-    Form3.FDQuery1.Open;
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and fecha='+quotedStr(stringFecha);
+    Tablas.FDQuery1.Open;
 
-    Label4.Caption := Form3.FDQuery1.SQL.Text;
+    Label4.Caption := Tablas.FDQuery1.SQL.Text;
    for i := 0 to Length(HabitacionesBD)-1 do
      begin
-      if Form3.FDQuery1.Locate('numerohabitacion', HabitacionesBD[i], []) then //si la habitación esta reservada para la fecha seleccionada
+      if Tablas.FDQuery1.Locate('numerohabitacion', HabitacionesBD[i], []) then //si la habitación esta reservada para la fecha seleccionada
       begin
          PanelesHabitaciones[i].Color:=clRed;
       end;

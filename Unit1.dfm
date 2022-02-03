@@ -1,7 +1,7 @@
-object Form1: TForm1
+object Principal: TPrincipal
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Principal'
   ClientHeight = 608
   ClientWidth = 1005
   Color = clBtnFace
@@ -12,6 +12,7 @@ object Form1: TForm1
   Font.Style = []
   OldCreateOrder = False
   OnActivate = FormActivate
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -100,7 +101,7 @@ object Form1: TForm1
     Top = 480
     Width = 320
     Height = 120
-    DataSource = Form3.DataSourceQuery
+    DataSource = Tablas.DataSourceQuery
     TabOrder = 5
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

@@ -1,7 +1,7 @@
-object Form2: TForm2
+object PantallaMes: TPantallaMes
   Left = 0
   Top = 193
-  Caption = 'Form2'
+  Caption = 'PantallaMes'
   ClientHeight = 715
   ClientWidth = 889
   Color = clBtnFace
@@ -17,7 +17,7 @@ object Form2: TForm2
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 168
+    Left = 40
     Top = 24
     Width = 139
     Height = 19
@@ -30,7 +30,7 @@ object Form2: TForm2
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 472
+    Left = 360
     Top = 24
     Width = 175
     Height = 19
@@ -51,6 +51,13 @@ object Form2: TForm2
       '            Lunes                      Martes                   ' +
       ' Mi'#233'rcoles                  Jueves                       Viernes' +
       '                     S'#225'bado                      Domingo'
+  end
+  object Label4: TLabel
+    Left = 652
+    Top = 24
+    Width = 60
+    Height = 13
+    Caption = 'Saltar al d'#237'a:'
   end
   object Panel1: TPanel
     Left = 96
@@ -76,5 +83,18 @@ object Form2: TForm2
     Caption = 'Mes siguiente'
     TabOrder = 2
     OnClick = BitBtn2Click
+  end
+  object DatePicker1: TDatePicker
+    Left = 718
+    Top = 15
+    Date = 44593.000000000000000000
+    DateFormat = 'dd/MM/yyyy'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    TabOrder = 3
+    OnChange = DatePicker1Change
   end
 end

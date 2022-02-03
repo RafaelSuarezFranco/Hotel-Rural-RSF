@@ -12,7 +12,7 @@ uses
   FireDAC.Comp.Client;
 
 type
-  TForm3 = class(TForm)
+  TTablas = class(TForm)
     FDConnection1: TFDConnection;
     FDTableHabitaciones: TFDTable;
     DataSource1: TDataSource;
@@ -37,7 +37,7 @@ type
   end;
 
 var
-  Form3: TForm3;
+  Tablas: TTablas;
 
 implementation
 
