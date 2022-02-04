@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, System.DateUtils,
-  Vcl.Buttons, Vcl.WinXPickers;
+  Vcl.Buttons, Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids;
 
 type
   TPantallaMes = class(TForm)
@@ -231,9 +231,37 @@ begin
     //ponemos todos en verde (habitaciones libres)
     for i := 0 to Length(PanelesDia)-1 do
     begin
-      PanelesDia[i].Color:=clGreen;
+      PanelesDia[i].Color:=clWebLawnGreen;
     end;
 
+
+
+
+    //COLOREAR TEMPORADAS
+
+   for i := 0 to Length(PanelesDia)-1 do
+     begin
+      dia:= IntToStr(i+1);
+        if length(dia) < 2 then
+          dia:= '0'+ dia;
+
+      //buscamos si la fecha se encuentra entre la fecha inicio y la fecha fin de algún registro
+      Tablas.FDQuery1.Close;
+      Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedStr(stringFecha+dia)+' and fechafin>='+quotedStr(stringFecha+dia);
+      Tablas.FDQuery1.Open;
+
+     if Tablas.FDQuery1.Locate('nombretemporada', 'media', []) then
+      begin
+         PanelesDia[i].Color:=clWebLimeGreen;
+      end;
+
+     if Tablas.FDQuery1.Locate('nombretemporada', 'alta', []) then
+      begin
+         PanelesDia[i].Color:=clWebForestGreen;
+      end;
+
+
+     end;
 
 
     // COLOREAR RESERVAS
@@ -273,6 +301,9 @@ begin
       end;
 
      end;
+
+
+
 
 end;
 

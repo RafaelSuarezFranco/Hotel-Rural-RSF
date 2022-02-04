@@ -70,6 +70,9 @@ begin
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
     Tablas.FDQuery1.Open;
+    Tablas.FDTableTemporadas.Open;
+    Tablas.FDTableServicios.Open;
+    Tablas.FDTableEntradasservicios.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
@@ -142,6 +145,7 @@ begin
     Tablas.FDTableHabitaciones.Close;
     Tablas.FDTableEntradas.Close;
     Tablas.FDQuery1.Close;
+    Tablas.FDTableTemporadas.Close;
 end;
 
 procedure TPrincipal.CargarDia();
@@ -212,7 +216,7 @@ begin
     //ponemos todos en verde (habitaciones libres)
     for i := 0 to Length(PanelesHabitaciones)-1 do
     begin
-      PanelesHabitaciones[i].Color:=clGreen;
+      PanelesHabitaciones[i].Color:=clWebLawnGreen;
     end;
 
 
@@ -246,6 +250,10 @@ begin
       end;
 
      end;
+
+
+
+
 
 end;
 

@@ -118,4 +118,106 @@ object Tablas: TTablas
     Left = 664
     Top = 32
   end
+  object FDTableTemporadas: TFDTable
+    Active = True
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.temporadas'
+    TableName = 'hotelrsf.temporadas'
+    Left = 40
+    Top = 280
+    object FDTableTemporadasid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+    end
+    object FDTableTemporadasfechainicio: TDateField
+      FieldName = 'fechainicio'
+      Origin = 'fechainicio'
+      Required = True
+    end
+    object FDTableTemporadasfechafin: TDateField
+      FieldName = 'fechafin'
+      Origin = 'fechafin'
+      Required = True
+    end
+    object FDTableTemporadasprecioadicional: TFloatField
+      AutoGenerateValue = arDefault
+      FieldName = 'precioadicional'
+      Origin = 'precioadicional'
+    end
+    object FDTableTemporadasnombretemporada: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'nombretemporada'
+      Origin = 'nombretemporada'
+      Size = 50
+    end
+  end
+  object DataSource3: TDataSource
+    DataSet = FDTableTemporadas
+    Left = 144
+    Top = 280
+  end
+  object FDTableServicios: TFDTable
+    Active = True
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.servicios'
+    TableName = 'hotelrsf.servicios'
+    Left = 40
+    Top = 352
+    object FDTableServiciosid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+    end
+    object FDTableServiciosnombreservicio: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'nombreservicio'
+      Origin = 'nombreservicio'
+      Size = 50
+    end
+    object FDTableServiciosprecioservicio: TFloatField
+      AutoGenerateValue = arDefault
+      FieldName = 'precioservicio'
+      Origin = 'precioservicio'
+    end
+  end
+  object DataSource4: TDataSource
+    DataSet = FDTableServicios
+    Left = 144
+    Top = 352
+  end
+  object FDTableEntradasservicios: TFDTable
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.entradasservicios'
+    TableName = 'hotelrsf.entradasservicios'
+    Left = 40
+    Top = 432
+    object FDTableEntradasserviciosid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object FDTableEntradasserviciosnumerohabitacion: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'numerohabitacion'
+      Origin = 'numerohabitacion'
+    end
+    object FDTableEntradasserviciosfecha: TDateField
+      FieldName = 'fecha'
+      Origin = 'fecha'
+      Required = True
+    end
+    object FDTableEntradasserviciosnombreservicio: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'nombreservicio'
+      Origin = 'nombreservicio'
+      Size = 50
+    end
+  end
+  object DataSource5: TDataSource
+    DataSet = FDTableEntradasservicios
+    Left = 144
+    Top = 432
+  end
 end

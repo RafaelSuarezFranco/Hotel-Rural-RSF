@@ -29,7 +29,7 @@ object FormularioDiario: TFormularioDiario
   end
   object Label2: TLabel
     Left = 40
-    Top = 120
+    Top = 112
     Width = 44
     Height = 18
     Caption = 'Fecha:'
@@ -42,7 +42,7 @@ object FormularioDiario: TFormularioDiario
   end
   object Label4: TLabel
     Left = 40
-    Top = 192
+    Top = 176
     Width = 47
     Height = 18
     Caption = 'Cliente:'
@@ -54,8 +54,8 @@ object FormularioDiario: TFormularioDiario
     ParentFont = False
   end
   object Label5: TLabel
-    Left = 42
-    Top = 264
+    Left = 41
+    Top = 240
     Width = 43
     Height = 18
     Caption = 'Precio:'
@@ -81,7 +81,7 @@ object FormularioDiario: TFormularioDiario
   end
   object Label7: TLabel
     Left = 128
-    Top = 120
+    Top = 112
     Width = 39
     Height = 18
     Caption = 'Fecha'
@@ -93,11 +93,24 @@ object FormularioDiario: TFormularioDiario
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 124
-    Top = 264
+    Left = 123
+    Top = 240
     Width = 38
     Height = 18
     Caption = 'Precio'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label8: TLabel
+    Left = 41
+    Top = 296
+    Width = 55
+    Height = 18
+    Caption = 'Servicios'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
@@ -119,7 +132,7 @@ object FormularioDiario: TFormularioDiario
   end
   object Edit1: TEdit
     Left = 128
-    Top = 193
+    Top = 177
     Width = 177
     Height = 21
     TabOrder = 1

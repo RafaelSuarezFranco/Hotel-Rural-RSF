@@ -19,6 +19,7 @@ type
     Edit1: TEdit;
     Label3: TLabel;
     Button1: TButton;
+    Label8: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
   private
@@ -35,22 +36,28 @@ var
   Cliente: String;
   Preciofinal: Double;
   fechabusqueda: String;
+  PrecioBase: Double;
+  TemporadaPrecio: Double;
 
+  CheckboxServicios: Array of TCheckbox;
+  NombresServicios: Array of String;
 
 implementation
 
 {$R *.dfm}
- uses Unit2, Unit3;
+ uses Unit1, Unit2, Unit3;
 
 procedure TFormularioDiario.Button1Click(Sender: TObject);
 var
 seleccion: integer;
+accionRealizada: boolean;
 begin
+  accionRealizada:= false;
+
+ // ANULAR RESERVA (O BORRAR OCUPACIÓN) si vamos a liberar una habitacion, significa que vamos a borrar su registro
   if (RadioGroup1.ItemIndex = 0) and (Estado <> 'libre') then
-  //si vamos a liberar una habitacion, significa que vamos a borrar su registro
     begin
       seleccion := messagedlg('Vas a dejar libre una habitación que estaba reservada/ocupada. Esto borrará su registro y los correspondientes datos. ¿Estás seguro?',mtWarning , mbOKCancel, 0);
-
 
       if seleccion = mrCancel then ShowMessage('Acción cancelada.');
        if seleccion = mrOK then
@@ -71,23 +78,61 @@ begin
           Tablas.FDTableEntradas.Next;
           end;
         Tablas.FDTableEntradas.Filtered:=False;
-
+        accionRealizada := true;
        end;
     end;
-    // RESERVAR UNA HABITACION QUE ESTABA LIBRE
+    // RESERVAR UNA HABITACION QUE ESTABA LIBRE  (caso contrario al anterior)
+    if (RadioGroup1.ItemIndex <> 0) and (Estado = 'libre') then
+      begin
+       //checkeamos que los necesarios estén rellenos
+        if Edit1.Text = '' then
+          begin
+            Showmessage('El campo del cliente no puede estar vacío.')
+          end
+          else
+          begin
+            seleccion := messagedlg('¿Confirmar Reserva (u ocupación)?',mtConfirmation , mbOKCancel, 0);
+
+            if seleccion = mrCancel then ShowMessage('Acción cancelada.');
+            if seleccion = mrOK then
+            begin
+               Tablas.FDTableEntradas.append;
+               Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
+               Tablas.FDTableEntradasfecha.Value := Fecha;
+               if RadioGroup1.ItemIndex = 1 then
+                  Tablas.FDTableEntradasestado.Value:= 'reservada';
+               if RadioGroup1.ItemIndex = 2 then
+                  Tablas.FDTableEntradasestado.Value:= 'ocupada';
+
+               Tablas.FDTableEntradascliente.Value:= Edit1.Text;
+               PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
+               Tablas.FDTableEntradaspreciofinal.Value := PrecioFinal;
+
+               Tablas.FDTableEntradas.post;
+
+               accionRealizada:= True;
+            end;
+          end;
+
+      end;
+
+    //OCUPAR UNA HABITACION QUE ESTABA RESERVADA (¿hemos quedado en que crea un nuevo registro a parte del de la reserva?)
 
 
-    //OCUPAR UNA HABITACION QUE ESTABA RESERVADA
 
+    if accionRealizada then
+    begin
+     //cerramos y actualizamos la pantalla del mes (y la principal, si hemos actualizado el día de hoy).
+     FormularioDiario.Close;
+     PantallaMes.cargarMes;
+     Principal.cargarDia;
+    end;
 
-
-    //cerramos y actualizamos la pantalla del mes.
-    FormularioDiario.Close;
-    PantallaMes.cargarMes;
 end;
 
 procedure TFormularioDiario.FormActivate(Sender: TObject);
 var
+i: integer;
 
 diabusqueda: String;
 mesbusqueda: String;
@@ -95,6 +140,9 @@ mesbusqueda: String;
 dia: integer;
 mes: integer;
 año: integer;
+
+servicioCheck: TCheckbox;
+
 begin
   dia:= PantallaMes.DevolverDiaSeleccionado;
   mes:= MonthOfTheYear(PantallaMes.DevolverFechaSeleccionada1);
@@ -110,7 +158,7 @@ begin
   fechabusqueda:= IntToStr(año)+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
 
   Habitacion:= PantallaMes.DevolverHabitacionSeleccionada1();
-
+  //buscamos en la tabla con en nº y fecha seleccionados, con lo que vamos encontrando, vamos rellenando el formulario
   Tablas.FDQuery1.Close;
   Tablas.FDQuery1.SQL.Text:= 'Select * from entradas where numerohabitacion='+IntToStr(Habitacion)+' and fecha = '+quotedStr(fechabusqueda);
   Tablas.FDQuery1.Open;
@@ -131,10 +179,19 @@ begin
       Cliente:= Tablas.FDQuery1.FieldByName('cliente').AsString;
     end;
 
-    Label6.Caption:= IntToStr(Habitacion);
-    Label7.Caption:= DateToStr(Fecha);
-    Edit1.Text:=Cliente;
-    Label3.Caption:=FloatToStr(Preciofinal);
+    //sacamos el precio adicional por temporada
+    TemporadaPrecio:=0; //por defecto es baja y no sumamos nada.
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedStr(fechabusqueda)+' and fechafin>='+quotedStr(fechabusqueda);
+    Tablas.FDQuery1.Open;
+      if Tablas.FDQuery1.Locate('nombretemporada', 'alta', []) then
+      begin
+         TemporadaPrecio:=Tablas.FDQuery1.FieldByName('precioadicional').AsFloat;
+      end;
+       if Tablas.FDQuery1.Locate('nombretemporada', 'media', []) then
+      begin
+         TemporadaPrecio:=Tablas.FDQuery1.FieldByName('precioadicional').AsFloat;
+      end;
 
     if Estado = 'libre' then
       RadioGroup1.ItemIndex:=0;
@@ -143,9 +200,57 @@ begin
     if Estado = 'ocupada' then
       RadioGroup1.ItemIndex:=2;
 
+    //si la habitación estaba libre, mostramos su precio base de la tabla de habitaciones.
 
+    Tablas.FDTableHabitaciones.Filtered:=True;
+    Tablas.FDTableHabitaciones.Filter:= 'numero='+IntTostr(Habitacion);
+    PrecioBase:=Tablas.FDTableHabitacionespreciobase.Value; //en cualquier caso nos interesa guardar el precio base de la habitación
+    Tablas.FDTableHabitaciones.Filtered:=False;
+
+    if Estado = 'libre' then
+     begin
+        Label3.Caption:=FloatToStr(PrecioBase + TemporadaPrecio);
+     end
+     else
+     begin
+        Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios)
+     end;
+
+    Label6.Caption:= IntToStr(Habitacion);
+    Label7.Caption:= DateToStr(Fecha);
+    Edit1.Text:=Cliente;
+    //Label3.Caption:=FloatToStr(Preciofinal);
 
     //showmessage(Estado+Cliente);
+
+    //SERVICIOS
+
+      SetLength(CheckboxServicios, Tablas.FDTableServicios.RecordCount);
+      SetLength(nombresServicios, Tablas.FDTableServicios.RecordCount);
+
+    //crear checkboxs de servicios.
+    i:=0;
+    Tablas.FDTableServicios.First;
+    while not Tablas.FDTableServicios.Eof do
+       begin
+        nombresServicios[i] := Tablas.FDTableServiciosnombreservicio.Value;
+
+        servicioCheck:=TCheckbox.create(self);
+        servicioCheck.Parent:=FormularioDiario;
+
+        servicioCheck.Tag:=HabitacionesBD[i];
+        servicioCheck.Top:=i*20+320;
+        servicioCheck.Left:=55;
+        servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€)';
+
+        CheckboxServicios[i]:= servicioCheck;
+
+        Tablas.FDTableServicios.Next;
+        i:=i+1;
+       end;
+
+       //hay que checkear aquellos que tengan un registro en la tabla entradasservicios
+
 end;
 
 end.

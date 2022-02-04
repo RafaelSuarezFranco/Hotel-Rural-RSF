@@ -30,6 +30,24 @@ type
     FDTableHabitacionespreciobase: TSingleField;
     FDQuery1: TFDQuery;
     DataSourceQuery: TDataSource;
+    FDTableTemporadas: TFDTable;
+    DataSource3: TDataSource;
+    FDTableTemporadasid: TFDAutoIncField;
+    FDTableTemporadasfechainicio: TDateField;
+    FDTableTemporadasfechafin: TDateField;
+    FDTableTemporadasprecioadicional: TFloatField;
+    FDTableTemporadasnombretemporada: TStringField;
+    FDTableServicios: TFDTable;
+    DataSource4: TDataSource;
+    FDTableEntradasservicios: TFDTable;
+    DataSource5: TDataSource;
+    FDTableServiciosid: TFDAutoIncField;
+    FDTableServiciosnombreservicio: TStringField;
+    FDTableServiciosprecioservicio: TFloatField;
+    FDTableEntradasserviciosid: TFDAutoIncField;
+    FDTableEntradasserviciosnumerohabitacion: TIntegerField;
+    FDTableEntradasserviciosfecha: TDateField;
+    FDTableEntradasserviciosnombreservicio: TStringField;
   private
     { Private declarations }
   public
