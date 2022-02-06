@@ -5,14 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls, System.DateUtils,
-  Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls;
+  Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Samples.Spin;
 
 type
   TFormularioDiario = class(TForm)
     Label1: TLabel;
     Label2: TLabel;
     Label4: TLabel;
-    Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
     RadioGroup1: TRadioGroup;
@@ -20,8 +19,15 @@ type
     Label3: TLabel;
     Button1: TButton;
     Label8: TLabel;
+    Label9: TLabel;
+    SpinEdit1: TSpinEdit;
+    Label5: TLabel;
+    Label10: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    function actualizarServicios(): Boolean;
+    procedure borrarServicios();
+    procedure RecalcularPrecio(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,9 +44,12 @@ var
   fechabusqueda: String;
   PrecioBase: Double;
   TemporadaPrecio: Double;
+  PrecioCalculado: Double;
 
   CheckboxServicios: Array of TCheckbox;
   NombresServicios: Array of String;
+  ServiciosContratados: Array of Boolean;
+  PreciosServicios: Array of Double;
 
 implementation
 
@@ -51,17 +60,27 @@ procedure TFormularioDiario.Button1Click(Sender: TObject);
 var
 seleccion: integer;
 accionRealizada: boolean;
+accionCancelada: boolean;
+serviciosCambiados: boolean;
 begin
   accionRealizada:= false;
 
  // ANULAR RESERVA (O BORRAR OCUPACIÓN) si vamos a liberar una habitacion, significa que vamos a borrar su registro
   if (RadioGroup1.ItemIndex = 0) and (Estado <> 'libre') then
     begin
+    accionCancelada:=false;
+
       seleccion := messagedlg('Vas a dejar libre una habitación que estaba reservada/ocupada. Esto borrará su registro y los correspondientes datos. ¿Estás seguro?',mtWarning , mbOKCancel, 0);
 
-      if seleccion = mrCancel then ShowMessage('Acción cancelada.');
+      if seleccion = mrCancel then
+      begin
+       ShowMessage('Acción cancelada.');
+      end;
+
        if seleccion = mrOK then
        begin
+
+       BorrarServicios;
 
        Tablas.FDTableEntradas.Filtered:=True;
        Tablas.FDTableEntradas.Filter:='numerohabitacion='+IntToStr(Habitacion);
@@ -93,7 +112,12 @@ begin
           begin
             seleccion := messagedlg('¿Confirmar Reserva (u ocupación)?',mtConfirmation , mbOKCancel, 0);
 
-            if seleccion = mrCancel then ShowMessage('Acción cancelada.');
+            if seleccion = mrCancel then
+             begin
+              ShowMessage('Acción cancelada.');
+              accionCancelada := true;  //AL CANCELAR ACCION (rserva/ocupar), AÚN SE GUARDAN LOS REGISTROS DE SERVICIOS!!
+             end;
+
             if seleccion = mrOK then
             begin
                Tablas.FDTableEntradas.append;
@@ -117,6 +141,12 @@ begin
       end;
 
     //OCUPAR UNA HABITACION QUE ESTABA RESERVADA (¿hemos quedado en que crea un nuevo registro a parte del de la reserva?)
+
+
+    //CAMBIAR SERVICIOS
+
+    serviciosCambiados:= ActualizarServicios;
+    if serviciosCambiados then accionRealizada := True;
 
 
 
@@ -207,13 +237,17 @@ begin
     PrecioBase:=Tablas.FDTableHabitacionespreciobase.Value; //en cualquier caso nos interesa guardar el precio base de la habitación
     Tablas.FDTableHabitaciones.Filtered:=False;
 
+    PrecioCalculado := PrecioBase + TemporadaPrecio;
+
     if Estado = 'libre' then
      begin
-        Label3.Caption:=FloatToStr(PrecioBase + TemporadaPrecio);
+        Label3.Caption:=FloatToStr(PrecioCalculado);
+        SpinEdit1.Text:=FloatToStr(PrecioCalculado);
      end
      else
      begin
-        Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios)
+        Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios o lo que hubiera)
+        SpinEdit1.Text:=FloatToStr(PrecioFinal);
      end;
 
     Label6.Caption:= IntToStr(Habitacion);
@@ -227,7 +261,8 @@ begin
 
       SetLength(CheckboxServicios, Tablas.FDTableServicios.RecordCount);
       SetLength(nombresServicios, Tablas.FDTableServicios.RecordCount);
-
+      SetLength(serviciosContratados, Tablas.FDTableServicios.RecordCount);
+      SetLength(PreciosServicios, Tablas.FDTableServicios.RecordCount);
     //crear checkboxs de servicios.
     i:=0;
     Tablas.FDTableServicios.First;
@@ -238,12 +273,15 @@ begin
         servicioCheck:=TCheckbox.create(self);
         servicioCheck.Parent:=FormularioDiario;
 
-        servicioCheck.Tag:=HabitacionesBD[i];
+        servicioCheck.Tag:=i;
         servicioCheck.Top:=i*20+320;
         servicioCheck.Left:=55;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€)';
 
+        PreciosServicios[i] := Tablas.FDTableServiciosprecioservicio.Value;
         CheckboxServicios[i]:= servicioCheck;
+
+        CheckboxServicios[i].OnClick := RecalcularPrecio;
 
         Tablas.FDTableServicios.Next;
         i:=i+1;
@@ -251,6 +289,161 @@ begin
 
        //hay que checkear aquellos que tengan un registro en la tabla entradasservicios
 
+      Tablas.FDQuery1.Close;
+      Tablas.FDQuery1.SQL.Text := 'select * from entradasservicios where fecha='+quotedStr(fechabusqueda)+' and numerohabitacion='+IntToStr(Habitacion);
+      Tablas.FDQuery1.Open;
+
+       for i := 0 to Length(nombresServicios)-1 do
+        begin
+           if Tablas.FDQuery1.locate('nombreservicio', nombresServicios[i], []) then
+            begin
+               serviciosContratados[i]:=True;
+               //los que tuvieran un registro (estaban contratados) aparecerán checkeados.
+               CheckboxServicios[i].Checked:=True;
+            end
+            else
+            begin
+               serviciosContratados[i]:=False;
+            end;
+
+        end;
+      //de esta manera tenemos guardado el estado actual de los servicios, si cambiamos los checkbox, al salir, los
+      //comparamos y sabemos cual tenemos que añadir o quitar de entradasservicios.
+
+end;
+
+
+
+
+
+
+
+
+//GESTIÓN DE SERVICIOS (borrarlos, crearlos)
+
+
+
+procedure TFormularioDiario.BorrarServicios(); //este procedimiento es exclusivo para cuando vamos a liberar una habitación, dado que hay que borrar sus servicios
+begin
+  Tablas.FDTableEntradasservicios.Filtered:=True;
+    Tablas.FDTableEntradasservicios.Filter:='numerohabitacion='+IntToStr(Habitacion);
+    Tablas.FDTableEntradasservicios.First;
+    while not Tablas.FDTableEntradasservicios.eof do
+      begin
+        if Tablas.FDTableEntradasserviciosfecha.Value = Fecha then
+          begin
+            Tablas.FDTableEntradasservicios.Delete; //borramos los registros de esta habitación para la fecha concreta.
+
+          end
+          else
+          begin
+            Tablas.FDTableEntradasservicios.next; //esto hay que meterlo en un else porque si borra algo, se salta el siguiente
+          end;
+
+      end;
+    Tablas.FDTableEntradasservicios.Filtered:=False;
+
+end;
+
+function TFormularioDiario.ActualizarServicios(): Boolean;
+var  //PROBABLEMENTE HAY QUE PULIR LAS OPCIONES DE ESTA FUNCIÓN
+i: integer;
+servicioscambiados: boolean;
+begin
+  servicioscambiados:= false;
+  //solo daremos de alta servicios si la habitación no va a estar libre. Es decir, si el radio botón está en libre, (se encarga el procedimiento anterior)
+  //borramos los registros, en caso contrario, borramos o creamos dependiendo de cada caso.
+  if RadioGroup1.ItemIndex <> 0 then
+ { begin
+    Tablas.FDTableEntradasservicios.Filtered:=True;
+    Tablas.FDTableEntradasservicios.Filter:='numerohabitacion='+IntToStr(Habitacion);
+    Tablas.FDTableEntradasservicios.First;
+    while not Tablas.FDTableEntradasservicios.eof do
+      begin
+        if Tablas.FDTableEntradasserviciosfecha.Value = Fecha then
+          begin
+            Tablas.FDTableEntradasservicios.Delete; //borramos los registros de esta habitación para la fecha concreta.
+
+          end
+          else
+          begin
+            Tablas.FDTableEntradasservicios.next; //esto hay que meterlo en un else porque si borra algo, se salta el siguiente
+          end;
+
+      end;
+    Tablas.FDTableEntradasservicios.Filtered:=False;
+    servicioscambiados := True;
+  end
+
+
+  else //si el estado quedará como reservado u ocupado.   }
+  begin
+    for i := 0 to Length(CheckboxServicios)-1 do
+      begin
+        if serviciosContratados[i] <> CheckboxServicios[i].Checked then //si lo que habia difiere de lo que el checkbox marca
+           begin
+             servicioscambiados := True;
+            //caso 1: estaba contratado y vamos a borrarlo.
+            if serviciosContratados[i] then
+              begin
+                 Tablas.FDTableEntradasservicios.Filtered:=True;
+                 Tablas.FDTableEntradasservicios.Filter:='numerohabitacion='+IntToStr(Habitacion);
+                 Tablas.FDTableEntradasservicios.First;
+                  while not Tablas.FDTableEntradasservicios.eof do
+                    begin
+                      if (Tablas.FDTableEntradasserviciosfecha.Value = Fecha) and (Tablas.FDTableEntradasserviciosnombreservicio.Value = nombresServicios[i]) then
+                        begin
+                          Tablas.FDTableEntradasservicios.Delete; //borramos un registro con el nombre del servicio que queremos quitar.
+                        end
+                        else
+                        begin
+                          Tablas.FDTableEntradasservicios.next;
+                        end;
+
+                    end;
+                  Tablas.FDTableEntradasservicios.Filtered:=False;
+
+              end;
+             //caso 2: no estaba contratado y vamos a darlo de alta.
+            if not serviciosContratados[i] then
+              begin
+                Tablas.FDTableEntradasservicios.Append;
+                Tablas.FDTableEntradasserviciosnumerohabitacion.Value := Habitacion;
+                Tablas.FDTableEntradasserviciosfecha.Value := Fecha;
+                Tablas.FDTableEntradasserviciosnombreservicio.Value := nombresServicios[i];
+                Tablas.FDTableEntradasservicios.Post;
+              end;
+
+           end;
+      end;
+
+   if (RadioGroup1.ItemIndex <> 0) and (Estado = 'libre') and (Edit1.Text = '') then
+      servicioscambiados:=false; //corrige un pequeño error por el cual si una habitacion libre se intenta
+      //reservar con unos servicios pero no es mete el nombre de cliente, simplmente se guardan los servicios
+      //(pero no se hace la reserva porque falta el cliente)
+
+  end;
+  ActualizarServicios := servicioscambiados;//devolvemos si hemos cambiado o no algo.
+
+end;
+
+procedure TFormularioDiario.RecalcularPrecio(Sender: TObject);
+var
+  i: integer;
+ checkbox: TCheckbox;
+begin
+   checkbox := TCheckbox(Sender);
+   i := checkbox.Tag;
+   if  CheckboxServicios[i].Checked then
+    begin
+      PrecioCalculado := PrecioCalculado + PreciosServicios[i];
+      SpinEdit1.Text := FloatToStr(PrecioCalculado);
+    end;
+     if  not CheckboxServicios[i].Checked then
+    begin
+      PrecioCalculado := PrecioCalculado - PreciosServicios[i];
+      SpinEdit1.Text := FloatToStr(PrecioCalculado);
+    end;
 end;
 
 end.
