@@ -18,16 +18,18 @@ type
     Edit1: TEdit;
     Label3: TLabel;
     Button1: TButton;
-    Label8: TLabel;
     Label9: TLabel;
     SpinEdit1: TSpinEdit;
     Label5: TLabel;
     Label10: TLabel;
+    Panel1: TPanel;
+    Label12: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     function actualizarServicios(): Boolean;
     procedure borrarServicios();
     procedure RecalcularPrecio(Sender: TObject);
+    procedure ActualizarPrecioTabla();
   private
     { Private declarations }
   public
@@ -115,7 +117,7 @@ begin
             if seleccion = mrCancel then
              begin
               ShowMessage('Acción cancelada.');
-              accionCancelada := true;  //AL CANCELAR ACCION (rserva/ocupar), AÚN SE GUARDAN LOS REGISTROS DE SERVICIOS!!
+              accionCancelada := true;  //AL CANCELAR ACCION (reserva/ocupar), AÚN SE GUARDAN LOS REGISTROS DE SERVICIOS!!
              end;
 
             if seleccion = mrOK then
@@ -130,7 +132,8 @@ begin
 
                Tablas.FDTableEntradascliente.Value:= Edit1.Text;
                PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
-               Tablas.FDTableEntradaspreciofinal.Value := PrecioFinal;
+               Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text); //el precio es lo que aparezca en el spinner,
+               // que de base es el precio final calculado, pero puede ser cambiado manualmente.
 
                Tablas.FDTableEntradas.post;
 
@@ -148,7 +151,7 @@ begin
     serviciosCambiados:= ActualizarServicios;
     if serviciosCambiados then accionRealizada := True;
 
-
+    ActualizarPrecioTabla(); //siempre que pulsemos el boton, el precio se actualizará con lo que haya en el spinner
 
     if accionRealizada then
     begin
@@ -271,11 +274,11 @@ begin
         nombresServicios[i] := Tablas.FDTableServiciosnombreservicio.Value;
 
         servicioCheck:=TCheckbox.create(self);
-        servicioCheck.Parent:=FormularioDiario;
+        servicioCheck.Parent:=Panel1;
 
         servicioCheck.Tag:=i;
-        servicioCheck.Top:=i*20+320;
-        servicioCheck.Left:=55;
+        servicioCheck.Top:=i*20+40;
+        servicioCheck.Left:=15;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€)';
 
         PreciosServicios[i] := Tablas.FDTableServiciosprecioservicio.Value;
@@ -386,6 +389,7 @@ begin
             //caso 1: estaba contratado y vamos a borrarlo.
             if serviciosContratados[i] then
               begin
+
                  Tablas.FDTableEntradasservicios.Filtered:=True;
                  Tablas.FDTableEntradasservicios.Filter:='numerohabitacion='+IntToStr(Habitacion);
                  Tablas.FDTableEntradasservicios.First;
@@ -444,6 +448,35 @@ begin
       PrecioCalculado := PrecioCalculado - PreciosServicios[i];
       SpinEdit1.Text := FloatToStr(PrecioCalculado);
     end;
+
+
+
 end;
+
+
+procedure TFormularioDiario.ActualizarPrecioTabla();
+//var
+begin
+  if StrToFloat(SpinEdit1.Text) <> Preciofinal then  //si hemos cambiado el precio de alguna manera, hay que actualizarlo.
+    begin
+      Tablas.FDTableEntradas.Filtered := True;
+      Tablas.FDTableEntradas.Filter := 'numerohabitacion='+IntToStr(Habitacion);
+      Tablas.FDTableEntradas.First;
+      while not  Tablas.FDTableEntradas.eof do
+        begin
+          if Tablas.FDTableEntradasfecha.Value = Fecha then
+          begin
+            Tablas.FDTableEntradas.Edit;
+            Tablas.FDTableEntradaspreciofinal.Value := StrToFloat(SpinEdit1.Text);
+            Tablas.FDTableEntradas.Post;
+          end;
+
+           Tablas.FDTableEntradas.Next;
+        end;
+      Tablas.FDTableEntradas.Filtered := False;
+    end;
+end;
+
+
 
 end.

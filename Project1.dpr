@@ -5,7 +5,9 @@ uses
   Unit1 in 'Unit1.pas' {Principal},
   Unit2 in 'Unit2.pas' {PantallaMes},
   Unit3 in 'Unit3.pas' {Tablas},
-  Unit4 in 'Unit4.pas' {FormularioDiario};
+  Unit4 in 'Unit4.pas' {FormularioDiario},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 
