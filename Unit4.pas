@@ -19,11 +19,11 @@ type
     Label3: TLabel;
     Button1: TButton;
     Label9: TLabel;
-    SpinEdit1: TSpinEdit;
     Label5: TLabel;
-    Label10: TLabel;
     Panel1: TPanel;
     Label12: TLabel;
+    SpinEdit1: TSpinEdit;
+    Label10: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     function actualizarServicios(): Boolean;
@@ -68,6 +68,7 @@ begin
   accionRealizada:= false;
 
  // ANULAR RESERVA (O BORRAR OCUPACIÓN) si vamos a liberar una habitacion, significa que vamos a borrar su registro
+ // a la vez, copiaremos el registor en el historico de entradas
   if (RadioGroup1.ItemIndex = 0) and (Estado <> 'libre') then
     begin
     accionCancelada:=false;
@@ -83,6 +84,16 @@ begin
        begin
 
        BorrarServicios;
+
+       Tablas.FDTableHistoricoentradas.Append;  //añadir al histórico
+       Tablas.FDTableHistoricoentradasnumerohabitacion.value := Habitacion;
+       Tablas.FDTableHistoricoentradasfecha.Value := Fecha;
+       Tablas.FDTableHistoricoentradascliente.Value := Cliente;
+       Tablas.FDTableHistoricoentradaspreciofinal.Value := PrecioFinal;
+       Tablas.FDTableHistoricoentradasestado.Value := Estado;
+       Tablas.FDTableHistoricoentradas.Post;
+
+
 
        Tablas.FDTableEntradas.Filtered:=True;
        Tablas.FDTableEntradas.Filter:='numerohabitacion='+IntToStr(Habitacion);
@@ -135,9 +146,18 @@ begin
                Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text); //el precio es lo que aparezca en el spinner,
                // que de base es el precio final calculado, pero puede ser cambiado manualmente.
 
-               Tablas.FDTableEntradas.post;
+               if StrToInt(SpinEdit1.Text) < 0 then //si se intenta guardar el registro con precio menor o igual a 0
+                 begin
+                   showmessage('Error: El precio final no puede ser menor que 0');
+                 end
+                 else
+                 begin
+                   Tablas.FDTableEntradas.post;
 
-               accionRealizada:= True;
+                   accionRealizada:= True;
+                 end;
+
+
             end;
           end;
 
@@ -206,7 +226,7 @@ begin
     Estado := 'reservada';
     Cliente:= Tablas.FDQuery1.FieldByName('cliente').AsString;
     end;
-  if Tablas.FDQuery1.Locate('estado', 'ocupada', []) then
+  if Tablas.FDQuery1.Locate('estado', 'ocupada', []) then  //si hay dos registros, uno de reserva y otro de ocupacion, consideramos el de ocupación
     begin
      Estado := 'ocupada';
       Cliente:= Tablas.FDQuery1.FieldByName('cliente').AsString;
@@ -227,31 +247,21 @@ begin
       end;
 
     if Estado = 'libre' then
+    begin
       RadioGroup1.ItemIndex:=0;
+      Panel1.Visible := False;
+    end
+    else
+    begin
+      Panel1.Visible := True;
+    end;
+
     if Estado = 'reservada' then
       RadioGroup1.ItemIndex:=1;
     if Estado = 'ocupada' then
       RadioGroup1.ItemIndex:=2;
 
-    //si la habitación estaba libre, mostramos su precio base de la tabla de habitaciones.
 
-    Tablas.FDTableHabitaciones.Filtered:=True;
-    Tablas.FDTableHabitaciones.Filter:= 'numero='+IntTostr(Habitacion);
-    PrecioBase:=Tablas.FDTableHabitacionespreciobase.Value; //en cualquier caso nos interesa guardar el precio base de la habitación
-    Tablas.FDTableHabitaciones.Filtered:=False;
-
-    PrecioCalculado := PrecioBase + TemporadaPrecio;
-
-    if Estado = 'libre' then
-     begin
-        Label3.Caption:=FloatToStr(PrecioCalculado);
-        SpinEdit1.Text:=FloatToStr(PrecioCalculado);
-     end
-     else
-     begin
-        Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios o lo que hubiera)
-        SpinEdit1.Text:=FloatToStr(PrecioFinal);
-     end;
 
     Label6.Caption:= IntToStr(Habitacion);
     Label7.Caption:= DateToStr(Fecha);
@@ -277,7 +287,7 @@ begin
         servicioCheck.Parent:=Panel1;
 
         servicioCheck.Tag:=i;
-        servicioCheck.Top:=i*20+40;
+        servicioCheck.Top:=i*20+30;
         servicioCheck.Left:=15;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€)';
 
@@ -289,6 +299,11 @@ begin
         Tablas.FDTableServicios.Next;
         i:=i+1;
        end;
+
+
+
+
+
 
        //hay que checkear aquellos que tengan un registro en la tabla entradasservicios
 
@@ -312,6 +327,32 @@ begin
         end;
       //de esta manera tenemos guardado el estado actual de los servicios, si cambiamos los checkbox, al salir, los
       //comparamos y sabemos cual tenemos que añadir o quitar de entradasservicios.
+
+
+
+
+
+   //si la habitación estaba libre, mostramos su precio base de la tabla de habitaciones.
+
+    Tablas.FDTableHabitaciones.Filtered:=True;
+    Tablas.FDTableHabitaciones.Filter:= 'numero='+IntTostr(Habitacion);
+    PrecioBase:=Tablas.FDTableHabitacionespreciobase.Value; //en cualquier caso nos interesa guardar el precio base de la habitación
+    Tablas.FDTableHabitaciones.Filtered:=False;
+
+    PrecioCalculado := PrecioBase + TemporadaPrecio;
+
+    if Estado = 'libre' then
+     begin
+        Label3.Caption:=FloatToStr(PrecioCalculado);
+        SpinEdit1.Text:=FloatToStr(PrecioCalculado);
+        PrecioCalculado := PrecioBase + TemporadaPrecio;
+     end
+     else
+     begin
+        Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios o lo que hubiera)
+        SpinEdit1.Text:=FloatToStr(PrecioFinal);
+        PrecioCalculado := PrecioFinal;
+     end;
 
 end;
 
@@ -458,6 +499,8 @@ procedure TFormularioDiario.ActualizarPrecioTabla();
 //var
 begin
   if StrToFloat(SpinEdit1.Text) <> Preciofinal then  //si hemos cambiado el precio de alguna manera, hay que actualizarlo.
+   if StrToInt(SpinEdit1.Text) >= 0 then //si se intenta guardar el registro con precio menor o igual a 0, no dejamos
+   begin
     begin
       Tablas.FDTableEntradas.Filtered := True;
       Tablas.FDTableEntradas.Filter := 'numerohabitacion='+IntToStr(Habitacion);
@@ -475,6 +518,11 @@ begin
         end;
       Tablas.FDTableEntradas.Filtered := False;
     end;
+   end
+   else
+   begin
+     showmessage('El precio no puede ser menor que 0');
+   end;
 end;
 
 

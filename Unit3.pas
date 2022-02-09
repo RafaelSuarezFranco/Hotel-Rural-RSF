@@ -48,6 +48,14 @@ type
     FDTableEntradasserviciosnumerohabitacion: TIntegerField;
     FDTableEntradasserviciosfecha: TDateField;
     FDTableEntradasserviciosnombreservicio: TStringField;
+    FDTableHistoricoentradas: TFDTable;
+    DataSource6: TDataSource;
+    FDTableHistoricoentradasid: TFDAutoIncField;
+    FDTableHistoricoentradasnumerohabitacion: TIntegerField;
+    FDTableHistoricoentradasfecha: TDateField;
+    FDTableHistoricoentradascliente: TStringField;
+    FDTableHistoricoentradaspreciofinal: TSingleField;
+    FDTableHistoricoentradasestado: TStringField;
   private
     { Private declarations }
   public

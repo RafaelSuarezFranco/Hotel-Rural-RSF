@@ -7,7 +7,8 @@ uses
   Unit3 in 'Unit3.pas' {Tablas},
   Unit4 in 'Unit4.pas' {FormularioDiario},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  Unit5 in 'Unit5.pas' {FormularioPeriodo};
 
 {$R *.res}
 
@@ -18,5 +19,6 @@ begin
   Application.CreateForm(TPantallaMes, PantallaMes);
   Application.CreateForm(TTablas, Tablas);
   Application.CreateForm(TFormularioDiario, FormularioDiario);
+  Application.CreateForm(TFormularioPeriodo, FormularioPeriodo);
   Application.Run;
 end.

@@ -129,6 +129,7 @@ object Tablas: TTablas
     object FDTableTemporadasid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
+      ReadOnly = True
     end
     object FDTableTemporadasfechainicio: TDateField
       FieldName = 'fechainicio'
@@ -168,6 +169,7 @@ object Tablas: TTablas
     object FDTableServiciosid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
+      ReadOnly = True
     end
     object FDTableServiciosnombreservicio: TStringField
       AutoGenerateValue = arDefault
@@ -197,6 +199,7 @@ object Tablas: TTablas
       FieldName = 'id'
       Origin = 'id'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object FDTableEntradasserviciosnumerohabitacion: TIntegerField
       AutoGenerateValue = arDefault
@@ -219,5 +222,50 @@ object Tablas: TTablas
     DataSet = FDTableEntradasservicios
     Left = 144
     Top = 432
+  end
+  object FDTableHistoricoentradas: TFDTable
+    Active = True
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.historicoentradas'
+    TableName = 'hotelrsf.historicoentradas'
+    Left = 240
+    Top = 120
+    object FDTableHistoricoentradasid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+    end
+    object FDTableHistoricoentradasnumerohabitacion: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'numerohabitacion'
+      Origin = 'numerohabitacion'
+    end
+    object FDTableHistoricoentradasfecha: TDateField
+      AutoGenerateValue = arDefault
+      FieldName = 'fecha'
+      Origin = 'fecha'
+    end
+    object FDTableHistoricoentradascliente: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cliente'
+      Origin = 'cliente'
+      Size = 50
+    end
+    object FDTableHistoricoentradaspreciofinal: TSingleField
+      AutoGenerateValue = arDefault
+      FieldName = 'preciofinal'
+      Origin = 'preciofinal'
+    end
+    object FDTableHistoricoentradasestado: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'estado'
+      Origin = 'estado'
+      Size = 50
+    end
+  end
+  object DataSource6: TDataSource
+    DataSet = FDTableHistoricoentradas
+    Left = 344
+    Top = 120
   end
 end

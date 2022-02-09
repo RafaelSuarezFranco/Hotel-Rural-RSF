@@ -112,19 +112,6 @@ object FormularioDiario: TFormularioDiario
     Font.Style = []
     ParentFont = False
   end
-  object Label10: TLabel
-    Left = 249
-    Top = 240
-    Width = 73
-    Height = 18
-    Caption = 'Precio final:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -15
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-  end
   object RadioGroup1: TRadioGroup
     Left = 288
     Top = 49
@@ -153,22 +140,12 @@ object FormularioDiario: TFormularioDiario
     TabOrder = 2
     OnClick = Button1Click
   end
-  object SpinEdit1: TSpinEdit
-    Left = 328
-    Top = 241
-    Width = 113
-    Height = 22
-    MaxValue = 0
-    MinValue = 0
-    TabOrder = 3
-    Value = 0
-  end
   object Panel1: TPanel
-    Left = 32
-    Top = 288
+    Left = 31
+    Top = 279
     Width = 409
     Height = 146
-    TabOrder = 4
+    TabOrder = 3
     object Label12: TLabel
       Left = 16
       Top = 8
@@ -181,6 +158,29 @@ object FormularioDiario: TFormularioDiario
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+    end
+    object Label10: TLabel
+      Left = 280
+      Top = 12
+      Width = 73
+      Height = 18
+      Caption = 'Precio final:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object SpinEdit1: TSpinEdit
+      Left = 280
+      Top = 36
+      Width = 113
+      Height = 22
+      MaxValue = 0
+      MinValue = 0
+      TabOrder = 0
+      Value = 0
     end
   end
 end

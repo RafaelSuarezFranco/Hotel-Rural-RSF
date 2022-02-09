@@ -19,6 +19,7 @@ type
     Button1: TButton;
     DBGrid1: TDBGrid;
     Label4: TLabel;
+    Button2: TButton;
 
 
 
@@ -33,6 +34,8 @@ type
     function DevolverFechaSeleccionada():TDate;
     function DevolverHabitacionSeleccionada():Integer;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button2Click(Sender: TObject);
+
 
   private
     { Private declarations }
@@ -52,7 +55,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3;
+ uses  Unit2, Unit3, Unit5;
 
 
 procedure TPrincipal.FormActivate(Sender: TObject);
@@ -186,6 +189,11 @@ begin
   CargarDia();
 end;
 
+procedure TPrincipal.Button2Click(Sender: TObject);
+begin
+  FormularioPeriodo.showmodal;
+end;
+
 procedure TPrincipal.DatePicker1Change(Sender: TObject);
 begin
    FechaSeleccionada:= DatePicker1.Date;
@@ -201,6 +209,8 @@ function TPrincipal.DevolverHabitacionSeleccionada(): Integer;
 begin
     DevolverHabitacionSeleccionada := HabitacionSeleccionada;
 end;
+
+
 
 
 procedure TPrincipal.ActualizarColores();

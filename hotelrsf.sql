@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS `entradas` (
   `cliente` varchar(50) DEFAULT NULL,
   `preciofinal` float DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla hotelrsf.entradas: ~20 rows (aproximadamente)
+-- Volcando datos para la tabla hotelrsf.entradas: ~26 rows (aproximadamente)
 DELETE FROM `entradas`;
 /*!40000 ALTER TABLE `entradas` DISABLE KEYS */;
 INSERT INTO `entradas` (`id`, `numerohabitacion`, `fecha`, `estado`, `cliente`, `preciofinal`) VALUES
@@ -47,11 +47,17 @@ INSERT INTO `entradas` (`id`, `numerohabitacion`, `fecha`, `estado`, `cliente`, 
 	(15, 1, '2022-03-18', 'reservada', 'Rafael', 14),
 	(16, 1, '2022-02-18', 'reservada', 'pepe', 10),
 	(17, 1, '2022-02-19', 'ocupada', 'Manuel', 10),
-	(20, 2, '2022-02-12', 'reservada', 'Manuel', 10),
+	(20, 2, '2022-02-12', 'reservada', 'Manuel', 5),
 	(23, 1, '2022-04-16', 'reservada', 'Rafael', 30),
 	(24, 1, '2022-04-09', 'reservada', 'pepe', 20),
 	(25, 9, '2022-02-04', 'ocupada', 'manolo', 20),
-	(26, 1, '2022-04-10', 'reservada', 'pascual', 30);
+	(26, 1, '2022-04-10', 'reservada', 'pascual', 30),
+	(33, 2, '2022-02-04', 'reservada', 'aa', 14),
+	(35, 1, '2022-02-09', 'reservada', 'sdfg', 244),
+	(36, 2, '2022-02-05', 'reservada', 'Rafael', 10),
+	(37, 2, '2022-02-06', 'reservada', 'qwewq', 21),
+	(38, 2, '2022-02-07', 'reservada', 'qwer', -6),
+	(40, 2, '2022-02-09', 'reservada', '23432', 5);
 /*!40000 ALTER TABLE `entradas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla hotelrsf.entradasservicios
@@ -61,11 +67,23 @@ CREATE TABLE IF NOT EXISTS `entradasservicios` (
   `fecha` date NOT NULL,
   `nombreservicio` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla hotelrsf.entradasservicios: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla hotelrsf.entradasservicios: ~11 rows (aproximadamente)
 DELETE FROM `entradasservicios`;
 /*!40000 ALTER TABLE `entradasservicios` DISABLE KEYS */;
+INSERT INTO `entradasservicios` (`id`, `numerohabitacion`, `fecha`, `nombreservicio`) VALUES
+	(2, 1, '2022-04-16', 'Desayuno'),
+	(3, 1, '2022-04-16', 'Lavandería'),
+	(16, 2, '2022-02-04', 'Lavandería'),
+	(17, 2, '2022-02-04', 'Desayuno'),
+	(20, 1, '2022-02-09', 'Lavandería'),
+	(21, 1, '2022-02-09', 'Desayuno'),
+	(22, 2, '2022-02-05', 'Lavandería'),
+	(23, 2, '2022-02-05', 'Desayuno'),
+	(24, 2, '2022-02-05', 'Limpieza'),
+	(25, 2, '2022-02-06', 'Lavandería'),
+	(26, 2, '2022-02-06', 'Desayuno');
 /*!40000 ALTER TABLE `entradasservicios` ENABLE KEYS */;
 
 -- Volcando estructura para tabla hotelrsf.habitaciones
@@ -93,6 +111,24 @@ INSERT INTO `habitaciones` (`id`, `numero`, `tipo`, `preciobase`) VALUES
 	(10, 10, 'suite', 50),
 	(14, 34, 'suite', 50);
 /*!40000 ALTER TABLE `habitaciones` ENABLE KEYS */;
+
+-- Volcando estructura para tabla hotelrsf.historicoentradas
+CREATE TABLE IF NOT EXISTS `historicoentradas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `numerohabitacion` int(11) DEFAULT '0',
+  `fecha` date DEFAULT NULL,
+  `cliente` varchar(50) DEFAULT NULL,
+  `preciofinal` float DEFAULT NULL,
+  `estado` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla hotelrsf.historicoentradas: ~0 rows (aproximadamente)
+DELETE FROM `historicoentradas`;
+/*!40000 ALTER TABLE `historicoentradas` DISABLE KEYS */;
+INSERT INTO `historicoentradas` (`id`, `numerohabitacion`, `fecha`, `cliente`, `preciofinal`, `estado`) VALUES
+	(1, 2, '2022-02-09', 'asdf', 10, 'reservada');
+/*!40000 ALTER TABLE `historicoentradas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla hotelrsf.servicios
 CREATE TABLE IF NOT EXISTS `servicios` (

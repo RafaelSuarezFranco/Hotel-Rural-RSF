@@ -109,4 +109,13 @@ object Principal: TPrincipal
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
   end
+  object Button2: TButton
+    Left = 272
+    Top = 512
+    Width = 105
+    Height = 25
+    Caption = 'Reservar periodo'
+    TabOrder = 6
+    OnClick = Button2Click
+  end
 end
