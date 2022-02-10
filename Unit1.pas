@@ -17,9 +17,8 @@ type
     DatePicker1: TDatePicker;
     Label3: TLabel;
     Button1: TButton;
-    DBGrid1: TDBGrid;
-    Label4: TLabel;
     Button2: TButton;
+    Button3: TButton;
 
 
 
@@ -35,6 +34,7 @@ type
     function DevolverHabitacionSeleccionada():Integer;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
 
 
   private
@@ -62,11 +62,12 @@ procedure TPrincipal.FormActivate(Sender: TObject);
 var
 PanelHabitacion: TPanel;
 BotonHabitacion: TButton;
+LabelHabitacion: TLabel;
 i: integer;    //será el nº de habitación
 columna:integer;
 fila: integer;
 cantidadHabitaciones: integer;
-
+tipohabitacion: string;
 
 begin
     //apertura de tablas
@@ -110,6 +111,12 @@ begin
           fila:= fila + 1;
           columna:= 1 ;
         end;
+
+        Tablas.FDQuery1.Close;
+        Tablas.FDQuery1.SQL.Text := 'select * from habitaciones where numero='+Inttostr(HabitacionesBD[i]);
+        Tablas.FDQuery1.Open;
+        tipohabitacion:= Tablas.FDQuery1.FieldByName('tipo').AsString;
+
         PanelHabitacion:=TPanel.create(self);
         PanelHabitacion.Parent:=ScrollBox1;
         PanelHabitacion.Width := 100;
@@ -117,7 +124,7 @@ begin
         PanelHabitacion.Tag:=HabitacionesBD[i];
         PanelHabitacion.Top:=fila*155+5;
         PanelHabitacion.Left:=columna+5;
-        PanelHabitacion.Caption:='Habitación'+Inttostr(HabitacionesBD[i]);
+        PanelHabitacion.Caption:='Habitación '+Inttostr(HabitacionesBD[i]);
         PanelHabitacion.ParentBackground:=false;
         PanelHabitacion.StyleElements := [seBorder];
         PanelHabitacion.Color:=clGreen;
@@ -129,7 +136,15 @@ begin
         BotonHabitacion.Left:=1;
         BotonHabitacion.Width:=98;
         BotonHabitacion.Height:=50;
-        BotonHabitacion.Caption:='Habitación'+Inttostr(HabitacionesBD[i]);
+        BotonHabitacion.Caption:= 'Abrir mes'; //'Habitación'+Inttostr(HabitacionesBD[i]);
+
+        LabelHabitacion:=TLabel.Create(self);
+        LabelHabitacion.Parent:=PanelHabitacion;
+        LabelHabitacion.Top:=90;
+        LabelHabitacion.Caption:= '('+tipohabitacion+')';
+        LabelHabitacion.Left:=30;
+        LabelHabitacion.StyleElements := [seBorder];
+        LabelHabitacion.Font.Color := clblack;
 
         columna := columna + 105;
         PanelesHabitaciones[i]:= PanelHabitacion; //guardamos los paneles en un array global
@@ -192,6 +207,13 @@ end;
 
 procedure TPrincipal.Button2Click(Sender: TObject);
 begin
+  FormularioPeriodo.ModoReserva;
+  FormularioPeriodo.showmodal;
+end;
+
+procedure TPrincipal.Button3Click(Sender: TObject);
+begin
+  FormularioPeriodo.ModoAnular;
   FormularioPeriodo.showmodal;
 end;
 
@@ -237,7 +259,6 @@ begin
     Tablas.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('reservada')+' and fecha='+quotedStr(stringFecha);
     Tablas.FDQuery1.Open;
 
-    Label4.Caption := Tablas.FDQuery1.SQL.Text;
    for i := 0 to Length(HabitacionesBD)-1 do
      begin
       if Tablas.FDQuery1.Locate('numerohabitacion', HabitacionesBD[i], []) then //si la habitación esta reservada para la fecha seleccionada
@@ -252,7 +273,6 @@ begin
     Tablas.FDQuery1.SQL.Text := 'select * from entradas where estado='+quotedstr('ocupada')+' and fecha='+quotedStr(stringFecha);
     Tablas.FDQuery1.Open;
 
-    Label4.Caption := Tablas.FDQuery1.SQL.Text;
    for i := 0 to Length(HabitacionesBD)-1 do
      begin
       if Tablas.FDQuery1.Locate('numerohabitacion', HabitacionesBD[i], []) then //si la habitación esta reservada para la fecha seleccionada

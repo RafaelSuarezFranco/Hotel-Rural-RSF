@@ -1,9 +1,11 @@
 object PantallaMes: TPantallaMes
   Left = 0
   Top = 193
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'PantallaMes'
-  ClientHeight = 794
-  ClientWidth = 889
+  ClientHeight = 804
+  ClientWidth = 899
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,7 +13,7 @@ object PantallaMes: TPantallaMes
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDesigned
+  Position = poDesktopCenter
   OnActivate = FormActivate
   OnClose = FormClose
   PixelsPerInch = 96

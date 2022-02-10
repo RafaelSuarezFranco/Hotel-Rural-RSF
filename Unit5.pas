@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.WinXPickers,  System.DateUtils,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids;
 
 type
   TFormularioPeriodo = class(TForm)
@@ -22,6 +22,8 @@ type
     Label5: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure ModoReserva();
+    procedure ModoAnular();
   private
     { Private declarations }
   public
@@ -49,6 +51,8 @@ var
   ServiciosContratados: Array of Boolean;
   PreciosServicios: Array of Double;
 
+  ModoDeFormulario: String;
+
 implementation
 
 {$R *.dfm}
@@ -73,11 +77,16 @@ dia: integer;
 mes: integer;
 año: integer;
 
+fecha1: TDate;
+fecha2: TDate;
 
+seleccion: integer;
 begin
    camposValidos:= true;
    registroValido:= true;
    PrecioTemporada := 0;
+   fecha1:= IncDay(DatePicker1.Date, -1); //había un problema a la hora de comparar fechas, tuve que ampliar el marco por arriba y por abajo para que funcione correctamente.
+   fecha2:= IncDay(DatePicker2.Date, 1);
 
    if DatePicker1.Date > DatePicker2.Date then
     begin
@@ -85,14 +94,14 @@ begin
        camposValidos := false;
     end;
 
-   if Edit1.Text = '' then
+   if (Edit1.Text = '') and (ModoDeFormulario = 'reserva') then
     begin
        showmessage('El campo de cliente no puede estar vacío');
        camposValidos := false;
     end;
 
 
-   if camposValidos then
+   if (camposValidos) and (ModoDeFormulario = 'reserva') then    //MODO RESERVA
    begin
     //showmessage('Los campos son válidos.');
     //una vez los datos son correctos, hay que comprobar que no hayan reservas hechas entre las fechas selecconadas para la habitación
@@ -100,13 +109,22 @@ begin
     Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
     Tablas.FDTableEntradas.First;
 
+
     while not Tablas.FDTableEntradas.eof do
       begin
+
+      if (Tablas.FDTableEntradasfecha.Value > fecha1) and (Tablas.FDTableEntradasfecha.Value < fecha2) then
+          begin
+             registroValido:= false;
+         end;
+
+        {
         if (Tablas.FDTableEntradasfecha.Value >= DatePicker1.Date) and (Tablas.FDTableEntradasfecha.Value <= DatePicker2.Date) then
         begin
           registroValido:= false;
         end;
-        
+         }
+
         Tablas.FDTableEntradas.Next;
       end;
 
@@ -115,10 +133,11 @@ begin
     if registroValido = false then
       begin
          showmessage('Hay reservas/ocupaciones en el periodo seleccionado');
-      end else
+      end
+      else
       begin
           fechaentrada:= DatePicker1.Date;
-          while fechaentrada <= DatePicker2.Date do
+          while fechaentrada < fecha2 do
             begin
               Tablas.FDTableEntradas.Append;
               Tablas.FDTableEntradasnumerohabitacion.Value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
@@ -167,10 +186,55 @@ begin
             end;
           
       end;
-    
+
+   end;
 
 
+   if (camposValidos) and (ModoDeFormulario = 'anular') then    //MODO ANULAR RESERVA
+   begin
+     seleccion := messagedlg('¿Seguro que quieres anular todas las reservas entre las fechas especificadas?',mtWarning , mbOKCancel, 0);
 
+      if seleccion = mrCancel then
+      begin
+       ShowMessage('Acción cancelada.');
+      end;
+
+      if seleccion = mrOK then
+       begin
+          showmessage('Anulando reservas');
+          Tablas.FDTableEntradas.Filtered := True;
+          Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
+
+          Tablas.FDTableEntradas.First;
+          //fechaentrada:= DatePicker1.Date;
+
+          while not Tablas.FDTableEntradas.eof do
+                begin
+
+                if (Tablas.FDTableEntradasfecha.Value > fecha1) and (Tablas.FDTableEntradasfecha.Value < fecha2) then
+                        begin
+
+                        Tablas.FDTableHistoricoentradas.Append;  //añadir al histórico
+                        Tablas.FDTableHistoricoentradasnumerohabitacion.value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
+                        Tablas.FDTableHistoricoentradasfecha.Value := Tablas.FDTableEntradasfecha.Value;
+                        Tablas.FDTableHistoricoentradascliente.Value := Tablas.FDTableEntradascliente.Value;
+                        Tablas.FDTableHistoricoentradaspreciofinal.Value := Tablas.FDTableEntradaspreciofinal.Value;
+                        Tablas.FDTableHistoricoentradasestado.Value := Tablas.FDTableEntradasestado.Value;
+                        Tablas.FDTableHistoricoentradas.Post;
+
+
+                          Tablas.FDTableEntradas.Delete;
+                        end
+                        else
+                        begin
+                          Tablas.FDTableEntradas.Next;
+                        end;
+
+                end;
+
+          Tablas.FDTableEntradas.Filtered := False;
+
+       end;
    end;
 
 end;
@@ -236,8 +300,19 @@ begin
        end;
 
 
+    if ModoDeFormulario = 'anular' then Button1.Caption:= 'Anular';
+    if ModoDeFormulario = 'reserva' then Button1.Caption:= 'Reservar';
 
+end;
 
+procedure TFormularioPeriodo.ModoReserva();
+begin
+  ModoDeFormulario:= 'reserva';
+end;
+
+procedure TFormularioPeriodo.ModoAnular();
+begin
+  ModoDeFormulario:= 'anular';
 end;
 
 end.

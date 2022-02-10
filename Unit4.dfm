@@ -1,9 +1,11 @@
 object FormularioDiario: TFormularioDiario
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'FormularioDiario'
-  ClientHeight = 498
-  ClientWidth = 467
+  ClientHeight = 508
+  ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +13,7 @@ object FormularioDiario: TFormularioDiario
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesktopCenter
   OnActivate = FormActivate
   PixelsPerInch = 96
   TextHeight = 13

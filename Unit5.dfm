@@ -1,9 +1,11 @@
 object FormularioPeriodo: TFormularioPeriodo
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'FormularioPeriodo'
-  ClientHeight = 567
-  ClientWidth = 409
+  ClientHeight = 577
+  ClientWidth = 419
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +13,7 @@ object FormularioPeriodo: TFormularioPeriodo
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesktopCenter
   OnActivate = FormActivate
   PixelsPerInch = 96
   TextHeight = 13

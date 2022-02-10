@@ -68,7 +68,7 @@ begin
   accionRealizada:= false;
 
  // ANULAR RESERVA (O BORRAR OCUPACIÓN) si vamos a liberar una habitacion, significa que vamos a borrar su registro
- // a la vez, copiaremos el registor en el historico de entradas
+ // a la vez, copiaremos el registro en el historico de entradas
   if (RadioGroup1.ItemIndex = 0) and (Estado <> 'libre') then
     begin
     accionCancelada:=false;

@@ -73,7 +73,7 @@ begin
    i:=0;
     cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;
     SetLength(Habitacionestodas, cantidadHabitaciones);
-
+    Combobox1.Items.Clear;
     Tablas.FDTableHabitaciones.First;
       while not  Tablas.FDTableHabitaciones.Eof do
         begin

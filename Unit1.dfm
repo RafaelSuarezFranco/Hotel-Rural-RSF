@@ -1,9 +1,11 @@
 object Principal: TPrincipal
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Principal'
-  ClientHeight = 608
-  ClientWidth = 1005
+  ClientHeight = 618
+  ClientWidth = 1015
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +13,7 @@ object Principal: TPrincipal
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesktopCenter
   OnActivate = FormActivate
   OnClose = FormClose
   PixelsPerInch = 96
@@ -29,7 +32,7 @@ object Principal: TPrincipal
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 232
+    Left = 200
     Top = 40
     Width = 65
     Height = 13
@@ -41,13 +44,6 @@ object Principal: TPrincipal
     Width = 60
     Height = 13
     Caption = 'Saltar al d'#237'a:'
-  end
-  object Label4: TLabel
-    Left = 48
-    Top = 512
-    Width = 31
-    Height = 13
-    Caption = 'Label4'
   end
   object ScrollBox1: TScrollBox
     Left = 208
@@ -96,26 +92,22 @@ object Principal: TPrincipal
     TabOrder = 4
     OnClick = Button1Click
   end
-  object DBGrid1: TDBGrid
-    Left = 488
-    Top = 480
-    Width = 320
-    Height = 120
-    DataSource = Tablas.DataSourceQuery
-    TabOrder = 5
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-  end
   object Button2: TButton
-    Left = 272
-    Top = 512
-    Width = 105
-    Height = 25
+    Left = 48
+    Top = 456
+    Width = 129
+    Height = 49
     Caption = 'Reservar periodo'
-    TabOrder = 6
+    TabOrder = 5
     OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 48
+    Top = 520
+    Width = 129
+    Height = 49
+    Caption = 'Anular periodo'
+    TabOrder = 6
+    OnClick = Button3Click
   end
 end
