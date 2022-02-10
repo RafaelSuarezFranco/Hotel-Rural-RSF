@@ -119,6 +119,7 @@ begin
         PanelHabitacion.Left:=columna+5;
         PanelHabitacion.Caption:='Habitación'+Inttostr(HabitacionesBD[i]);
         PanelHabitacion.ParentBackground:=false;
+        PanelHabitacion.StyleElements := [seBorder];
         PanelHabitacion.Color:=clGreen;
 
         BotonHabitacion:=TButton.Create(self);

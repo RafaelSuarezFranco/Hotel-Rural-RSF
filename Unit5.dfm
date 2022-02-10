@@ -125,6 +125,7 @@ object FormularioPeriodo: TFormularioPeriodo
     Height = 33
     Caption = 'Confirmar'
     TabOrder = 4
+    OnClick = Button1Click
   end
   object Panel1: TPanel
     Left = 184

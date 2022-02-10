@@ -2,7 +2,7 @@ object PantallaMes: TPantallaMes
   Left = 0
   Top = 193
   Caption = 'PantallaMes'
-  ClientHeight = 715
+  ClientHeight = 794
   ClientWidth = 889
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -44,7 +44,7 @@ object PantallaMes: TPantallaMes
   end
   object Label3: TLabel
     Left = 104
-    Top = 53
+    Top = 109
     Width = 665
     Height = 13
     Caption = 
@@ -59,9 +59,22 @@ object PantallaMes: TPantallaMes
     Height = 13
     Caption = 'Saltar al d'#237'a:'
   end
+  object Label5: TLabel
+    Left = 328
+    Top = 64
+    Width = 142
+    Height = 19
+    Caption = 'Cambiar habitaci'#243'n:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
   object Panel1: TPanel
     Left = 96
-    Top = 72
+    Top = 136
     Width = 700
     Height = 600
     TabOrder = 0
@@ -96,5 +109,14 @@ object PantallaMes: TPantallaMes
     Font.Style = []
     TabOrder = 3
     OnChange = DatePicker1Change
+  end
+  object ComboBox1: TComboBox
+    Left = 488
+    Top = 66
+    Width = 81
+    Height = 21
+    TabOrder = 4
+    Text = 'ComboBox1'
+    OnChange = ComboBox1Change
   end
 end

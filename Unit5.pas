@@ -21,6 +21,7 @@ type
     Panel1: TPanel;
     Label5: TLabel;
     procedure FormActivate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,6 +54,30 @@ implementation
 {$R *.dfm}
  uses Unit1, Unit3;
 
+
+procedure TFormularioPeriodo.Button1Click(Sender: TObject);
+var
+registroValido: boolean;
+begin
+   registroValido:= true;
+   if DatePicker1.Date > DatePicker2.Date then
+    begin
+      showmessage('La fecha de inicio no puede ser mayor a la fecha de fin');
+       registroValido := false;
+    end;
+
+   if Edit1.Text = '' then
+    begin
+       showmessage('El campo de cliente no puede estar vacío');
+       registroValido := false;
+    end;
+
+
+   if registroValido then
+    showmessage('La reserva es válida');
+
+
+end;
 
 procedure TFormularioPeriodo.FormActivate(Sender: TObject);
 var

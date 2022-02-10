@@ -17,6 +17,8 @@ type
     Label3: TLabel;
     Label4: TLabel;
     DatePicker1: TDatePicker;
+    Label5: TLabel;
+    ComboBox1: TComboBox;
     procedure FormActivate(Sender: TObject);
     function DevolverDiasMes(): integer;
     function DevolverDiaSemana(): integer;
@@ -30,6 +32,8 @@ type
     function DevolverFechaSeleccionada1():TDate;
     function DevolverDiaSeleccionado():Integer;
     function DevolverHabitacionSeleccionada1():Integer;
+    procedure ComboBox1Change(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -43,6 +47,8 @@ var
   HabitacionSeleccionada1: integer;
   PanelesDia: Array of TPanel;
   BotonesDia: Array of TButton;
+  HabitacionesTodas: Array of Integer; //contiene los nº de habitaciones
+  indiceHabitacion: integer;
 
 implementation
 
@@ -50,6 +56,9 @@ implementation
  uses Unit1, Unit3, Unit4;
 
 procedure TPantallaMes.FormActivate(Sender: TObject);
+var
+i: integer;
+cantidadHabitaciones : integer;
 begin
   FechaSeleccionada1:= Principal.DevolverFechaSeleccionada;
   HabitacionSeleccionada1:= Principal.DevolverHabitacionSeleccionada;
@@ -57,6 +66,31 @@ begin
   Label2.Caption:= 'Habitación seleccionada: '+ IntToStr(HabitacionSeleccionada1);
 
   CargarMes();
+
+//COMBO HABITACIONES
+
+  ComboBox1.Style := csDropDownList;
+   i:=0;
+    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;
+    SetLength(Habitacionestodas, cantidadHabitaciones);
+
+    Tablas.FDTableHabitaciones.First;
+      while not  Tablas.FDTableHabitaciones.Eof do
+        begin
+          Habitacionestodas[i]:= Tablas.FDTableHabitacionesnumero.Value;
+          Combobox1.Items.Add(IntToStr(Tablas.FDTableHabitacionesnumero.Value));
+          if HabitacionSeleccionada1 = Tablas.FDTableHabitacionesnumero.Value then
+            begin
+              Combobox1.ItemIndex := i; //seleccionamos el de la habitación actual
+            end;
+
+          i:=i+1;
+          Tablas.FDTableHabitaciones.Next;
+        end;
+
+
+
+
 end;
 
 procedure TPantallaMes.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -116,6 +150,8 @@ begin
   CargarMes();
 end;
 
+
+
 procedure TPantallaMes.DatePicker1Change(Sender: TObject);
 begin
   FechaSeleccionada1:= DatePicker1.Date;
@@ -171,6 +207,7 @@ begin
         PanelDia.Left:=diasemana*100;
         PanelDia.Caption:='Día '+Inttostr(dia);
         PanelDia.ParentBackground:= false;
+        PanelDia.StyleElements := [seBorder]; // esta línea hace que tarden en cargar bastante más.
         if DayOfTheMonth(FechaSeleccionada) = dia then
           begin
             PanelDia.Font.Style := [fsBold];
@@ -199,6 +236,13 @@ begin
      DatePicker1.Date := FechaSeleccionada1;
 end;
 
+
+procedure TPantallaMes.ComboBox1Change(Sender: TObject);
+begin
+  HabitacionSeleccionada1:= HabitacionesTodas[Combobox1.ItemIndex];
+  Label2.Caption:= 'Habitación seleccionada: '+ IntToStr(HabitacionSeleccionada1);
+  CargarMes;
+end;
 
 procedure TPantallaMes.PulsarBotonDia(Sender: TObject);
 var
