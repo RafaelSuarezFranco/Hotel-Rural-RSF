@@ -15,7 +15,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Windows10 Blue');
+  TStyleManager.TrySetStyle('TabletDark');
   Application.CreateForm(TPrincipal, Principal);
   Application.CreateForm(TPantallaMes, PantallaMes);
   Application.CreateForm(TTablas, Tablas);

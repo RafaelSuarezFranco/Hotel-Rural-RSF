@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.WinXPickers,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.WinXPickers,  System.DateUtils,
   Vcl.ExtCtrls;
 
 type
@@ -57,25 +57,121 @@ implementation
 
 procedure TFormularioPeriodo.Button1Click(Sender: TObject);
 var
+camposValidos: boolean;
 registroValido: boolean;
+fechaentrada: TDate;
+PrecioBase: Double;
+PrecioTemporada: Double;
+PrecioFinal: Double;
+fechabusqueda: String;
+
+
+diabusqueda: String;
+mesbusqueda: String;
+
+dia: integer;
+mes: integer;
+año: integer;
+
+
 begin
+   camposValidos:= true;
    registroValido:= true;
+   PrecioTemporada := 0;
+
    if DatePicker1.Date > DatePicker2.Date then
     begin
       showmessage('La fecha de inicio no puede ser mayor a la fecha de fin');
-       registroValido := false;
+       camposValidos := false;
     end;
 
    if Edit1.Text = '' then
     begin
        showmessage('El campo de cliente no puede estar vacío');
-       registroValido := false;
+       camposValidos := false;
     end;
 
 
-   if registroValido then
-    showmessage('La reserva es válida');
+   if camposValidos then
+   begin
+    //showmessage('Los campos son válidos.');
+    //una vez los datos son correctos, hay que comprobar que no hayan reservas hechas entre las fechas selecconadas para la habitación
+    Tablas.FDTableEntradas.Filtered := True;
+    Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
+    Tablas.FDTableEntradas.First;
 
+    while not Tablas.FDTableEntradas.eof do
+      begin
+        if (Tablas.FDTableEntradasfecha.Value >= DatePicker1.Date) and (Tablas.FDTableEntradasfecha.Value <= DatePicker2.Date) then
+        begin
+          registroValido:= false;
+        end;
+        
+        Tablas.FDTableEntradas.Next;
+      end;
+
+    Tablas.FDTableEntradas.Filtered := False;
+
+    if registroValido = false then
+      begin
+         showmessage('Hay reservas/ocupaciones en el periodo seleccionado');
+      end else
+      begin
+          fechaentrada:= DatePicker1.Date;
+          while fechaentrada <= DatePicker2.Date do
+            begin
+              Tablas.FDTableEntradas.Append;
+              Tablas.FDTableEntradasnumerohabitacion.Value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
+              Tablas.FDTableEntradasfecha.Value := fechaentrada;
+              Tablas.FDTableEntradasestado.Value := 'reservada';
+              Tablas.FDTableEntradascliente.Value := Edit1.Text;
+
+              //precio base
+              Tablas.FDTableHabitaciones.Filtered:=True;
+              Tablas.FDTableHabitaciones.Filter:= 'numero='+(ComboBox1.Items[Combobox1.ItemIndex]);
+              PrecioBase := Tablas.FDTableHabitacionespreciobase.Value; //necesitamos calcular el precio día a día, por si cambia por la temporada.
+              Tablas.FDTableHabitaciones.Filtered:=False;
+
+              //precio temporada
+              dia:= DayOfTheMonth(fechaentrada);
+              mes:= MonthOfTheYear(fechaentrada);
+              año:= YearOf(fechaentrada);
+             
+
+              diabusqueda := IntToStr(dia);
+              mesbusqueda := IntToStr(mes);
+              if length(diabusqueda) < 2 then
+                diabusqueda:= '0'+ diabusqueda;
+              if length(mesbusqueda) < 2 then
+                  mesbusqueda:= '0'+ mesbusqueda;
+              fechabusqueda:= IntToStr(año)+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
+
+              Tablas.FDQuery1.Close;
+              Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedStr(fechabusqueda)+' and fechafin>='+quotedStr(fechabusqueda);
+              Tablas.FDQuery1.Open;
+              
+              PrecioTemporada:=Tablas.FDQuery1.FieldByName('precioadicional').AsFloat;
+              
+              PrecioFinal := PrecioBase + PrecioTemporada;
+              
+              //precio servicios
+              
+
+
+
+              Tablas.FDTableEntradasPrecioFinal.Value := PrecioFinal;
+              Tablas.FDTableEntradas.Post;
+
+              fechaentrada := IncDay(fechaentrada, 1); //incrementar la fecha
+
+            end;
+          
+      end;
+    
+
+
+
+   end;
 
 end;
 
@@ -92,7 +188,7 @@ begin
    i:=0;
     cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;
     SetLength(Habitacionescombo, cantidadHabitaciones);
-
+    Combobox1.Items.Clear; //vaciar el combobox para rellenarlo con las habitaciones
     Tablas.FDTableHabitaciones.First;
       while not  Tablas.FDTableHabitaciones.Eof do
         begin
@@ -104,6 +200,9 @@ begin
 
    Combobox1.ItemIndex := 0;
 
+   DatePicker1.Date := Now; //resetear el formulario al dia de hoy, sin cliente especificado.
+   DatePicker2.Date := Now;
+   Edit1.Text:= '';
 
 
     //SERVICIOS
