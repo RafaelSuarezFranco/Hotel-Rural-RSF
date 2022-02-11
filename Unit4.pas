@@ -85,15 +85,27 @@ begin
 
        BorrarServicios;
 
-       Tablas.FDTableHistoricoentradas.Append;  //añadir al histórico
-       Tablas.FDTableHistoricoentradasnumerohabitacion.value := Habitacion;
-       Tablas.FDTableHistoricoentradasfecha.Value := Fecha;
-       Tablas.FDTableHistoricoentradascliente.Value := Cliente;
-       Tablas.FDTableHistoricoentradaspreciofinal.Value := PrecioFinal;
-       Tablas.FDTableHistoricoentradasestado.Value := Estado;
-       Tablas.FDTableHistoricoentradas.Post;
+       //en caso de que tengamos reserva y ocupación, habría que migrar los dos registros al histórico.
+       Tablas.FDQuery1.Close;
+       Tablas.FDQuery1.SQL.Text:= 'Select * from entradas where numerohabitacion='+IntToStr(Habitacion)+' and fecha = '+quotedStr(fechabusqueda);
+       Tablas.FDQuery1.Open;
+
+       Tablas.FDQuery1.First;
+       while not Tablas.FDQuery1.Eof do
+        begin       //añadir al histórico
+          Tablas.FDTableHistoricoentradas.Append; 
+          Tablas.FDTableHistoricoentradasnumerohabitacion.value := Habitacion;
+          Tablas.FDTableHistoricoentradasfecha.Value := Fecha;
+          Tablas.FDTableHistoricoentradascliente.Value := Cliente;
+          Tablas.FDTableHistoricoentradaspreciofinal.Value := PrecioFinal;
+          Tablas.FDTableHistoricoentradasestado.Value := Tablas.FDQuery1.FieldByName('estado').AsString;
+          Tablas.FDTableHistoricoentradas.Post;
+
+          Tablas.FDQuery1.Next;
+        end;
 
 
+        //borrar de la tabla
 
        Tablas.FDTableEntradas.Filtered:=True;
        Tablas.FDTableEntradas.Filter:='numerohabitacion='+IntToStr(Habitacion);
@@ -105,14 +117,23 @@ begin
           if Tablas.FDTableEntradasFecha.Value = Fecha then  //borramos las entradas de esta habitacion para esta fecha
             begin
             Tablas.FDTableEntradas.Delete;
-            ShowMessage('El registo de esta habitación para la fecha concreta ha sido borrado.');
+            end
+            else
+            begin
+              Tablas.FDTableEntradas.Next;
             end;
-          Tablas.FDTableEntradas.Next;
+          
           end;
+        ShowMessage('El registo de esta habitación para la fecha concreta ha sido borrado.');
         Tablas.FDTableEntradas.Filtered:=False;
         accionRealizada := true;
        end;
     end;
+
+
+
+
+    
     // RESERVAR UNA HABITACION QUE ESTABA LIBRE  (caso contrario al anterior)
     if (RadioGroup1.ItemIndex <> 0) and (Estado = 'libre') then
       begin
@@ -164,6 +185,29 @@ begin
       end;
 
     //OCUPAR UNA HABITACION QUE ESTABA RESERVADA (¿hemos quedado en que crea un nuevo registro a parte del de la reserva?)
+    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') then
+      begin
+          Tablas.FDTableEntradas.append;
+
+          Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
+          Tablas.FDTableEntradasfecha.Value := Fecha;
+          Tablas.FDTableEntradasestado.Value:= 'ocupada';
+
+          Tablas.FDTableEntradascliente.Value:= Cliente; //usamos el cliente almacenado, en caso de que escribamos algo distinto.
+          PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
+          Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text);
+          
+          Tablas.FDTableEntradas.post;
+          
+          accionRealizada:= true;
+      end;
+
+
+    //PASAR DE OCUPACION A RESERVA? no lo creo
+    if (RadioGroup1.ItemIndex = 1) and (Estado = 'ocupada') then
+    begin
+      showmessage('Estás intentado reservar una habitación ocupada. Si quieres reservar la habitación, libérala primero (Marca "libre")');
+    end;
 
 
     //CAMBIAR SERVICIOS

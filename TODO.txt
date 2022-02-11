@@ -1,5 +1,3 @@
-Reservar y anular periodo: gestionar servicios
-ocupar habitacion reservada (día de hoy o pasado)
 no permitir reservar del pasado
 no permitir ocupar en el futuro
 tabla clientes y gestión

@@ -56,6 +56,12 @@ type
     FDTableHistoricoentradascliente: TStringField;
     FDTableHistoricoentradaspreciofinal: TSingleField;
     FDTableHistoricoentradasestado: TStringField;
+    FDTableClientes: TFDTable;
+    FDTableClientesid: TFDAutoIncField;
+    FDTableClientesidentificador: TStringField;
+    FDTableClientesnombre: TStringField;
+    FDTableClientesapellidos: TStringField;
+    DataSource7: TDataSource;
   private
     { Private declarations }
   public

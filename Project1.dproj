@@ -153,6 +153,10 @@
             <Form>FormularioPeriodo</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Unit6.pas">
+            <Form>AltaCliente</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -56,7 +56,7 @@ var
 implementation
 
 {$R *.dfm}
- uses Unit1, Unit3;
+ uses Unit1, Unit2, Unit3;
 
 
 procedure TFormularioPeriodo.Button1Click(Sender: TObject);
@@ -67,6 +67,7 @@ fechaentrada: TDate;
 PrecioBase: Double;
 PrecioTemporada: Double;
 PrecioFinal: Double;
+PrecioServiciosTotal: Double;
 fechabusqueda: String;
 
 
@@ -81,10 +82,13 @@ fecha1: TDate;
 fecha2: TDate;
 
 seleccion: integer;
+i: integer;
 begin
    camposValidos:= true;
    registroValido:= true;
    PrecioTemporada := 0;
+   PrecioServiciosTotal := 0;
+
    fecha1:= IncDay(DatePicker1.Date, -1); //había un problema a la hora de comparar fechas, tuve que ampliar el marco por arriba y por abajo para que funcione correctamente.
    fecha2:= IncDay(DatePicker2.Date, 1);
 
@@ -92,12 +96,14 @@ begin
     begin
       showmessage('La fecha de inicio no puede ser mayor a la fecha de fin');
        camposValidos := false;
+       registroValido := false;
     end;
 
    if (Edit1.Text = '') and (ModoDeFormulario = 'reserva') then
     begin
        showmessage('El campo de cliente no puede estar vacío');
        camposValidos := false;
+       registroValido := false;
     end;
 
 
@@ -109,21 +115,30 @@ begin
     Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
     Tablas.FDTableEntradas.First;
 
+    //comprobar qué servicios vamos a dar de alta
+    for i := 0 to Length(CheckboxServicios)-1 do
+      begin
+        if CheckboxServicios[i].Checked then
+          begin
+            ServiciosContratados[i] := true;
+            PrecioServiciosTotal:= PrecioServiciosTotal + PreciosServicios[i];
+          end
+          else
+          begin
+            ServiciosContratados[i] := false;
+          end;
+      end;
+
+
 
     while not Tablas.FDTableEntradas.eof do
       begin
 
       if (Tablas.FDTableEntradasfecha.Value > fecha1) and (Tablas.FDTableEntradasfecha.Value < fecha2) then
           begin
-             registroValido:= false;
+             registroValido:= false;  //si hay alguna fecha ya reservada/ocupada
          end;
 
-        {
-        if (Tablas.FDTableEntradasfecha.Value >= DatePicker1.Date) and (Tablas.FDTableEntradasfecha.Value <= DatePicker2.Date) then
-        begin
-          registroValido:= false;
-        end;
-         }
 
         Tablas.FDTableEntradas.Next;
       end;
@@ -171,37 +186,52 @@ begin
               
               PrecioTemporada:=Tablas.FDQuery1.FieldByName('precioadicional').AsFloat;
               
-              PrecioFinal := PrecioBase + PrecioTemporada;
-              
-              //precio servicios
-              
-
+              PrecioFinal := PrecioBase + PrecioTemporada + PrecioServiciosTotal;
 
 
               Tablas.FDTableEntradasPrecioFinal.Value := PrecioFinal;
               Tablas.FDTableEntradas.Post;
 
-              fechaentrada := IncDay(fechaentrada, 1); //incrementar la fecha
+              //crear registros de los servicios (seguimos dentro de registroValido = true)
+              for i := 0 to Length(ServiciosContratados)-1 do  //por cada dia, añadimos un registro por cada servicio marcado.
+                begin
+                  if ServiciosContratados[i] then
+                    begin
+                      Tablas.FDTableEntradasservicios.append;
+                      Tablas.FDTableEntradasserviciosnumerohabitacion.Value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
+                      Tablas.FDTableEntradasserviciosfecha.Value := fechaentrada;
+                      Tablas.FDTableEntradasserviciosnombreservicio.Value := NombresServicios[i];
+                      Tablas.FDTableEntradasservicios.post;
+                    end;
 
+                end;
+
+
+              fechaentrada := IncDay(fechaentrada, 1); //incrementar la fecha para iterar el bucle
             end;
-          
+
+
+
+
+         showmessage('Se ha reservado con éxito el periodo especificado.');
       end;
 
    end;
 
 
-   if (camposValidos) and (ModoDeFormulario = 'anular') then    //MODO ANULAR RESERVA
+ if (camposValidos) and (ModoDeFormulario = 'anular') then    //MODO ANULAR RESERVA
    begin
      seleccion := messagedlg('¿Seguro que quieres anular todas las reservas entre las fechas especificadas?',mtWarning , mbOKCancel, 0);
 
       if seleccion = mrCancel then
       begin
        ShowMessage('Acción cancelada.');
+       registroValido := false;
       end;
 
       if seleccion = mrOK then
        begin
-          showmessage('Anulando reservas');
+
           Tablas.FDTableEntradas.Filtered := True;
           Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
 
@@ -212,7 +242,7 @@ begin
                 begin
 
                 if (Tablas.FDTableEntradasfecha.Value > fecha1) and (Tablas.FDTableEntradasfecha.Value < fecha2) then
-                        begin
+                       begin
 
                         Tablas.FDTableHistoricoentradas.Append;  //añadir al histórico
                         Tablas.FDTableHistoricoentradasnumerohabitacion.value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
@@ -223,19 +253,48 @@ begin
                         Tablas.FDTableHistoricoentradas.Post;
 
 
-                          Tablas.FDTableEntradas.Delete;
-                        end
-                        else
-                        begin
-                          Tablas.FDTableEntradas.Next;
-                        end;
+                        Tablas.FDTableEntradas.Delete;
+                       end
+                       else
+                       begin
+                        Tablas.FDTableEntradas.Next;
+                       end;
 
                 end;
 
-          Tablas.FDTableEntradas.Filtered := False;
+          //borrar los servicios contratados
+          Tablas.FDTableentradasservicios.Filtered:= True;
+          Tablas.FDTableentradasservicios.Filter:= 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
+          Tablas.FDTableentradasservicios.First;
+          while not Tablas.FDTableentradasservicios.eof do
+            begin
+               if (Tablas.FDTableentradasserviciosfecha.Value > fecha1) and (Tablas.FDTableentradasserviciosfecha.Value < fecha2) then
+                begin   //si la fecha está dentro del periodo de anulación (para la habitación concreta)
+                   Tablas.FDTableentradasservicios.Delete;
+                end
+                else
+                begin
+                   Tablas.FDTableentradasservicios.Next;
+                end;
+            end;
 
+          Tablas.FDTableentradasservicios.Filtered:= false;
+
+
+          Tablas.FDTableEntradas.Filtered := False;
+          showmessage('Todas las reservas y ocupaciones del periodo especificado se han anulado');
+          registroValido := true;
        end;
+
    end;
+
+   if registroValido then
+    begin
+      FormularioPeriodo.Close;  //cerramos y refrescamos todo
+      PantallaMes.cargarMes;
+      Principal.cargarDia;
+    end;
+
 
 end;
 

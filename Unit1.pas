@@ -19,6 +19,7 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    Button4: TButton;
 
 
 
@@ -35,6 +36,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
 
 
   private
@@ -55,7 +57,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit5;
+ uses  Unit2, Unit3, Unit5, Unit6;
 
 
 procedure TPrincipal.FormActivate(Sender: TObject);
@@ -215,6 +217,12 @@ procedure TPrincipal.Button3Click(Sender: TObject);
 begin
   FormularioPeriodo.ModoAnular;
   FormularioPeriodo.showmodal;
+end;
+
+procedure TPrincipal.Button4Click(Sender: TObject);
+begin
+  Tablas.FDTableClientes.Append;
+  AltaCliente.ShowModal;
 end;
 
 procedure TPrincipal.DatePicker1Change(Sender: TObject);

@@ -110,4 +110,13 @@ object Principal: TPrincipal
     TabOrder = 6
     OnClick = Button3Click
   end
+  object Button4: TButton
+    Left = 48
+    Top = 392
+    Width = 129
+    Height = 49
+    Caption = 'Alta de cliente'
+    TabOrder = 7
+    OnClick = Button4Click
+  end
 end

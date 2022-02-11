@@ -234,6 +234,7 @@ object Tablas: TTablas
     object FDTableHistoricoentradasid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
+      ReadOnly = True
     end
     object FDTableHistoricoentradasnumerohabitacion: TIntegerField
       AutoGenerateValue = arDefault
@@ -267,5 +268,41 @@ object Tablas: TTablas
     DataSet = FDTableHistoricoentradas
     Left = 344
     Top = 120
+  end
+  object FDTableClientes: TFDTable
+    Active = True
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.clientes'
+    TableName = 'hotelrsf.clientes'
+    Left = 240
+    Top = 200
+    object FDTableClientesid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+    end
+    object FDTableClientesidentificador: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'identificador'
+      Origin = 'identificador'
+      Size = 50
+    end
+    object FDTableClientesnombre: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'nombre'
+      Origin = 'nombre'
+      Size = 100
+    end
+    object FDTableClientesapellidos: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'apellidos'
+      Origin = 'apellidos'
+      Size = 150
+    end
+  end
+  object DataSource7: TDataSource
+    DataSet = FDTableClientes
+    Left = 344
+    Top = 200
   end
 end
