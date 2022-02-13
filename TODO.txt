@@ -1,3 +1,18 @@
 no permitir reservar del pasado
 no permitir ocupar en el futuro
-tabla clientes y gestión
+
+
+
+
+
+Reglas esblecidas en cuanto a cambios de estado de habitaciones.
+
+Reservar/anular por periodos: solo se pueden hacer en días futuros, incluyendo el día de hoy. Anular tambíen anula ocupaciones.
+
+Por días:
+	- De libre a reservada : Día de hoy o futuro
+	- De libre a ocupada : Día de hoy o en los 7 días pasados.
+	- De reservada a ocupada: Día de hoy o en el pasado
+	- De reservada a libre : Cualquier día.
+	- De ocupada a libre : Día de hoy (o futuro, pero no se puede marcar como ocupado en el futuro)
+	- De ocupada a reservada: Nunca.

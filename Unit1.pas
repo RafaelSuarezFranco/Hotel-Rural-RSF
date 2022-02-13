@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,
-  Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids;
+  Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus;
 
 type
   TPrincipal = class(TForm)
@@ -19,7 +19,8 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    Button4: TButton;
+    PopupMenu1: TPopupMenu;
+    administrarpopup: TMenuItem;
 
 
 
@@ -36,7 +37,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure administrarpopupClick(Sender: TObject);
 
 
   private
@@ -57,7 +59,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit5, Unit6;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6;
 
 
 procedure TPrincipal.FormActivate(Sender: TObject);
@@ -72,13 +74,15 @@ cantidadHabitaciones: integer;
 tipohabitacion: string;
 
 begin
-    //apertura de tablas
+         //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
     Tablas.FDQuery1.Open;
     Tablas.FDTableTemporadas.Open;
     Tablas.FDTableServicios.Open;
     Tablas.FDTableEntradasservicios.Open;
+    Tablas.FDTableClientes.Open;
+    Tablas.FDTableHistoricoentradas.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
@@ -130,6 +134,7 @@ begin
         PanelHabitacion.ParentBackground:=false;
         PanelHabitacion.StyleElements := [seBorder];
         PanelHabitacion.Color:=clGreen;
+        PanelHabitacion.PopupMenu:= PopupMenu1;
 
         BotonHabitacion:=TButton.Create(self);
         BotonHabitacion.Parent:=PanelHabitacion;
@@ -167,6 +172,23 @@ begin
     Tablas.FDTableEntradas.Close;
     Tablas.FDQuery1.Close;
     Tablas.FDTableTemporadas.Close;
+    Tablas.FDTableServicios.Close;
+    Tablas.FDTableEntradasservicios.Close;
+    Tablas.FDTableClientes.Close;
+    Tablas.FDTableHistoricoentradas.Close;
+end;
+
+procedure TPrincipal.FormCreate(Sender: TObject);
+begin   {
+    //apertura de tablas
+    Tablas.FDTableHabitaciones.Open;
+    Tablas.FDTableEntradas.Open;
+    Tablas.FDQuery1.Open;
+    Tablas.FDTableTemporadas.Open;
+    Tablas.FDTableServicios.Open;
+    Tablas.FDTableEntradasservicios.Open;
+    Tablas.FDTableClientes.Open;
+    Tablas.FDTableHistoricoentradas.Open;  }
 end;
 
 procedure TPrincipal.CargarDia();
@@ -189,7 +211,29 @@ begin
   PantallaMes.showmodal();
 end;
 
- procedure TPrincipal.BitBtn1Click(Sender: TObject);
+procedure TPrincipal.administrarpopupClick(Sender: TObject); //popup para abrir formulario de reserva de un dia concreto
+var Caller: TObject;
+var i: integer;
+var j: integer;
+var etiqueta: integer;
+var dia: integer;
+begin
+
+    Caller := ((Sender as TMenuItem).GetParentMenu as TPopupMenu).PopupComponent;
+    //label1.Caption:=(Caller as Tpanel).name + ' ' +inttostr((Caller as Tpanel).tag);
+    etiqueta := (Caller as Tpanel).tag;
+    dia := DayOfTheMonth(FechaSeleccionada);
+
+  FormularioDiario.dia:= dia;
+  FormularioDiario.mes:= MonthOfTheYear(FechaSeleccionada);
+  FormularioDiario.año:= YearOf(FechaSeleccionada);
+  FormularioDiario.Habitacion := etiqueta;
+  FormularioDiario.showmodal();
+
+
+end;
+
+procedure TPrincipal.BitBtn1Click(Sender: TObject);
 begin
   FechaSeleccionada:= IncDay(FechaSeleccionada, 1); //nos permite navegar al día siguente
   CargarDia();
@@ -219,11 +263,7 @@ begin
   FormularioPeriodo.showmodal;
 end;
 
-procedure TPrincipal.Button4Click(Sender: TObject);
-begin
-  Tablas.FDTableClientes.Append;
-  AltaCliente.ShowModal;
-end;
+
 
 procedure TPrincipal.DatePicker1Change(Sender: TObject);
 begin

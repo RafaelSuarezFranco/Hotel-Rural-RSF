@@ -16,6 +16,7 @@ object Principal: TPrincipal
   Position = poDesktopCenter
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -49,7 +50,7 @@ object Principal: TPrincipal
     Left = 208
     Top = 120
     Width = 561
-    Height = 329
+    Height = 385
     TabOrder = 0
   end
   object BitBtn1: TBitBtn
@@ -110,13 +111,12 @@ object Principal: TPrincipal
     TabOrder = 6
     OnClick = Button3Click
   end
-  object Button4: TButton
-    Left = 48
+  object PopupMenu1: TPopupMenu
+    Left = 912
     Top = 392
-    Width = 129
-    Height = 49
-    Caption = 'Alta de cliente'
-    TabOrder = 7
-    OnClick = Button4Click
+    object administrarpopup: TMenuItem
+      Caption = 'Administrar'
+      OnClick = administrarpopupClick
+    end
   end
 end

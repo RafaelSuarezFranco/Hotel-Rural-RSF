@@ -38,6 +38,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    BotonesDia: Array of TButton;
   end;
 
 var
@@ -46,7 +47,7 @@ var
   diaSeleccionado: integer;
   HabitacionSeleccionada1: integer;
   PanelesDia: Array of TPanel;
-  BotonesDia: Array of TButton;
+  //BotonesDia: Array of TButton;
   HabitacionesTodas: Array of Integer; //contiene los nº de habitaciones
   indiceHabitacion: integer;
 
@@ -251,6 +252,14 @@ begin
   boton := TButton(Sender);
   //Showmessage('Has clickado el día'+ IntToStr(boton.Tag));
   diaSeleccionado := boton.Tag;
+
+  //cambio de planes, para poder usar el formulario diario desde le pantalla mes y la pantalla principal, he hecho que algunas de
+  //sus variables sean públicas, para poder asignarlas desde el origen. El resultado es el mismo dado que a partir de dichas variables,
+  //se hacen consultas para inferir el resto de variables necesarias en dicho formulario.
+  FormularioDiario.dia:= diaSeleccionado;
+  FormularioDiario.mes:= MonthOfTheYear(FechaSeleccionada1);
+  FormularioDiario.año:= YearOf(FechaSeleccionada1);
+  FormularioDiario.Habitacion := HabitacionSeleccionada1;
   FormularioDiario.showmodal();
 end;
 

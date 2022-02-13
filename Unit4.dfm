@@ -95,13 +95,6 @@ object FormularioDiario: TFormularioDiario
     Font.Style = []
     ParentFont = False
   end
-  object Label9: TLabel
-    Left = 8
-    Top = 477
-    Width = 31
-    Height = 13
-    Caption = 'Label9'
-  end
   object Label5: TLabel
     Left = 31
     Top = 240
@@ -132,13 +125,14 @@ object FormularioDiario: TFormularioDiario
     Top = 177
     Width = 177
     Height = 21
+    MaxLength = 50
     TabOrder = 1
   end
   object Button1: TButton
-    Left = 192
+    Left = 168
     Top = 440
-    Width = 75
-    Height = 25
+    Width = 113
+    Height = 41
     Caption = 'Registar'
     TabOrder = 2
     OnClick = Button1Click

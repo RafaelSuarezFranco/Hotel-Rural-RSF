@@ -18,7 +18,6 @@ type
     Edit1: TEdit;
     Label3: TLabel;
     Button1: TButton;
-    Label9: TLabel;
     Label5: TLabel;
     Panel1: TPanel;
     Label12: TLabel;
@@ -34,13 +33,17 @@ type
     { Private declarations }
   public
     { Public declarations }
+    dia: integer;
+    mes: integer;
+    año: integer;
+    Habitacion: Integer;
   end;
 
 var
   FormularioDiario: TFormularioDiario;
   Estado: String;
   Fecha: TDate;
-  Habitacion: Integer;
+  //Habitacion: Integer;
   Cliente: String;
   Preciofinal: Double;
   fechabusqueda: String;
@@ -53,10 +56,12 @@ var
   ServiciosContratados: Array of Boolean;
   PreciosServicios: Array of Double;
 
+  DiaPasado: Boolean;
+
 implementation
 
 {$R *.dfm}
- uses Unit1, Unit2, Unit3;
+ uses Unit1, Unit2, Unit3, Unit6;
 
 procedure TFormularioDiario.Button1Click(Sender: TObject);
 var
@@ -64,14 +69,25 @@ seleccion: integer;
 accionRealizada: boolean;
 accionCancelada: boolean;
 serviciosCambiados: boolean;
+clienteValido: boolean;
+accionValida: boolean;
 begin
   accionRealizada:= false;
+  clienteValido:= true;
+  accionValida:= true;
 
  // ANULAR RESERVA (O BORRAR OCUPACIÓN) si vamos a liberar una habitacion, significa que vamos a borrar su registro
  // a la vez, copiaremos el registro en el historico de entradas
   if (RadioGroup1.ItemIndex = 0) and (Estado <> 'libre') then
     begin
-    accionCancelada:=false;
+      accionCancelada:=false;
+      // en primer lugar, si es una ocupación, solo podemos borrarla si es del día de hoy  (o futura)
+    if (Estado = 'ocupada') and (DiaPasado = true) then
+     begin
+          showmessage('No se puede borrar una ocupación que ya ha ocurrido en el pasado.')
+     end else
+     begin  //por el contrario, las reservas pasadas si se pueden anular (o marcar como ocupadas
+
 
       seleccion := messagedlg('Vas a dejar libre una habitación que estaba reservada/ocupada. Esto borrará su registro y los correspondientes datos. ¿Estás seguro?',mtWarning , mbOKCancel, 0);
 
@@ -128,32 +144,69 @@ begin
         Tablas.FDTableEntradas.Filtered:=False;
         accionRealizada := true;
        end;
+
+      end;
+
     end;
 
 
 
 
     
-    // RESERVAR UNA HABITACION QUE ESTABA LIBRE  (caso contrario al anterior)
+    // RESERVAR/0CUPAR UNA HABITACION QUE ESTABA LIBRE  (caso contrario al anterior)
     if (RadioGroup1.ItemIndex <> 0) and (Estado = 'libre') then
       begin
        //checkeamos que los necesarios estén rellenos
         if Edit1.Text = '' then
           begin
-            Showmessage('El campo del cliente no puede estar vacío.')
-          end
-          else
+            Showmessage('El campo del cliente no puede estar vacío.');
+            accionValida := false;
+          end;
+
+        if (RadioGroup1.ItemIndex = 1) and (DiaPasado = True) then
           begin
+            Showmessage('No se puede reservar en un día pasado');
+            accionValida := false;
+          end;
+
+       //vamos a ser generosos y pensar que al usuario se le podría haber olvidado marcar una ocupación que ya ha pasado
+       //con una semana de margen. Por tanto, solo podemos marcar de libre a ocupada si es hoy, o como mucho, hace 7 días
+        if (RadioGroup1.ItemIndex = 2) then
+          begin
+            if (Fecha > Now()) or (Fecha < IncDay(Now(), -8)) then
+            begin
+            Showmessage('Solo se puede marcar una habitación libre como ocupada en el día presente, o como muy tarde, con 7 días de retraso');
+            accionValida := false;
+            end;
+          end;
+        // esta condición no va en perjuicio de que cualquier reserva que quede en el pasado pueda ser marcada como libre u ocupada.
+
+
+
+        if accionValida then
+          begin
+
+          AltaCliente.ImportarIdentificador(Edit1.Text); //preventivamente, mandamos el identificador al formulario.
+          clienteValido := AltaCliente.AltaEnCaliente(Edit1.Text); //abre el alta de cliente si no existe.
+
+          if not clienteValido then
+            begin
+              showmessage('Acción cancelada. No se puede completar la reserva con el identificador de un cliente inexistente');
+              accionRealizada:= false;
+            end
+            else  //si el cliente es válido (existía o lo acabamos de crear)
+            begin
+
             seleccion := messagedlg('¿Confirmar Reserva (u ocupación)?',mtConfirmation , mbOKCancel, 0);
 
             if seleccion = mrCancel then
-             begin
-              ShowMessage('Acción cancelada.');
-              accionCancelada := true;  //AL CANCELAR ACCION (reserva/ocupar), AÚN SE GUARDAN LOS REGISTROS DE SERVICIOS!!
-             end;
+              begin
+                ShowMessage('Acción cancelada.');
+                accionCancelada := true;
+              end;
 
             if seleccion = mrOK then
-            begin
+              begin
                Tablas.FDTableEntradas.append;
                Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
                Tablas.FDTableEntradasfecha.Value := Fecha;
@@ -179,13 +232,16 @@ begin
                  end;
 
 
-            end;
+              end;
+             end;
+
           end;
 
       end;
 
     //OCUPAR UNA HABITACION QUE ESTABA RESERVADA (¿hemos quedado en que crea un nuevo registro a parte del de la reserva?)
-    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') then
+    //tambien hemos establecido que solo podemos pasar de reservada o ocupada si es hoy, o pasado.
+    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') and (Fecha < Now()) then
       begin
           Tablas.FDTableEntradas.append;
 
@@ -200,6 +256,10 @@ begin
           Tablas.FDTableEntradas.post;
           
           accionRealizada:= true;
+      end;
+    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') and (Fecha > Now()) then
+      begin
+         showmessage('No se puede marcar como ocupada una reserva que está en el futuro.  ');
       end;
 
 
@@ -234,17 +294,25 @@ i: integer;
 diabusqueda: String;
 mesbusqueda: String;
 
-dia: integer;
-mes: integer;
-año: integer;
+//dia: integer;
+//mes: integer;
+//año: integer;
 
 servicioCheck: TCheckbox;
 
 begin
-  dia:= PantallaMes.DevolverDiaSeleccionado;
-  mes:= MonthOfTheYear(PantallaMes.DevolverFechaSeleccionada1);
-  año:= YearOf(PantallaMes.DevolverFechaSeleccionada1);
+  //dia:= PantallaMes.DevolverDiaSeleccionado;
+  //mes:= MonthOfTheYear(PantallaMes.DevolverFechaSeleccionada1);
+  //año:= YearOf(PantallaMes.DevolverFechaSeleccionada1);
   Fecha:= EncodeDate(año, mes, dia); //Tdate del formulario
+
+  if Fecha < IncDay(Now(), -1) then
+  begin
+    DiaPasado:= True;
+  end else
+  begin
+    DiaPasado:= False;
+  end;
 
   diabusqueda := IntToStr(dia);
   mesbusqueda := IntToStr(mes);
@@ -254,8 +322,12 @@ begin
     mesbusqueda:= '0'+ mesbusqueda;
   fechabusqueda:= IntToStr(año)+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
 
-  Habitacion:= PantallaMes.DevolverHabitacionSeleccionada1();
+  //Habitacion:= PantallaMes.DevolverHabitacionSeleccionada1();
+
   //buscamos en la tabla con en nº y fecha seleccionados, con lo que vamos encontrando, vamos rellenando el formulario
+
+  //la idea de este formulario es guardar el estado actual cuando se ejecuta el activate (en función de fecha y habitación seleccionada)
+  //y luego al pulsar el botón, comparar ese estado con lo que se ha seleccionado en el formulario.
   Tablas.FDQuery1.Close;
   Tablas.FDQuery1.SQL.Text:= 'Select * from entradas where numerohabitacion='+IntToStr(Habitacion)+' and fecha = '+quotedStr(fechabusqueda);
   Tablas.FDQuery1.Open;

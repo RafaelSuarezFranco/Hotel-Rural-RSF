@@ -1,11 +1,11 @@
 object AltaCliente: TAltaCliente
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu, biMinimize]
+  BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'AltaCliente'
   ClientHeight = 305
-  ClientWidth = 356
+  ClientWidth = 283
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,6 @@ object AltaCliente: TAltaCliente
     Width = 94
     Height = 13
     Caption = 'Identificador (DNI):'
-    FocusControl = DBEdit1
   end
   object Label2: TLabel
     Left = 17
@@ -40,45 +39,45 @@ object AltaCliente: TAltaCliente
     Caption = 'Apellidos:'
     FocusControl = DBEdit3
   end
-  object DBEdit1: TDBEdit
-    Left = 17
-    Top = 59
-    Width = 309
-    Height = 21
-    DataField = 'identificador'
-    DataSource = DataSource1
-    TabOrder = 0
-  end
   object DBEdit2: TDBEdit
     Left = 17
     Top = 112
-    Width = 309
+    Width = 240
     Height = 21
     DataField = 'nombre'
     DataSource = DataSource1
-    TabOrder = 1
+    TabOrder = 0
   end
   object DBEdit3: TDBEdit
     Left = 17
     Top = 168
-    Width = 309
+    Width = 240
     Height = 21
     DataField = 'apellidos'
     DataSource = DataSource1
-    TabOrder = 2
+    TabOrder = 1
   end
   object Button1: TButton
-    Left = 112
+    Left = 80
     Top = 224
     Width = 105
     Height = 41
     Caption = 'Dar de alta'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = Button1Click
+  end
+  object Edit1: TEdit
+    Left = 17
+    Top = 59
+    Width = 240
+    Height = 21
+    ReadOnly = True
+    TabOrder = 3
+    Text = 'Edit1'
   end
   object DataSource1: TDataSource
     DataSet = Tablas.FDTableClientes
-    Left = 288
-    Top = 8
+    Left = 208
+    Top = 232
   end
 end

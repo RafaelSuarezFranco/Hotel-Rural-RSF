@@ -56,13 +56,14 @@ var
 implementation
 
 {$R *.dfm}
- uses Unit1, Unit2, Unit3;
+ uses Unit1, Unit2, Unit3, Unit6;
 
 
 procedure TFormularioPeriodo.Button1Click(Sender: TObject);
 var
 camposValidos: boolean;
 registroValido: boolean;
+clienteValido: boolean;
 fechaentrada: TDate;
 PrecioBase: Double;
 PrecioTemporada: Double;
@@ -86,6 +87,7 @@ i: integer;
 begin
    camposValidos:= true;
    registroValido:= true;
+   clienteValido := true;
    PrecioTemporada := 0;
    PrecioServiciosTotal := 0;
 
@@ -99,6 +101,14 @@ begin
        registroValido := false;
     end;
 
+    if DatePicker1.Date < IncDay(Now(), -1) then //esto impedirá reservar o anular fechas pasadas (podemos reservar anular de hoy en adelante).
+    begin
+       showmessage('Solo se pueden reservar/anular reservas para el día de hoy en adelante.');
+       camposValidos := false;
+       registroValido := false;
+    end;
+
+
    if (Edit1.Text = '') and (ModoDeFormulario = 'reserva') then
     begin
        showmessage('El campo de cliente no puede estar vacío');
@@ -106,6 +116,19 @@ begin
        registroValido := false;
     end;
 
+    if (Edit1.Text <> '') and (ModoDeFormulario = 'reserva') and (camposValidos = true) then
+    begin
+      AltaCliente.ImportarIdentificador(Edit1.Text); //preventivamente, mandamos el identificador al formulario.
+      clienteValido := AltaCliente.AltaEnCaliente(Edit1.Text); //abre el alta de cliente si no existe.
+    end;
+
+
+  if not clienteValido then
+    begin
+      showmessage('Acción cancelada. No se puede completar la reserva con el identificador de un cliente inexistente');
+       camposValidos := false;
+       registroValido := false;
+    end;
 
    if (camposValidos) and (ModoDeFormulario = 'reserva') then    //MODO RESERVA
    begin
@@ -114,21 +137,6 @@ begin
     Tablas.FDTableEntradas.Filtered := True;
     Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
     Tablas.FDTableEntradas.First;
-
-    //comprobar qué servicios vamos a dar de alta
-    for i := 0 to Length(CheckboxServicios)-1 do
-      begin
-        if CheckboxServicios[i].Checked then
-          begin
-            ServiciosContratados[i] := true;
-            PrecioServiciosTotal:= PrecioServiciosTotal + PreciosServicios[i];
-          end
-          else
-          begin
-            ServiciosContratados[i] := false;
-          end;
-      end;
-
 
 
     while not Tablas.FDTableEntradas.eof do
@@ -144,6 +152,20 @@ begin
       end;
 
     Tablas.FDTableEntradas.Filtered := False;
+
+     //comprobar qué servicios vamos a dar de alta
+    for i := 0 to Length(CheckboxServicios)-1 do
+      begin
+        if CheckboxServicios[i].Checked then
+          begin
+            ServiciosContratados[i] := true;
+            PrecioServiciosTotal:= PrecioServiciosTotal + PreciosServicios[i];
+          end
+          else
+          begin
+            ServiciosContratados[i] := false;
+          end;
+      end;
 
     if registroValido = false then
       begin
@@ -221,7 +243,7 @@ begin
 
  if (camposValidos) and (ModoDeFormulario = 'anular') then    //MODO ANULAR RESERVA
    begin
-     seleccion := messagedlg('¿Seguro que quieres anular todas las reservas entre las fechas especificadas?',mtWarning , mbOKCancel, 0);
+     seleccion := messagedlg('¿Seguro que quieres anular todas las reservas/ocupaciones entre las fechas especificadas?',mtWarning , mbOKCancel, 0);
 
       if seleccion = mrCancel then
       begin
@@ -348,11 +370,10 @@ begin
         servicioCheck.Top:=i*20+5;
         servicioCheck.Left:=5;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€ al día)';
-        servicioCheck.Width:= 120;
+        servicioCheck.Width:= 130;
         PreciosServicios[i] := Tablas.FDTableServiciosprecioservicio.Value;
         CheckboxServicios[i]:= servicioCheck;
 
-        //CheckboxServicios[i].OnClick := RecalcularPrecio;
 
         Tablas.FDTableServicios.Next;
         i:=i+1;
