@@ -58,7 +58,7 @@ object AltaCliente: TAltaCliente
     TabOrder = 1
   end
   object Button1: TButton
-    Left = 80
+    Left = 89
     Top = 224
     Width = 105
     Height = 41
@@ -77,7 +77,7 @@ object AltaCliente: TAltaCliente
   end
   object DataSource1: TDataSource
     DataSet = Tablas.FDTableClientes
-    Left = 208
-    Top = 232
+    Left = 200
+    Top = 8
   end
 end

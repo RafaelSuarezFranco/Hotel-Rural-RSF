@@ -189,6 +189,7 @@ begin
           AltaCliente.ImportarIdentificador(Edit1.Text); //preventivamente, mandamos el identificador al formulario.
           clienteValido := AltaCliente.AltaEnCaliente(Edit1.Text); //abre el alta de cliente si no existe.
 
+
           if not clienteValido then
             begin
               showmessage('Acción cancelada. No se puede completar la reserva con el identificador de un cliente inexistente');

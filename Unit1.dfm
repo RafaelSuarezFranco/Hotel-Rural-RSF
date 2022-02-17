@@ -47,10 +47,11 @@ object Principal: TPrincipal
     Caption = 'Saltar al d'#237'a:'
   end
   object ScrollBox1: TScrollBox
-    Left = 208
+    Left = 200
     Top = 120
-    Width = 561
+    Width = 577
     Height = 385
+    PopupMenu = PopupMenu2
     TabOrder = 0
   end
   object BitBtn1: TBitBtn
@@ -95,7 +96,7 @@ object Principal: TPrincipal
   end
   object Button2: TButton
     Left = 48
-    Top = 456
+    Top = 424
     Width = 129
     Height = 49
     Caption = 'Reservar periodo'
@@ -104,12 +105,21 @@ object Principal: TPrincipal
   end
   object Button3: TButton
     Left = 48
-    Top = 520
+    Top = 488
     Width = 129
     Height = 49
     Caption = 'Anular periodo'
     TabOrder = 6
     OnClick = Button3Click
+  end
+  object Button4: TButton
+    Left = 48
+    Top = 552
+    Width = 129
+    Height = 49
+    Caption = 'Crear temporada'
+    TabOrder = 7
+    OnClick = Button4Click
   end
   object PopupMenu1: TPopupMenu
     Left = 912
@@ -117,6 +127,14 @@ object Principal: TPrincipal
     object administrarpopup: TMenuItem
       Caption = 'Administrar'
       OnClick = administrarpopupClick
+    end
+  end
+  object PopupMenu2: TPopupMenu
+    Left = 912
+    Top = 456
+    object CrearHabitacin1: TMenuItem
+      Caption = 'Crear Habitaci'#243'n'
+      OnClick = CrearHabitacin1Click
     end
   end
 end

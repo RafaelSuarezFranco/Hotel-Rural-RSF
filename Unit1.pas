@@ -21,6 +21,9 @@ type
     Button3: TButton;
     PopupMenu1: TPopupMenu;
     administrarpopup: TMenuItem;
+    PopupMenu2: TPopupMenu;
+    CrearHabitacin1: TMenuItem;
+    Button4: TButton;
 
 
 
@@ -39,7 +42,9 @@ type
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure administrarpopupClick(Sender: TObject);
-
+    procedure CrearHabitacin1Click(Sender: TObject);
+    procedure CrearPanelesHabitaciones();
+    procedure Button4Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -59,7 +64,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8;
 
 
 procedure TPrincipal.FormActivate(Sender: TObject);
@@ -74,7 +79,7 @@ cantidadHabitaciones: integer;
 tipohabitacion: string;
 
 begin
-         //apertura de tablas
+ //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
     Tablas.FDQuery1.Open;
@@ -86,7 +91,7 @@ begin
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
-
+     {
     i:=0;
     cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;  //esta variable recogera la cantidad de habitaciones de la bbdd
     SetLength(HabitacionesBD, cantidadHabitaciones);
@@ -98,6 +103,9 @@ begin
           i:=i+1;
           Tablas.FDTableHabitaciones.Next;
         end;
+
+        //como tenemos la opción de crear habitaciones, en lugar de crear sus paneles en el activate, lo haremos
+        // en la función de cargardia,
 
 
     //creación de las habitaciones
@@ -163,8 +171,117 @@ begin
          BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
       end;
 
+           }
+    CrearPanelesHabitaciones();
     CargarDia();
 end;
+
+procedure TPrincipal.CrearPanelesHabitaciones();
+var
+PanelHabitacion: TPanel;
+BotonHabitacion: TButton;
+LabelHabitacion: TLabel;
+i: integer;    //será el nº de habitación
+columna:integer;
+fila: integer;
+cantidadHabitaciones: integer;
+tipohabitacion: string;
+
+begin
+  //primero borrar los paneles
+  if Length(PanelesHabitaciones) > 0 then
+      begin
+       for i := 0 to Length(PanelesHabitaciones)-1 do
+          begin
+          PanelesHabitaciones[i].Free;
+          end;
+      end;
+
+   //a partir de aqui es copiado del activate.
+    i:=0;
+    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;  //esta variable recogera la cantidad de habitaciones de la bbdd
+    SetLength(HabitacionesBD, cantidadHabitaciones);
+
+    Tablas.FDTableHabitaciones.First;
+      while not  Tablas.FDTableHabitaciones.Eof do //guardamos los numero de habitacion para ponerselo a los paneles y botones
+        begin
+          HabitacionesBD[i]:= Tablas.FDTableHabitacionesnumero.Value;
+          i:=i+1;
+          Tablas.FDTableHabitaciones.Next;
+        end;
+
+        //como tenemos la opción de crear habitaciones, en lugar de crear sus paneles en el activate, lo haremos
+        // en la función de cargardia,
+
+
+    //creación de las habitaciones
+     i:= 1;
+     columna := 1;
+     fila := 0;
+
+
+     SetLength(PanelesHabitaciones, cantidadHabitaciones);
+     SetLength(BotonesHabitaciones, cantidadHabitaciones);
+
+
+    for i:=0 to (cantidadHabitaciones-1) do   //la cantidad de habitaciones se especifica aquí
+     begin
+      if (i mod 5 = 0) and (i <> 0) then
+        begin
+          fila:= fila + 1;
+          columna:= 1 ;
+        end;
+
+        Tablas.FDQuery1.Close;
+        Tablas.FDQuery1.SQL.Text := 'select * from habitaciones where numero='+Inttostr(HabitacionesBD[i]);
+        Tablas.FDQuery1.Open;
+        tipohabitacion:= Tablas.FDQuery1.FieldByName('tipo').AsString;
+
+        PanelHabitacion:=TPanel.create(self);
+        PanelHabitacion.Parent:=ScrollBox1;
+        PanelHabitacion.Width := 100;
+        PanelHabitacion.Height := 150;
+        PanelHabitacion.Tag:=HabitacionesBD[i];
+        PanelHabitacion.Top:=fila*155+5;
+        PanelHabitacion.Left:=columna+5;
+        PanelHabitacion.Caption:='Habitación '+Inttostr(HabitacionesBD[i]);
+        PanelHabitacion.ParentBackground:=false;
+        PanelHabitacion.StyleElements := [seBorder];
+        PanelHabitacion.Color:=clGreen;
+        PanelHabitacion.PopupMenu:= PopupMenu1;
+
+        BotonHabitacion:=TButton.Create(self);
+        BotonHabitacion.Parent:=PanelHabitacion;
+        BotonHabitacion.Top:=1;
+        BotonHabitacion.Tag:=HabitacionesBD[i];
+        BotonHabitacion.Left:=1;
+        BotonHabitacion.Width:=98;
+        BotonHabitacion.Height:=50;
+        BotonHabitacion.Caption:= 'Abrir mes'; //'Habitación'+Inttostr(HabitacionesBD[i]);
+
+        LabelHabitacion:=TLabel.Create(self);
+        LabelHabitacion.Parent:=PanelHabitacion;
+        LabelHabitacion.Top:=90;
+        LabelHabitacion.Caption:= '('+tipohabitacion+')';
+        LabelHabitacion.Left:=30;
+        LabelHabitacion.StyleElements := [seBorder];
+        LabelHabitacion.Font.Color := clblack;
+
+        columna := columna + 105;
+        PanelesHabitaciones[i]:= PanelHabitacion; //guardamos los paneles en un array global
+        BotonesHabitaciones[i]:=BotonHabitacion;
+    end;
+
+    for i := 0 to (Length(BotonesHabitaciones) - 1) do
+      begin
+         BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
+      end;
+
+
+
+    CargarDia();
+end;
+
 
 procedure TPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -192,13 +309,41 @@ begin   {
 end;
 
 procedure TPrincipal.CargarDia();
+var
+PanelHabitacion: TPanel;
+BotonHabitacion: TButton;
+LabelHabitacion: TLabel;
+i: integer;    //será el nº de habitación
+columna:integer;
+fila: integer;
+cantidadHabitaciones: integer;
+tipohabitacion: string;
 begin
     Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
     Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
 
     DatePicker1.Date:= FechaSeleccionada;
+
     ActualizarColores();
 
+end;
+
+procedure TPrincipal.CrearHabitacin1Click(Sender: TObject);
+var
+seleccion: integer;
+begin
+      seleccion := messagedlg('¿Quieres dar de alta una nueva habitación?',mtConfirmation, mbOKCancel, 0);
+
+      if seleccion = mrCancel then
+      begin
+       //ShowMessage('Acción cancelada.');
+      end;
+
+       if seleccion = mrOK then
+       begin
+          NuevaHabitacion.ShowModal;
+       end;
+    //crear habitación
 end;
 
 procedure TPrincipal.PulsarBotonHabitacion(Sender: TObject);
@@ -264,6 +409,11 @@ begin
 end;
 
 
+
+procedure TPrincipal.Button4Click(Sender: TObject);
+begin
+  CrearTemporada.showmodal;
+end;
 
 procedure TPrincipal.DatePicker1Change(Sender: TObject);
 begin
