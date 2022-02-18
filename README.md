@@ -17,11 +17,14 @@ posibilidad.
 - Crear nuevas temporadas.
 - Acceder a la vista mensual de una habitación.
 
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_2.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_6.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_7.png)
 
 <h3>Pantalla mensual</h3>
 
 - Visualizar el estado de una habitación mes a mes.
 - Cambiar el estado de una habitación para un día concreto.
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_3.png)
 
 <h3>Formularios de reserva</h3>
 
@@ -30,6 +33,9 @@ posibilidad.
 - Cambiar el precio final que tendrá la habitación para un día concreto, independientemente de la temporada o servicios contratados.
 - Gestionar el estado de las habitaciones, siguiendo las reglas del siguiente apartado.
 
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_4.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_5.png)
+
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_8.png)
 
 <h2>Reglas establecidas en cuanto a cambios de estado de habitaciones.</h2>
 
@@ -42,3 +48,13 @@ Por días:
 - De reservada a libre : Cualquier día.
 - De ocupada a libre : Día de hoy (o futuro, pero no se puede marcar como ocupado en el futuro).
 - De ocupada a reservada: Nunca.
+
+<h3>Colores</h3>
+
+Utilizamos distintos colores para distinguir a simple vista el estado de las habitaciones:
+
+- ![#FF0000](https://via.placeholder.com/15/FF0000/000000?text=+) `Rojo` 'clRed': ocupado.
+- ![#FFFF00](https://via.placeholder.com/15/FFFF00/000000?text=+) `Amarillo` 'clyellow': reservado.
+- ![#7cfc00](https://via.placeholder.com/15/7cfc00/000000?text=+) `Verde césped` 'clWebLawnGreen': libre - temporada baja.
+- ![#32cd32](https://via.placeholder.com/15/32cd32/000000?text=+) `Verde lima` 'clWebLimeGreen' (algo más oscuro que el anterior): libre - temporada media.
+- ![#228b22](https://via.placeholder.com/15/228b22/000000?text=+) `Verde bosque` 'clWebForestGreen' (más oscuro que los anteriores): - temporada alta.
