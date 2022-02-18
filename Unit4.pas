@@ -18,11 +18,11 @@ type
     Edit1: TEdit;
     Label3: TLabel;
     Button1: TButton;
-    Label5: TLabel;
     Panel1: TPanel;
     Label12: TLabel;
     SpinEdit1: TSpinEdit;
     Label10: TLabel;
+    Label5: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     function actualizarServicios(): Boolean;

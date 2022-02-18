@@ -110,14 +110,20 @@ object FormularioDiario: TFormularioDiario
   end
   object RadioGroup1: TRadioGroup
     Left = 288
-    Top = 49
-    Width = 105
-    Height = 89
+    Top = 48
+    Width = 136
+    Height = 96
     Caption = 'Estado'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
     Items.Strings = (
       'libre'
       'reservada'
       'ocupada')
+    ParentFont = False
     TabOrder = 0
   end
   object Edit1: TEdit
