@@ -46,7 +46,7 @@ object AltaCliente: TAltaCliente
     Height = 21
     DataField = 'nombre'
     DataSource = DataSource1
-    TabOrder = 0
+    TabOrder = 1
   end
   object DBEdit3: TDBEdit
     Left = 17
@@ -55,7 +55,7 @@ object AltaCliente: TAltaCliente
     Height = 21
     DataField = 'apellidos'
     DataSource = DataSource1
-    TabOrder = 1
+    TabOrder = 2
   end
   object Button1: TButton
     Left = 89
@@ -63,7 +63,7 @@ object AltaCliente: TAltaCliente
     Width = 105
     Height = 41
     Caption = 'Dar de alta'
-    TabOrder = 2
+    TabOrder = 3
     OnClick = Button1Click
   end
   object Edit1: TEdit
@@ -72,7 +72,7 @@ object AltaCliente: TAltaCliente
     Width = 240
     Height = 21
     ReadOnly = True
-    TabOrder = 3
+    TabOrder = 0
     Text = 'Edit1'
   end
   object DataSource1: TDataSource

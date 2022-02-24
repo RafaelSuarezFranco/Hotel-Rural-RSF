@@ -5,7 +5,7 @@ object FormularioPeriodo: TFormularioPeriodo
   BorderStyle = bsSingle
   Caption = 'FormularioPeriodo'
   ClientHeight = 577
-  ClientWidth = 419
+  ClientWidth = 407
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -130,10 +130,10 @@ object FormularioPeriodo: TFormularioPeriodo
     TabOrder = 4
     OnClick = Button1Click
   end
-  object Panel1: TPanel
-    Left = 184
-    Top = 328
-    Width = 150
+  object ScrollBox1: TScrollBox
+    Left = 168
+    Top = 320
+    Width = 185
     Height = 153
     TabOrder = 5
   end

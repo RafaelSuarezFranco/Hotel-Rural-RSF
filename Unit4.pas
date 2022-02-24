@@ -18,11 +18,11 @@ type
     Edit1: TEdit;
     Label3: TLabel;
     Button1: TButton;
-    Panel1: TPanel;
-    Label12: TLabel;
-    SpinEdit1: TSpinEdit;
-    Label10: TLabel;
     Label5: TLabel;
+    ScrollBox1: TScrollBox;
+    Label10: TLabel;
+    SpinEdit1: TSpinEdit;
+    Label12: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     function actualizarServicios(): Boolean;
@@ -366,11 +366,11 @@ begin
     if Estado = 'libre' then
     begin
       RadioGroup1.ItemIndex:=0;
-      Panel1.Visible := False;
+      ScrollBox1.Visible := False;
     end
     else
     begin
-      Panel1.Visible := True;
+      ScrollBox1.Visible := True;
     end;
 
     if Estado = 'reservada' then
@@ -401,12 +401,13 @@ begin
         nombresServicios[i] := Tablas.FDTableServiciosnombreservicio.Value;
 
         servicioCheck:=TCheckbox.create(self);
-        servicioCheck.Parent:=Panel1;
+        servicioCheck.Parent:=ScrollBox1;
 
         servicioCheck.Tag:=i;
         servicioCheck.Top:=i*20+30;
         servicioCheck.Left:=15;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€)';
+        servicioCheck.Width:= 180;
 
         PreciosServicios[i] := Tablas.FDTableServiciosprecioservicio.Value;
         CheckboxServicios[i]:= servicioCheck;

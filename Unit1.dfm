@@ -2,9 +2,9 @@ object Principal: TPrincipal
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsSingle
+  BorderStyle = bsDialog
   Caption = 'Principal'
-  ClientHeight = 618
+  ClientHeight = 577
   ClientWidth = 1015
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,8 +12,9 @@ object Principal: TPrincipal
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
-  Position = poDesktopCenter
+  Position = poMainFormCenter
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
@@ -52,7 +53,7 @@ object Principal: TPrincipal
     Width = 577
     Height = 385
     PopupMenu = PopupMenu2
-    TabOrder = 0
+    TabOrder = 2
   end
   object BitBtn1: TBitBtn
     Left = 864
@@ -60,7 +61,7 @@ object Principal: TPrincipal
     Width = 75
     Height = 73
     Caption = 'D'#237'a siguiente'
-    TabOrder = 1
+    TabOrder = 0
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
@@ -69,7 +70,7 @@ object Principal: TPrincipal
     Width = 75
     Height = 73
     Caption = 'D'#237'a anterior'
-    TabOrder = 2
+    TabOrder = 1
     OnClick = BitBtn2Click
   end
   object DatePicker1: TDatePicker
@@ -82,7 +83,7 @@ object Principal: TPrincipal
     Font.Height = -16
     Font.Name = 'Segoe UI'
     Font.Style = []
-    TabOrder = 3
+    TabOrder = 4
     OnChange = DatePicker1Change
   end
   object Button1: TButton
@@ -91,7 +92,7 @@ object Principal: TPrincipal
     Width = 137
     Height = 25
     Caption = 'Volver al d'#237'a de hoy'
-    TabOrder = 4
+    TabOrder = 3
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -112,15 +113,6 @@ object Principal: TPrincipal
     TabOrder = 6
     OnClick = Button3Click
   end
-  object Button4: TButton
-    Left = 48
-    Top = 552
-    Width = 129
-    Height = 49
-    Caption = 'Crear temporada'
-    TabOrder = 7
-    OnClick = Button4Click
-  end
   object PopupMenu1: TPopupMenu
     Left = 912
     Top = 392
@@ -135,6 +127,28 @@ object Principal: TPrincipal
     object CrearHabitacin1: TMenuItem
       Caption = 'Crear Habitaci'#243'n'
       OnClick = CrearHabitacin1Click
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 48
+    Top = 40
+    object CrearTemporada1: TMenuItem
+      Caption = 'Crear'
+      object Habitacin1: TMenuItem
+        Caption = 'Habitaci'#243'n'
+        OnClick = Habitacin1Click
+      end
+      object creartemp: TMenuItem
+        Caption = 'Temporada'
+        OnClick = creartempClick
+      end
+      object Servicio1: TMenuItem
+        Caption = 'Servicio'
+        OnClick = Servicio1Click
+      end
+    end
+    object Creartemp1: TMenuItem
+      Caption = 'Borrar'
     end
   end
 end

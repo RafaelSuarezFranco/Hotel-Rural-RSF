@@ -5,7 +5,7 @@ object FormularioDiario: TFormularioDiario
   BorderStyle = bsSingle
   Caption = 'FormularioDiario'
   ClientHeight = 508
-  ClientWidth = 477
+  ClientWidth = 460
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -143,12 +143,25 @@ object FormularioDiario: TFormularioDiario
     TabOrder = 2
     OnClick = Button1Click
   end
-  object Panel1: TPanel
-    Left = 31
+  object ScrollBox1: TScrollBox
+    Left = 32
     Top = 279
-    Width = 409
+    Width = 362
     Height = 146
     TabOrder = 3
+    object Label10: TLabel
+      Left = 213
+      Top = 19
+      Width = 73
+      Height = 18
+      Caption = 'Precio final:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
     object Label12: TLabel
       Left = 16
       Top = 8
@@ -162,22 +175,9 @@ object FormularioDiario: TFormularioDiario
       Font.Style = []
       ParentFont = False
     end
-    object Label10: TLabel
-      Left = 280
-      Top = 12
-      Width = 73
-      Height = 18
-      Caption = 'Precio final:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-    end
     object SpinEdit1: TSpinEdit
-      Left = 280
-      Top = 36
+      Left = 210
+      Top = 52
       Width = 113
       Height = 22
       MaxValue = 0

@@ -58,7 +58,7 @@ begin
     if nhabitacion < 1 then
       begin
          registroValido := false;
-         showmessage('El nº de habitación no debería ser negativo.');
+         showmessage('El nº de habitación no debería ser negativo o cero.');
       end;
   except
     registroValido:=false;

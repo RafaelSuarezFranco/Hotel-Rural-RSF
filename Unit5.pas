@@ -18,8 +18,8 @@ type
     Label4: TLabel;
     Edit1: TEdit;
     Button1: TButton;
-    Panel1: TPanel;
     Label5: TLabel;
+    ScrollBox1: TScrollBox;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure ModoReserva();
@@ -365,13 +365,13 @@ begin
         nombresServicios[i] := Tablas.FDTableServiciosnombreservicio.Value;
 
         servicioCheck:=TCheckbox.create(self);
-        servicioCheck.Parent:=Panel1;
+        servicioCheck.Parent:=Scrollbox1;
 
         servicioCheck.Tag:=i;
         servicioCheck.Top:=i*20+5;
         servicioCheck.Left:=5;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€ al día)';
-        servicioCheck.Width:= 130;
+        servicioCheck.Width:= 250;
         PreciosServicios[i] := Tablas.FDTableServiciosprecioservicio.Value;
         CheckboxServicios[i]:= servicioCheck;
 

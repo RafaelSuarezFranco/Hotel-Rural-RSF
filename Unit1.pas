@@ -23,7 +23,12 @@ type
     administrarpopup: TMenuItem;
     PopupMenu2: TPopupMenu;
     CrearHabitacin1: TMenuItem;
-    Button4: TButton;
+    MainMenu1: TMainMenu;
+    CrearTemporada1: TMenuItem;
+    Creartemp1: TMenuItem;
+    creartemp: TMenuItem;
+    Servicio1: TMenuItem;
+    Habitacin1: TMenuItem;
 
 
 
@@ -44,7 +49,9 @@ type
     procedure administrarpopupClick(Sender: TObject);
     procedure CrearHabitacin1Click(Sender: TObject);
     procedure CrearPanelesHabitaciones();
-    procedure Button4Click(Sender: TObject);
+    procedure creartempClick(Sender: TObject);
+    procedure Habitacin1Click(Sender: TObject);
+    procedure Servicio1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -64,7 +71,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9;
 
 
 procedure TPrincipal.FormActivate(Sender: TObject);
@@ -308,6 +315,11 @@ begin   {
     Tablas.FDTableHistoricoentradas.Open;  }
 end;
 
+procedure TPrincipal.Habitacin1Click(Sender: TObject);
+begin
+  NuevaHabitacion.ShowModal;
+end;
+
 procedure TPrincipal.CargarDia();
 var
 PanelHabitacion: TPanel;
@@ -356,6 +368,11 @@ begin
   PantallaMes.showmodal();
 end;
 
+procedure TPrincipal.Servicio1Click(Sender: TObject);
+begin
+  AltaServicio.showmodal;
+end;
+
 procedure TPrincipal.administrarpopupClick(Sender: TObject); //popup para abrir formulario de reserva de un dia concreto
 var Caller: TObject;
 var i: integer;
@@ -390,6 +407,11 @@ begin
   CargarDia();
 end;
 
+procedure TPrincipal.creartempClick(Sender: TObject);
+begin
+   CrearTemporada.showmodal;
+end;
+
 procedure TPrincipal.Button1Click(Sender: TObject);
 begin
   FechaSeleccionada:= FechaActual;
@@ -409,11 +431,6 @@ begin
 end;
 
 
-
-procedure TPrincipal.Button4Click(Sender: TObject);
-begin
-  CrearTemporada.showmodal;
-end;
 
 procedure TPrincipal.DatePicker1Change(Sender: TObject);
 begin

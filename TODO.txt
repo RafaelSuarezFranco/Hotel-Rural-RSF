@@ -1,6 +1,6 @@
-
-crear temporadas
 visualizar/editar clientes?
+editar habitaciones? borrar/editar temporadas?
+quitar botones del mes y sustituir por click/popup
 
 
 

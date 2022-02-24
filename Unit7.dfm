@@ -43,7 +43,7 @@ object NuevaHabitacion: TNuevaHabitacion
     Width = 75
     Height = 25
     Caption = 'Crear'
-    TabOrder = 0
+    TabOrder = 3
     OnClick = Button1Click
   end
   object SpinEdit1: TSpinEdit
@@ -53,7 +53,7 @@ object NuevaHabitacion: TNuevaHabitacion
     Height = 22
     MaxValue = 0
     MinValue = 0
-    TabOrder = 1
+    TabOrder = 0
     Value = 0
   end
   object Edit1: TEdit
@@ -68,7 +68,7 @@ object NuevaHabitacion: TNuevaHabitacion
     Top = 99
     Width = 133
     Height = 21
-    TabOrder = 3
+    TabOrder = 1
   end
   object Button2: TButton
     Left = 128
