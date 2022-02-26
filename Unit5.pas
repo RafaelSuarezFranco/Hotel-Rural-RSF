@@ -328,6 +328,8 @@ cantidadHabitaciones: integer;
 servicioCheck: TCheckbox;
 begin
 
+
+
 //COMBO HABITACIONES
 
   ComboBox1.Style := csDropDownList;
@@ -352,6 +354,18 @@ begin
 
 
     //SERVICIOS
+
+    //borrar preventivamente los checkbox para que no se repitan
+    if Length(CheckboxServicios) > 0 then
+      begin
+       for i := 0 to Length(CheckboxServicios)-1 do
+          begin
+          CheckboxServicios[i].Free;
+          end;
+      end;
+
+
+
 
       SetLength(CheckboxServicios, Tablas.FDTableServicios.RecordCount);
       SetLength(nombresServicios, Tablas.FDTableServicios.RecordCount);

@@ -175,15 +175,12 @@ object FormularioDiario: TFormularioDiario
       Font.Style = []
       ParentFont = False
     end
-    object SpinEdit1: TSpinEdit
-      Left = 210
-      Top = 52
+    object Edit2: TEdit
+      Left = 213
+      Top = 56
       Width = 113
-      Height = 22
-      MaxValue = 0
-      MinValue = 0
+      Height = 21
       TabOrder = 0
-      Value = 0
     end
   end
 end

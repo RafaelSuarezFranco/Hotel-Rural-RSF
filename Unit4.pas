@@ -21,8 +21,8 @@ type
     Label5: TLabel;
     ScrollBox1: TScrollBox;
     Label10: TLabel;
-    SpinEdit1: TSpinEdit;
     Label12: TLabel;
+    Edit2: TEdit;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     function actualizarServicios(): Boolean;
@@ -65,6 +65,7 @@ implementation
 
 procedure TFormularioDiario.Button1Click(Sender: TObject);
 var
+precio: double;
 seleccion: integer;
 accionRealizada: boolean;
 accionCancelada: boolean;
@@ -208,31 +209,37 @@ begin
 
             if seleccion = mrOK then
               begin
-               Tablas.FDTableEntradas.append;
-               Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
-               Tablas.FDTableEntradasfecha.Value := Fecha;
-               if RadioGroup1.ItemIndex = 1 then
-                  Tablas.FDTableEntradasestado.Value:= 'reservada';
-               if RadioGroup1.ItemIndex = 2 then
-                  Tablas.FDTableEntradasestado.Value:= 'ocupada';
+                try
+                precio:= strtofloat(Edit2.Text);
 
-               Tablas.FDTableEntradascliente.Value:= Edit1.Text;
-               PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
-               Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text); //el precio es lo que aparezca en el spinner,
-               // que de base es el precio final calculado, pero puede ser cambiado manualmente.
 
-               if StrToInt(SpinEdit1.Text) < 0 then //si se intenta guardar el registro con precio menor o igual a 0
-                 begin
-                   showmessage('Error: El precio final no puede ser menor que 0');
-                 end
-                 else
-                 begin
-                   Tablas.FDTableEntradas.post;
+                Tablas.FDTableEntradas.append;
+                Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
+                Tablas.FDTableEntradasfecha.Value := Fecha;
+                if RadioGroup1.ItemIndex = 1 then
+                   Tablas.FDTableEntradasestado.Value:= 'reservada';
+                if RadioGroup1.ItemIndex = 2 then
+                   Tablas.FDTableEntradasestado.Value:= 'ocupada';
 
-                   accionRealizada:= True;
+                Tablas.FDTableEntradascliente.Value:= Edit1.Text;
+                PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
+                Tablas.FDTableEntradaspreciofinal.Value := precio; //el precio es lo que aparezca en el spinner,
+                // que de base es el precio final calculado, pero puede ser cambiado manualmente.
+
+                if precio < 0 then //si se intenta guardar el registro con precio menor o igual a 0
+                  begin
+                     showmessage('Error: El precio final no puede ser menor que 0');
+                   end
+                   else
+                   begin
+                     Tablas.FDTableEntradas.post;
+
+                     accionRealizada:= True;
+                   end;
+
+                except
+                  showmessage('El precio debe ser de tipo numérico.');
                  end;
-
-
               end;
              end;
 
@@ -244,6 +251,9 @@ begin
     //tambien hemos establecido que solo podemos pasar de reservada o ocupada si es hoy, o pasado.
     if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') and (Fecha < Now()) then
       begin
+        try
+           precio:= strtofloat(Edit2.Text);
+
           Tablas.FDTableEntradas.append;
 
           Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
@@ -252,11 +262,14 @@ begin
 
           Tablas.FDTableEntradascliente.Value:= Cliente; //usamos el cliente almacenado, en caso de que escribamos algo distinto.
           PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
-          Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text);
+          Tablas.FDTableEntradaspreciofinal.Value := precio;
           
           Tablas.FDTableEntradas.post;
           
           accionRealizada:= true;
+        except
+          showmessage('El campo precio debe ser un numérico.');
+        end;
       end;
     if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') and (Fecha > Now()) then
       begin
@@ -314,6 +327,17 @@ begin
   begin
     DiaPasado:= False;
   end;
+
+  //borrar los checkboxs y recrearlos, puede dar errores si hay muchos y se crean más de la cuenta
+    if Length(CheckboxServicios) > 0 then
+      begin
+       for i := 0 to Length(CheckboxServicios)-1 do
+          begin
+          CheckboxServicios[i].Free;
+          end;
+      end;
+
+
 
   diabusqueda := IntToStr(dia);
   mesbusqueda := IntToStr(mes);
@@ -461,14 +485,15 @@ begin
 
     if Estado = 'libre' then
      begin
-        Label3.Caption:=FloatToStr(PrecioCalculado);
-        SpinEdit1.Text:=FloatToStr(PrecioCalculado);
+        Label3.Caption:= FloatToStr(Round(PrecioCalculado*100)/100);
+        edit2.Text := FloatToStr(Round(PrecioCalculado*100)/100);
         PrecioCalculado := PrecioBase + TemporadaPrecio;
      end
      else
      begin
         Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios o lo que hubiera)
-        SpinEdit1.Text:=FloatToStr(PrecioFinal);
+        Label3.Caption:= FloatToStr(Round(PrecioFinal*100)/100);
+        edit2.Text := FloatToStr(Round(PrecioFinal*100)/100);
         PrecioCalculado := PrecioFinal;
      end;
 
@@ -600,12 +625,14 @@ begin
    if  CheckboxServicios[i].Checked then
     begin
       PrecioCalculado := PrecioCalculado + PreciosServicios[i];
-      SpinEdit1.Text := FloatToStr(PrecioCalculado);
+
+      edit2.Text := FloatToStr(Round(PrecioCalculado*100)/100);
     end;
      if  not CheckboxServicios[i].Checked then
     begin
       PrecioCalculado := PrecioCalculado - PreciosServicios[i];
-      SpinEdit1.Text := FloatToStr(PrecioCalculado);
+
+      edit2.Text := FloatToStr(Round(PrecioCalculado*100)/100);
     end;
 
 
@@ -614,11 +641,15 @@ end;
 
 
 procedure TFormularioDiario.ActualizarPrecioTabla();
-//var
+var
+precio: double;
 begin
-  if StrToFloat(SpinEdit1.Text) <> Preciofinal then  //si hemos cambiado el precio de alguna manera, hay que actualizarlo.
-   if StrToInt(SpinEdit1.Text) >= 0 then //si se intenta guardar el registro con precio menor o igual a 0, no dejamos
+  try
+    precio:= strtofloat(Edit2.Text);
+
+  if precio <> Preciofinal then  //si hemos cambiado el precio de alguna manera, hay que actualizarlo.
    begin
+   if precio >= 0 then //si se intenta guardar el registro con precio menor o igual a 0, no dejamos
     begin
       Tablas.FDTableEntradas.Filtered := True;
       Tablas.FDTableEntradas.Filter := 'numerohabitacion='+IntToStr(Habitacion);
@@ -628,19 +659,23 @@ begin
           if Tablas.FDTableEntradasfecha.Value = Fecha then
           begin
             Tablas.FDTableEntradas.Edit;
-            Tablas.FDTableEntradaspreciofinal.Value := StrToFloat(SpinEdit1.Text);
+            Tablas.FDTableEntradaspreciofinal.Value := precio;
             Tablas.FDTableEntradas.Post;
           end;
 
            Tablas.FDTableEntradas.Next;
         end;
       Tablas.FDTableEntradas.Filtered := False;
-    end;
-   end
-   else
-   begin
+    end else
+    begin
      showmessage('El precio no puede ser menor que 0');
+    end;
    end;
+
+
+  except
+   showmessage('Error al actualizar precio. Por favor, no introduzcas datos no numéricos en el campo precio.');
+  end;
 end;
 
 
