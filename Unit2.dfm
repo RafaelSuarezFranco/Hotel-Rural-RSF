@@ -5,7 +5,7 @@ object PantallaMes: TPantallaMes
   BorderStyle = bsSingle
   Caption = 'PantallaMes'
   ClientHeight = 804
-  ClientWidth = 899
+  ClientWidth = 998
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -120,5 +120,39 @@ object PantallaMes: TPantallaMes
     TabOrder = 4
     Text = 'ComboBox1'
     OnChange = ComboBox1Change
+  end
+  object CalendarView1: TCalendarView
+    Left = 802
+    Top = 53
+    Width = 191
+    Height = 181
+    Date = 44621.000000000000000000
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
+    HeaderInfo.DaysOfWeekFont.Color = clWindowText
+    HeaderInfo.DaysOfWeekFont.Height = -13
+    HeaderInfo.DaysOfWeekFont.Name = 'Segoe UI'
+    HeaderInfo.DaysOfWeekFont.Style = []
+    HeaderInfo.Font.Charset = DEFAULT_CHARSET
+    HeaderInfo.Font.Color = clWindowText
+    HeaderInfo.Font.Height = -16
+    HeaderInfo.Font.Name = 'Segoe UI'
+    HeaderInfo.Font.Style = []
+    OnChange = CalendarView1Change
+    ParentFont = False
+    TabOrder = 5
+  end
+  object MonthCalendar1: TMonthCalendar
+    Left = 799
+    Top = 336
+    Width = 191
+    Height = 160
+    Date = 44621.000000000000000000
+    TabOrder = 6
+    OnClick = MonthCalendar1Click
   end
 end

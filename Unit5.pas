@@ -328,6 +328,22 @@ cantidadHabitaciones: integer;
 servicioCheck: TCheckbox;
 begin
 
+//hay algunos elementos que no hace falta mostrar si estamos en modo de anular reservas
+  if ModoDeFormulario = 'reserva' then
+    begin
+      Label5.Visible := True;
+      Scrollbox1.Visible := True;
+      Label4.Visible := True;
+      Edit1.Visible := True;
+    end;
+  if ModoDeFormulario = 'anular' then
+    begin
+      Label5.Visible := False;
+      Scrollbox1.Visible := False;
+      Label4.Visible := False;
+      Edit1.Visible := False;
+    end;
+
 
 
 //COMBO HABITACIONES
@@ -363,8 +379,6 @@ begin
           CheckboxServicios[i].Free;
           end;
       end;
-
-
 
 
       SetLength(CheckboxServicios, Tablas.FDTableServicios.RecordCount);

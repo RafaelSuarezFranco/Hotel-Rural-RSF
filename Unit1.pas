@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,
-  Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus;
+  Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, Vcl.WinXCalendars;
 
 type
   TPrincipal = class(TForm)
@@ -29,6 +29,8 @@ type
     creartemp: TMenuItem;
     Servicio1: TMenuItem;
     Habitacin1: TMenuItem;
+    CalendarView1: TCalendarView;
+    Clientes1: TMenuItem;
 
 
 
@@ -52,6 +54,8 @@ type
     procedure creartempClick(Sender: TObject);
     procedure Habitacin1Click(Sender: TObject);
     procedure Servicio1Click(Sender: TObject);
+    procedure CalendarView1Change(Sender: TObject);
+    procedure Clientes1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -71,7 +75,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10;
 
 
 procedure TPrincipal.FormActivate(Sender: TObject);
@@ -320,6 +324,22 @@ begin
   NuevaHabitacion.ShowModal;
 end;
 
+procedure TPrincipal.CalendarView1Change(Sender: TObject);
+var
+fecharespaldo: TDate;
+begin
+  fecharespaldo :=  FechaSeleccionada;
+  try
+    FechaSeleccionada:= CalendarView1.Date;
+    CargarDia();
+  except
+    FechaSeleccionada:= fecharespaldo;
+    CargarDia();
+    //si clickamos en el mismo día, esto da un error, es como si se deseleccionase el día y por
+    //tanto la fecha selecionada es igual a 00/00/0000
+  end;
+end;
+
 procedure TPrincipal.CargarDia();
 var
 PanelHabitacion: TPanel;
@@ -335,9 +355,15 @@ begin
     Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
 
     DatePicker1.Date:= FechaSeleccionada;
+    CalendarView1.Date := FechaSeleccionada;
 
     ActualizarColores();
 
+end;
+
+procedure TPrincipal.Clientes1Click(Sender: TObject);
+begin
+   InformeClientes.QuickRep1.Preview;
 end;
 
 procedure TPrincipal.CrearHabitacin1Click(Sender: TObject);
@@ -403,7 +429,7 @@ end;
 
 procedure TPrincipal.BitBtn2Click(Sender: TObject);
 begin
-  FechaSeleccionada:= IncDay(FechaSeleccionada, -1); //nos permite navegar al día siguente
+  FechaSeleccionada:= IncDay(FechaSeleccionada, -1); //nos permite navegar al día anterior
   CargarDia();
 end;
 

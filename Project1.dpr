@@ -12,7 +12,8 @@ uses
   Unit6 in 'Unit6.pas' {AltaCliente},
   Unit7 in 'Unit7.pas' {NuevaHabitacion},
   Unit8 in 'Unit8.pas' {CrearTemporada},
-  Unit9 in 'Unit9.pas' {AltaServicio};
+  Unit9 in 'Unit9.pas' {AltaServicio},
+  Unit10 in 'Unit10.pas' {InformeClientes};
 
 {$R *.res}
 
@@ -29,5 +30,6 @@ begin
   Application.CreateForm(TNuevaHabitacion, NuevaHabitacion);
   Application.CreateForm(TCrearTemporada, CrearTemporada);
   Application.CreateForm(TAltaServicio, AltaServicio);
+  Application.CreateForm(TInformeClientes, InformeClientes);
   Application.Run;
 end.

@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, System.DateUtils,
-  Vcl.Buttons, Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids;
+  Vcl.Buttons, Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.WinXCalendars, Vcl.ComCtrls;
 
 type
   TPantallaMes = class(TForm)
@@ -19,6 +20,8 @@ type
     DatePicker1: TDatePicker;
     Label5: TLabel;
     ComboBox1: TComboBox;
+    CalendarView1: TCalendarView;
+    MonthCalendar1: TMonthCalendar;
     procedure FormActivate(Sender: TObject);
     function DevolverDiasMes(): integer;
     function DevolverDiaSemana(): integer;
@@ -33,6 +36,8 @@ type
     function DevolverDiaSeleccionado():Integer;
     function DevolverHabitacionSeleccionada1():Integer;
     procedure ComboBox1Change(Sender: TObject);
+    procedure CalendarView1Change(Sender: TObject);
+    procedure MonthCalendar1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -109,6 +114,22 @@ begin{
 
 end;
 
+procedure TPantallaMes.MonthCalendar1Click(Sender: TObject);
+var
+fecharespaldo: TDate;
+begin
+  fecharespaldo :=  FechaSeleccionada1;
+  try
+    FechaSeleccionada1:= MonthCalendar1.Date;
+    CargarMes();
+  except
+    FechaSeleccionada1:= fecharespaldo;
+    CargarMes();
+    //si clickamos en el mismo día, esto da un error, es como si se deseleccionase el día y por
+    //tanto la fecha selecionada es igual a 00/00/0000
+  end;
+end;
+
 function TPantallaMes.DevolverDiasMes(): Integer;
 var
 mes: integer;
@@ -152,6 +173,22 @@ begin
 end;
 
 
+
+procedure TPantallaMes.CalendarView1Change(Sender: TObject);
+var
+fecharespaldo: TDate;
+begin
+  fecharespaldo :=  FechaSeleccionada1;
+  try
+    FechaSeleccionada1:= CalendarView1.Date;
+    CargarMes();
+  except
+    FechaSeleccionada1:= fecharespaldo;
+    CargarMes();
+    //si clickamos en el mismo día, esto da un error, es como si se deseleccionase el día y por
+    //tanto la fecha selecionada es igual a 00/00/0000
+  end;
+end;
 
 procedure TPantallaMes.DatePicker1Change(Sender: TObject);
 begin
@@ -213,7 +250,7 @@ begin
           begin
             PanelDia.Font.Style := [fsBold];
           end;
-
+       {
         BotonDia:=TButton.Create(self);
         BotonDia.Parent:=PanelDia;
         BotonDia.Top:=1;
@@ -222,19 +259,26 @@ begin
         BotonDia.Width:=98;
         BotonDia.Height:=40;
         BotonDia.Caption:='Día '+Inttostr(dia);
+         }
+         //para no sobrecargar mucho esta pantalla, mejor quitar los botones y ponerle el click a los paneles
+
+
 
         dia := dia + 1;
         diasemana:= diasemana +1;
         PanelesDia[i]:= PanelDia; //guardamos los paneles en un array global
-        BotonesDia[i]:=BotonDia;
+        //BotonesDia[i]:=BotonDia;
     end;
 
-      for i := 0 to (Length(BotonesDia) - 1) do
+      for i := 0 to (Length(PanelesDia) - 1) do
       begin
-         BotonesDia[i].OnClick := PulsarBotonDia;
+         //BotonesDia[i].OnClick := PulsarBotonDia;
+         PanelesDia[i].OnClick := PulsarBotonDia;
       end;
      ActualizarColores2();
      DatePicker1.Date := FechaSeleccionada1;
+     CalendarView1.Date := FechaSeleccionada1;
+     MonthCalendar1.Date := FechaSeleccionada1;
 end;
 
 
@@ -247,15 +291,21 @@ end;
 
 procedure TPantallaMes.PulsarBotonDia(Sender: TObject);
 var
+panel : TPanel;
 boton : TButton;
 begin
-  boton := TButton(Sender);
-  //Showmessage('Has clickado el día'+ IntToStr(boton.Tag));
-  diaSeleccionado := boton.Tag;
+  panel := TPanel(Sender);
+  diaSeleccionado := panel.Tag;
 
-  //cambio de planes, para poder usar el formulario diario desde le pantalla mes y la pantalla principal, he hecho que algunas de
-  //sus variables sean públicas, para poder asignarlas desde el origen. El resultado es el mismo dado que a partir de dichas variables,
+  //boton := TButton(Sender);
+  //Showmessage('Has clickado el día'+ IntToStr(boton.Tag));
+  //diaSeleccionado := boton.Tag;
+
+  //cambio de planes, para poder usar el formulario diario desde le pantalla mes y la pantalla principal,
+  // he hecho que algunas de sus variables sean públicas, para poder asignarlas desde el origen.
+  // El resultado es el mismo dado que a partir de dichas variables,
   //se hacen consultas para inferir el resto de variables necesarias en dicho formulario.
+
   FormularioDiario.dia:= diaSeleccionado;
   FormularioDiario.mes:= MonthOfTheYear(FechaSeleccionada1);
   FormularioDiario.año:= YearOf(FechaSeleccionada1);
