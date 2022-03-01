@@ -1,6 +1,9 @@
 visualizar/editar clientes?
 editar habitaciones? borrar/editar temporadas?
-quitar botones del mes y sustituir por click/popup
+
+informes:
+factura -> pasar fechas y habitacion por parametro, ordenar por fecha, si hay reserva y ocupacion en mismo día, no tener en cuenta esa reserva, en el summary incluir el coste final, si es posible, desgranar las temporadas también.
+informe dinámico -> crear informe sin campos o datasets asociados, que se le puedan asociar y crear campos de manera dinámica, según la tabla que queramos imprimir, ordenar/agrupar por campo, etc.
 
 
 
