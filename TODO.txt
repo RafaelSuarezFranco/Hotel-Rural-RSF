@@ -1,10 +1,17 @@
 visualizar/editar clientes?
 editar habitaciones? borrar/editar temporadas?
 
+crear un método de formateo de fechas para poder buscar fechas con las fdquery, para no copiar el mismo código cada vez que quiero usarlas.
+
+
 informes:
 factura -> pasar fechas y habitacion por parametro, ordenar por fecha, si hay reserva y ocupacion en mismo día, no tener en cuenta esa reserva, en el summary incluir el coste final, si es posible, desgranar las temporadas también.
+
+se me ocurre que podríamos tener 2 facturas distintas, o para ser más preciso, tener un informe que sea 'presupuesto' (con las reservas de un periodo) y otro que sea factura final (con las ocupaciones reales) en caso de que reservas y ocupaciones no coincidan finalmente.
+
 informe dinámico -> crear informe sin campos o datasets asociados, que se le puedan asociar y crear campos de manera dinámica, según la tabla que queramos imprimir, ordenar/agrupar por campo, etc.
 
+itinerario de servicios -> imprimir, agrupado por servicios, las habitaciones del dia de hoy que van a recibir dichos servicios, para entregarle el informe a los empleados del hotel. 
 
 
 
