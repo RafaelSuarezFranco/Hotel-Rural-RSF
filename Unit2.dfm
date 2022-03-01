@@ -122,7 +122,7 @@ object PantallaMes: TPantallaMes
     OnChange = ComboBox1Change
   end
   object CalendarView1: TCalendarView
-    Left = 802
+    Left = 799
     Top = 53
     Width = 191
     Height = 181

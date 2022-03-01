@@ -2,7 +2,7 @@ object InformeClientes: TInformeClientes
   Left = 0
   Top = 0
   Caption = 'InformeClientes'
-  ClientHeight = 1031
+  ClientHeight = 881
   ClientWidth = 814
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -84,7 +84,7 @@ object InformeClientes: TInformeClientes
       Width = 718
       Height = 74
       AlignToBottom = False
-      Color = clGradientInactiveCaption
+      Color = 14002045
       TransparentBand = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -226,13 +226,13 @@ object InformeClientes: TInformeClientes
       end
       object QRShape1: TQRShape
         Left = 0
-        Top = 31
+        Top = 30
         Width = 718
         Height = 16
         Size.Values = (
           42.333333333333330000
           0.000000000000000000
-          82.020833333333330000
+          79.375000000000000000
           1899.708333333333000000)
         XLColumn = 0
         XLNumFormat = nfGeneral

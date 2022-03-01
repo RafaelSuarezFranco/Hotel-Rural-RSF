@@ -62,6 +62,8 @@ type
     FDTableClientesnombre: TStringField;
     FDTableClientesapellidos: TStringField;
     DataSource7: TDataSource;
+    FDQuery2: TFDQuery;
+    FDQuery3: TFDQuery;
   private
     { Private declarations }
   public

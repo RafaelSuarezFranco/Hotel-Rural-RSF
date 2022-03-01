@@ -310,6 +310,7 @@ begin
   FormularioDiario.mes:= MonthOfTheYear(FechaSeleccionada1);
   FormularioDiario.año:= YearOf(FechaSeleccionada1);
   FormularioDiario.Habitacion := HabitacionSeleccionada1;
+  FormularioDiario.origen := 'pantallames';
   FormularioDiario.showmodal();
 end;
 

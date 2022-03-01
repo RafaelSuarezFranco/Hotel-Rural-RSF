@@ -178,6 +178,10 @@ object Principal: TPrincipal
         Caption = '&Clientes'
         OnClick = Clientes1Click
       end
+      object Factura1: TMenuItem
+        Caption = 'Factura'
+        OnClick = Factura1Click
+      end
     end
   end
 end

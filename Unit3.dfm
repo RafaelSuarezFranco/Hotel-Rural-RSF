@@ -280,6 +280,7 @@ object Tablas: TTablas
     object FDTableClientesid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
+      ReadOnly = True
     end
     object FDTableClientesidentificador: TStringField
       AutoGenerateValue = arDefault
@@ -303,6 +304,26 @@ object Tablas: TTablas
   object DataSource7: TDataSource
     DataSet = FDTableClientes
     Left = 344
+    Top = 200
+  end
+  object FDQuery2: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'select numerohabitacion as numero, fecha as fechaentrada, estado' +
+        ', cliente, preciofinal from entradas where fecha > '#39'2022-01-01'#39' ' +
+        'and fecha < '#39'2022-03-01'#39)
+    Left = 584
+    Top = 128
+  end
+  object FDQuery3: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'SELECT numerohabitacion AS numerohservicio, fecha AS fechaservic' +
+        'io, e.nombreservicio, precioservicio FROM entradasservicios e, s' +
+        'ervicios s WHERE e.nombreservicio = s.nombreservicio')
+    Left = 584
     Top = 200
   end
 end

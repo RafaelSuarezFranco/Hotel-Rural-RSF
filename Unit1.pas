@@ -31,6 +31,7 @@ type
     Habitacin1: TMenuItem;
     CalendarView1: TCalendarView;
     Clientes1: TMenuItem;
+    Factura1: TMenuItem;
 
 
 
@@ -56,6 +57,7 @@ type
     procedure Servicio1Click(Sender: TObject);
     procedure CalendarView1Change(Sender: TObject);
     procedure Clientes1Click(Sender: TObject);
+    procedure Factura1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -75,8 +77,14 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11;
 
+
+procedure TPrincipal.Factura1Click(Sender: TObject);
+begin
+  Factura.quickreport1.preview;
+  //Factura.quickreport1.Cancel;
+end;
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 var
@@ -99,6 +107,9 @@ begin
     Tablas.FDTableEntradasservicios.Open;
     Tablas.FDTableClientes.Open;
     Tablas.FDTableHistoricoentradas.Open;
+
+    Tablas.FDQuery2.Open;
+    Tablas.FDQuery3.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
@@ -416,6 +427,7 @@ begin
   FormularioDiario.mes:= MonthOfTheYear(FechaSeleccionada);
   FormularioDiario.año:= YearOf(FechaSeleccionada);
   FormularioDiario.Habitacion := etiqueta;
+  FormularioDiario.origen := 'principal';
   FormularioDiario.showmodal();
 
 

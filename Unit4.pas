@@ -37,6 +37,9 @@ type
     mes: integer;
     año: integer;
     Habitacion: Integer;
+    origen: string; //variable de control para saber si venimos de principal o pantallames. es importante
+    //para controlar si debemos refrescar o no la pantallames, porque puede dar un invalid pointer si el origen
+    //es la pantalla ppal (y no se ha inicializado la pantalla mes).
   end;
 
 var
@@ -295,9 +298,11 @@ begin
     begin
      //cerramos y actualizamos la pantalla del mes (y la principal, si hemos actualizado el día de hoy).
      FormularioDiario.Close;
-     PantallaMes.cargarMes;
+     if origen = 'pantallames' then PantallaMes.cargarMes;
+
      Principal.cargarDia;
     end;
+
 
 end;
 
