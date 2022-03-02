@@ -34,6 +34,10 @@ implementation
   uses
    Unit1, Unit3;
 
+
+
+//botón para confirmar la creación de la habitación.
+
 procedure TNuevaHabitacion.Button1Click(Sender: TObject);
 var
 nhabitacion: integer;
@@ -44,6 +48,9 @@ begin
 
   nhabitacion:= strtoint(SpinEdit1.Text);
   try
+
+   //validaciones pertinentes
+
     precio:= strtofloat(Edit1.Text);
     if precio < 0 then
       begin
@@ -71,6 +78,8 @@ begin
         showmessage('El nº de habitación ya existe, por favor, escoge otro.');
     end;
 
+
+  //una vez hemos comprobado que todo está correcto, creamos el registro
   if registroValido then
     begin
       Tablas.FDTableHabitaciones.Append;
@@ -79,7 +88,7 @@ begin
       Tablas.FDTableHabitacionespreciobase.Value := precio;
       Tablas.FDTableHabitaciones.Post;
       NuevaHabitacion.Close;
-      //showmessage('Habitación creada con éxito. Por favor, reinicia la aplicación para poder administrarla'); //mentira, se actualiza solo
+      //refrescamos la pantalla principal para que se vea la nueva habitación
       Principal.CrearPanelesHabitaciones;
       Principal.CargarDia;
     end;

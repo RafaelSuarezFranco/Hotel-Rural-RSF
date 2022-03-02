@@ -2,7 +2,7 @@ object Tablas: TTablas
   Left = 0
   Top = 0
   Caption = 'Tablas'
-  ClientHeight = 531
+  ClientHeight = 666
   ClientWidth = 744
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,6 +13,67 @@ object Tablas: TTablas
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 480
+    Top = 152
+    Width = 70
+    Height = 13
+    Caption = 'factura detalle'
+  end
+  object Label2: TLabel
+    Left = 480
+    Top = 216
+    Width = 87
+    Height = 13
+    Caption = 'factura subdetalle'
+  end
+  object Label3: TLabel
+    Left = 480
+    Top = 288
+    Width = 42
+    Height = 13
+    Caption = 'itinerario'
+  end
+  object Label4: TLabel
+    Left = 456
+    Top = 368
+    Width = 94
+    Height = 13
+    Caption = 'itinerario subdetalle'
+  end
+  object Label5: TLabel
+    Left = 472
+    Top = 56
+    Width = 75
+    Height = 13
+    Caption = 'query multiusos'
+  end
+  object Label6: TLabel
+    Left = 120
+    Top = 24
+    Width = 74
+    Height = 23
+    Caption = 'TABLAS'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label7: TLabel
+    Left = 472
+    Top = 16
+    Width = 88
+    Height = 23
+    Caption = 'QUERIES'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object FDConnection1: TFDConnection
     Params.Strings = (
       'DriverID=MySQL'
@@ -229,8 +290,8 @@ object Tablas: TTablas
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.historicoentradas'
     TableName = 'hotelrsf.historicoentradas'
-    Left = 240
-    Top = 120
+    Left = 40
+    Top = 512
     object FDTableHistoricoentradasid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
@@ -266,8 +327,8 @@ object Tablas: TTablas
   end
   object DataSource6: TDataSource
     DataSet = FDTableHistoricoentradas
-    Left = 344
-    Top = 120
+    Left = 144
+    Top = 512
   end
   object FDTableClientes: TFDTable
     Active = True
@@ -275,8 +336,8 @@ object Tablas: TTablas
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.clientes'
     TableName = 'hotelrsf.clientes'
-    Left = 240
-    Top = 200
+    Left = 40
+    Top = 592
     object FDTableClientesid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
@@ -303,8 +364,8 @@ object Tablas: TTablas
   end
   object DataSource7: TDataSource
     DataSet = FDTableClientes
-    Left = 344
-    Top = 200
+    Left = 144
+    Top = 592
   end
   object FDQuery2: TFDQuery
     Connection = FDConnection1
@@ -312,7 +373,7 @@ object Tablas: TTablas
       
         'select numerohabitacion as numero, fecha as fechaentrada, estado' +
         ', cliente, preciofinal from entradas where fecha > '#39'2022-01-01'#39' ' +
-        'and fecha < '#39'2022-03-01'#39)
+        'and fecha < '#39'2022-03-02'#39' and numerohabitacion = 1')
     Left = 584
     Top = 128
   end
@@ -324,6 +385,22 @@ object Tablas: TTablas
         'io, e.nombreservicio, precioservicio FROM entradasservicios e, s' +
         'ervicios s WHERE e.nombreservicio = s.nombreservicio')
     Left = 584
-    Top = 200
+    Top = 208
+  end
+  object FDQuery4: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select nombreservicio as nombre from servicios;')
+    Left = 584
+    Top = 280
+  end
+  object FDQuery5: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'select numerohabitacion as numero from entradasservicios where f' +
+        'echa = '#39'2022-03-02'#39)
+    Left = 584
+    Top = 352
   end
 end

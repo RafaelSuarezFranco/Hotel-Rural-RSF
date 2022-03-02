@@ -14,7 +14,9 @@ uses
   Unit8 in 'Unit8.pas' {CrearTemporada},
   Unit9 in 'Unit9.pas' {AltaServicio},
   Unit10 in 'Unit10.pas' {InformeClientes},
-  Unit11 in 'Unit11.pas' {Factura};
+  Unit11 in 'Unit11.pas' {Factura},
+  Unit12 in 'Unit12.pas' {FacturaParametros},
+  Unit13 in 'Unit13.pas' {ItinerarioServicios};
 
 {$R *.res}
 
@@ -33,5 +35,7 @@ begin
   Application.CreateForm(TAltaServicio, AltaServicio);
   Application.CreateForm(TInformeClientes, InformeClientes);
   Application.CreateForm(TFactura, Factura);
+  Application.CreateForm(TFacturaParametros, FacturaParametros);
+  Application.CreateForm(TItinerarioServicios, ItinerarioServicios);
   Application.Run;
 end.

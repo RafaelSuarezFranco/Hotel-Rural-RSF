@@ -59,6 +59,9 @@ implementation
  uses Unit1, Unit2, Unit3, Unit6;
 
 
+
+ //botón único del formulario, ya sea para reservar u anular
+
 procedure TFormularioPeriodo.Button1Click(Sender: TObject);
 var
 camposValidos: boolean;
@@ -71,13 +74,6 @@ PrecioFinal: Double;
 PrecioServiciosTotal: Double;
 fechabusqueda: String;
 
-
-diabusqueda: String;
-mesbusqueda: String;
-
-dia: integer;
-mes: integer;
-año: integer;
 
 fecha1: TDate;
 fecha2: TDate;
@@ -93,6 +89,8 @@ begin
 
    fecha1:= IncDay(DatePicker1.Date, -1); //había un problema a la hora de comparar fechas, tuve que ampliar el marco por arriba y por abajo para que funcione correctamente.
    fecha2:= IncDay(DatePicker2.Date, 1);
+
+   //validaciones pertinentes
 
    if DatePicker1.Date > DatePicker2.Date then
     begin
@@ -131,7 +129,11 @@ begin
        registroValido := false;
     end;
 
-   if (camposValidos) and (ModoDeFormulario = 'reserva') then    //MODO RESERVA
+
+
+   //MODO RESERVA
+
+   if (camposValidos) and (ModoDeFormulario = 'reserva') then
    begin
     //showmessage('Los campos son válidos.');
     //una vez los datos son correctos, hay que comprobar que no hayan reservas hechas entre las fechas selecconadas para la habitación
@@ -190,18 +192,8 @@ begin
               Tablas.FDTableHabitaciones.Filtered:=False;
 
               //precio temporada
-              dia:= DayOfTheMonth(fechaentrada);
-              mes:= MonthOfTheYear(fechaentrada);
-              año:= YearOf(fechaentrada);
-             
 
-              diabusqueda := IntToStr(dia);
-              mesbusqueda := IntToStr(mes);
-              if length(diabusqueda) < 2 then
-                diabusqueda:= '0'+ diabusqueda;
-              if length(mesbusqueda) < 2 then
-                  mesbusqueda:= '0'+ mesbusqueda;
-              fechabusqueda:= IntToStr(año)+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
+              fechabusqueda:= Tablas.formatearFechaSQL(fechaentrada);
 
               Tablas.FDQuery1.Close;
               Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedStr(fechabusqueda)+' and fechafin>='+quotedStr(fechabusqueda);
@@ -241,8 +233,8 @@ begin
 
    end;
 
-
- if (camposValidos) and (ModoDeFormulario = 'anular') then    //MODO ANULAR RESERVA
+   //MODO ANULAR RESERVA
+ if (camposValidos) and (ModoDeFormulario = 'anular') then
    begin
      seleccion := messagedlg('¿Seguro que quieres anular todas las reservas/ocupaciones entre las fechas especificadas?',mtWarning , mbOKCancel, 0);
 
@@ -314,12 +306,15 @@ begin
    if registroValido then
     begin
       FormularioPeriodo.Close;  //cerramos y refrescamos todo
-      PantallaMes.cargarMes;
       Principal.cargarDia;
     end;
 
 
 end;
+
+
+
+//parecido al formulario diario, creamos los servicios, creamos combo de habitaciones, etc
 
 procedure TFormularioPeriodo.FormActivate(Sender: TObject);
 var
@@ -413,6 +408,9 @@ begin
     if ModoDeFormulario = 'reserva' then Button1.Caption:= 'Reservar';
 
 end;
+
+
+//altera el propósito de este formulario
 
 procedure TFormularioPeriodo.ModoReserva();
 begin

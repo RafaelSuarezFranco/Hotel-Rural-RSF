@@ -17,7 +17,6 @@ object Principal: TPrincipal
   Position = poMainFormCenter
   OnActivate = FormActivate
   OnClose = FormClose
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -163,13 +162,16 @@ object Principal: TPrincipal
         Caption = 'Habitaci'#243'n'
         OnClick = Habitacin1Click
       end
+      object Servicio1: TMenuItem
+        Caption = 'Servicio'
+        OnClick = Servicio1Click
+      end
       object creartemp: TMenuItem
         Caption = 'Temporada'
         OnClick = creartempClick
       end
-      object Servicio1: TMenuItem
-        Caption = 'Servicio'
-        OnClick = Servicio1Click
+      object N1: TMenuItem
+        Caption = '-'
       end
     end
     object Creartemp1: TMenuItem
@@ -179,8 +181,12 @@ object Principal: TPrincipal
         OnClick = Clientes1Click
       end
       object Factura1: TMenuItem
-        Caption = 'Factura'
+        Caption = '&Factura'
         OnClick = Factura1Click
+      end
+      object ItinerariodeServicios1: TMenuItem
+        Caption = '&Itinerario de Servicios'
+        OnClick = ItinerariodeServicios1Click
       end
     end
   end

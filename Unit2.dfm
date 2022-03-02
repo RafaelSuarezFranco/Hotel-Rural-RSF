@@ -5,7 +5,7 @@ object PantallaMes: TPantallaMes
   BorderStyle = bsSingle
   Caption = 'PantallaMes'
   ClientHeight = 804
-  ClientWidth = 998
+  ClientWidth = 891
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,6 @@ object PantallaMes: TPantallaMes
   OldCreateOrder = False
   Position = poDesktopCenter
   OnActivate = FormActivate
-  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -55,24 +54,18 @@ object PantallaMes: TPantallaMes
       '                     S'#225'bado                      Domingo'
   end
   object Label4: TLabel
-    Left = 652
-    Top = 24
+    Left = 644
+    Top = 48
     Width = 60
     Height = 13
     Caption = 'Saltar al d'#237'a:'
   end
   object Label5: TLabel
-    Left = 328
-    Top = 64
-    Width = 142
-    Height = 19
+    Left = 376
+    Top = 69
+    Width = 95
+    Height = 13
     Caption = 'Cambiar habitaci'#243'n:'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
   end
   object Panel1: TPanel
     Left = 96
@@ -100,8 +93,8 @@ object PantallaMes: TPantallaMes
     OnClick = BitBtn2Click
   end
   object DatePicker1: TDatePicker
-    Left = 718
-    Top = 15
+    Left = 710
+    Top = 39
     Date = 44593.000000000000000000
     DateFormat = 'dd/MM/yyyy'
     Font.Charset = DEFAULT_CHARSET
@@ -120,39 +113,5 @@ object PantallaMes: TPantallaMes
     TabOrder = 4
     Text = 'ComboBox1'
     OnChange = ComboBox1Change
-  end
-  object CalendarView1: TCalendarView
-    Left = 799
-    Top = 53
-    Width = 191
-    Height = 181
-    Date = 44621.000000000000000000
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
-    HeaderInfo.DaysOfWeekFont.Color = clWindowText
-    HeaderInfo.DaysOfWeekFont.Height = -13
-    HeaderInfo.DaysOfWeekFont.Name = 'Segoe UI'
-    HeaderInfo.DaysOfWeekFont.Style = []
-    HeaderInfo.Font.Charset = DEFAULT_CHARSET
-    HeaderInfo.Font.Color = clWindowText
-    HeaderInfo.Font.Height = -16
-    HeaderInfo.Font.Name = 'Segoe UI'
-    HeaderInfo.Font.Style = []
-    OnChange = CalendarView1Change
-    ParentFont = False
-    TabOrder = 5
-  end
-  object MonthCalendar1: TMonthCalendar
-    Left = 799
-    Top = 336
-    Width = 191
-    Height = 160
-    Date = 44621.000000000000000000
-    TabOrder = 6
-    OnClick = MonthCalendar1Click
   end
 end

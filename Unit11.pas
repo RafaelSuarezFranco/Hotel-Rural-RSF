@@ -38,15 +38,28 @@ type
     QRLabel8: TQRLabel;
     QRLabel11: TQRLabel;
     QRSysData2: TQRSysData;
+    QRBand4: TQRBand;
+    QRLabel12: TQRLabel;
+    QRLabel13: TQRLabel;
+    QRLabel14: TQRLabel;
+    QRLabel15: TQRLabel;
+    QRLabel16: TQRLabel;
+    QRLabel17: TQRLabel;
+    QRLabel18: TQRLabel;
+    QRLabel19: TQRLabel;
     procedure QRBand3BeforePrint(Sender: TQRCustomBand; var PrintBand: Boolean);
     procedure FormActivate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure QRSubDetail1BeforePrint(Sender: TQRCustomBand;
       var PrintBand: Boolean);
+    procedure imprimirFechas(fecha1: TDate; fecha2: TDate);
   private
     { Private declarations }
   public
     { Public declarations }
+      CostoTotal: Double;
+      CantidadDias: integer;
+      Fechainicio: String;
+      Fechafin: String;
   end;
 
 var
@@ -60,50 +73,41 @@ implementation
 
 procedure TFactura.FormActivate(Sender: TObject);
 begin
-  Tablas.FDQuery2.Open;
-  Tablas.FDQuery3.Open;
+  CostoTotal:=0;
+  CantidadDias:=0;
 end;
 
-procedure TFactura.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-   Tablas.FDQuery2.close;
-   Tablas.FDQuery3.close;
-end;
+//para hacer agrupaciones, la idea es recorrer la tabla con los datos por los que vamos a agrupar, y por cada registro,
+//con esos datos, hacemos una consulta para rellenar los subdetalles. Es un group by artesanal, por así decirlo.
 
 procedure TFactura.QRBand3BeforePrint(Sender: TQRCustomBand;
   var PrintBand: Boolean);
   var
   fecha: TDate;
   habitacion: integer;
-  diabusqueda: String;
-  mesbusqueda: String;
+  precio: double;
   fechabusqueda: String;
 begin
   fecha := Tablas.FDQuery2.FieldByName('fechaentrada').Value;
   habitacion := Tablas.FDQuery2.FieldByName('numero').Value;
+  precio := Tablas.FDQuery2.FieldByName('preciofinal').Value;
+  CostoTotal:= CostoTotal + precio;
+  CantidadDias:= CantidadDias + 1;
 
+  QRLabel13.Caption := FloatToStr(Round(CostoTotal*100)/100);
+  QRLabel15.Caption := inttostr(CantidadDias);
 
-
-  diabusqueda := IntToStr(DayOfTheMonth(fecha));
-  mesbusqueda := IntToStr(MonthOfTheYear(fecha));
-  if length(diabusqueda) < 2 then
-    diabusqueda:= '0'+ diabusqueda;
-    if length(mesbusqueda) < 2 then
-    mesbusqueda:= '0'+ mesbusqueda;
-  fechabusqueda:= IntToStr(YearOf(fecha))+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
+  fechabusqueda:= Tablas.formatearFechaSQL(fecha);
 
   Tablas.FDQuery3.close;
   Tablas.FDQuery3.SQL.Text := 'SELECT numerohabitacion AS numerohservicio, fecha AS fechaservicio, e.nombreservicio, precioservicio FROM entradasservicios e, servicios s WHERE e.nombreservicio = s.nombreservicio';
   Tablas.FDQuery3.SQL.Text := Tablas.FDQuery3.SQL.Text + ' and numerohabitacion = '+inttostr(habitacion)+' and fecha = '+quotedstr(fechabusqueda);
-  //showmessage(Tablas.FDQuery3.SQL.Text);
-
-  //Tablas.FDQuery3.SQL.Text := 'SELECT numerohabitacion AS numerohservicio, fecha AS fechaservicio, e.nombreservicio, precioservicio FROM entradasservicios e, servicios s WHERE e.nombreservicio = s.nombreservicio  AND numerohabitacion = 3 and fecha = "2022-03-01"';
-
-
 
   Tablas.FDQuery3.open;
 
 end;
+
+ //muestra un mensaje si una reserva/ocupación no tiene servicios asociados
 
 procedure TFactura.QRSubDetail1BeforePrint(Sender: TQRCustomBand;
   var PrintBand: Boolean);
@@ -123,5 +127,12 @@ banda := TQRBand(Sender);
 
 
 end;
+
+ procedure TFactura.imprimirFechas(fecha1: TDate; fecha2: TDate);
+ begin
+    QRLabel17.Caption := DatetoStr(fecha1);
+    QRLabel19.Caption := DatetoStr(fecha2);
+ end;
+
 
 end.

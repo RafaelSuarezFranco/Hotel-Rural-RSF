@@ -32,6 +32,8 @@ type
     CalendarView1: TCalendarView;
     Clientes1: TMenuItem;
     Factura1: TMenuItem;
+    N1: TMenuItem;
+    ItinerariodeServicios1: TMenuItem;
 
 
 
@@ -48,7 +50,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure administrarpopupClick(Sender: TObject);
     procedure CrearHabitacin1Click(Sender: TObject);
     procedure CrearPanelesHabitaciones();
@@ -58,6 +59,7 @@ type
     procedure CalendarView1Change(Sender: TObject);
     procedure Clientes1Click(Sender: TObject);
     procedure Factura1Click(Sender: TObject);
+    procedure ItinerariodeServicios1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -77,26 +79,57 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13;
 
+
+
+
+
+//procedimientos del menú superior
 
 procedure TPrincipal.Factura1Click(Sender: TObject);
 begin
-  Factura.quickreport1.preview;
-  //Factura.quickreport1.Cancel;
+  FacturaParametros.showmodal;
 end;
 
-procedure TPrincipal.FormActivate(Sender: TObject);
-var
-PanelHabitacion: TPanel;
-BotonHabitacion: TButton;
-LabelHabitacion: TLabel;
-i: integer;    //será el nº de habitación
-columna:integer;
-fila: integer;
-cantidadHabitaciones: integer;
-tipohabitacion: string;
+procedure TPrincipal.Habitacin1Click(Sender: TObject);
+begin
+  NuevaHabitacion.ShowModal;
+end;
 
+procedure TPrincipal.ItinerariodeServicios1Click(Sender: TObject);
+begin
+
+  ItinerarioServicios.fecha := FechaSeleccionada;
+  ItinerarioServicios.imprimirFechas(FechaSeleccionada);
+  ItinerarioServicios.quickreport1.Preview;
+end;
+
+procedure TPrincipal.Servicio1Click(Sender: TObject);
+begin
+  AltaServicio.showmodal;
+end;
+
+procedure TPrincipal.creartempClick(Sender: TObject);
+begin
+   CrearTemporada.showmodal;
+end;
+
+procedure TPrincipal.Clientes1Click(Sender: TObject);
+begin
+  Tablas.FDTableClientes.IndexFieldNames := 'apellidos';
+  InformeClientes.QuickRep1.Preview;
+end;
+
+
+
+
+
+
+
+//abrimos las tablas e inicialiamos las fechas, creamos los paneles y los coloreamos
+
+procedure TPrincipal.FormActivate(Sender: TObject);
 begin
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
@@ -110,93 +143,18 @@ begin
 
     Tablas.FDQuery2.Open;
     Tablas.FDQuery3.Open;
+    Tablas.FDQuery4.Open;
+    Tablas.FDQuery5.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
-     {
-    i:=0;
-    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;  //esta variable recogera la cantidad de habitaciones de la bbdd
-    SetLength(HabitacionesBD, cantidadHabitaciones);
 
-    Tablas.FDTableHabitaciones.First;
-      while not  Tablas.FDTableHabitaciones.Eof do //guardamos los numero de habitacion para ponerselo a los paneles y botones
-        begin
-          HabitacionesBD[i]:= Tablas.FDTableHabitacionesnumero.Value;
-          i:=i+1;
-          Tablas.FDTableHabitaciones.Next;
-        end;
-
-        //como tenemos la opción de crear habitaciones, en lugar de crear sus paneles en el activate, lo haremos
-        // en la función de cargardia,
-
-
-    //creación de las habitaciones
-     i:= 1;
-     columna := 1;
-     fila := 0;
-
-
-     SetLength(PanelesHabitaciones, cantidadHabitaciones);
-     SetLength(BotonesHabitaciones, cantidadHabitaciones);
-
-
-    for i:=0 to (cantidadHabitaciones-1) do   //la cantidad de habitaciones se especifica aquí
-     begin
-      if (i mod 5 = 0) and (i <> 0) then
-        begin
-          fila:= fila + 1;
-          columna:= 1 ;
-        end;
-
-        Tablas.FDQuery1.Close;
-        Tablas.FDQuery1.SQL.Text := 'select * from habitaciones where numero='+Inttostr(HabitacionesBD[i]);
-        Tablas.FDQuery1.Open;
-        tipohabitacion:= Tablas.FDQuery1.FieldByName('tipo').AsString;
-
-        PanelHabitacion:=TPanel.create(self);
-        PanelHabitacion.Parent:=ScrollBox1;
-        PanelHabitacion.Width := 100;
-        PanelHabitacion.Height := 150;
-        PanelHabitacion.Tag:=HabitacionesBD[i];
-        PanelHabitacion.Top:=fila*155+5;
-        PanelHabitacion.Left:=columna+5;
-        PanelHabitacion.Caption:='Habitación '+Inttostr(HabitacionesBD[i]);
-        PanelHabitacion.ParentBackground:=false;
-        PanelHabitacion.StyleElements := [seBorder];
-        PanelHabitacion.Color:=clGreen;
-        PanelHabitacion.PopupMenu:= PopupMenu1;
-
-        BotonHabitacion:=TButton.Create(self);
-        BotonHabitacion.Parent:=PanelHabitacion;
-        BotonHabitacion.Top:=1;
-        BotonHabitacion.Tag:=HabitacionesBD[i];
-        BotonHabitacion.Left:=1;
-        BotonHabitacion.Width:=98;
-        BotonHabitacion.Height:=50;
-        BotonHabitacion.Caption:= 'Abrir mes'; //'Habitación'+Inttostr(HabitacionesBD[i]);
-
-        LabelHabitacion:=TLabel.Create(self);
-        LabelHabitacion.Parent:=PanelHabitacion;
-        LabelHabitacion.Top:=90;
-        LabelHabitacion.Caption:= '('+tipohabitacion+')';
-        LabelHabitacion.Left:=30;
-        LabelHabitacion.StyleElements := [seBorder];
-        LabelHabitacion.Font.Color := clblack;
-
-        columna := columna + 105;
-        PanelesHabitaciones[i]:= PanelHabitacion; //guardamos los paneles en un array global
-        BotonesHabitaciones[i]:=BotonHabitacion;
-    end;
-
-    for i := 0 to (Length(BotonesHabitaciones) - 1) do
-      begin
-         BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
-      end;
-
-           }
     CrearPanelesHabitaciones();
     CargarDia();
 end;
+
+
+//crea los paneles de las habitaciones. se llama desde el activate y tras crear una habitación nueva
 
 procedure TPrincipal.CrearPanelesHabitaciones();
 var
@@ -210,7 +168,7 @@ cantidadHabitaciones: integer;
 tipohabitacion: string;
 
 begin
-  //primero borrar los paneles
+  //primero borrar los paneles, vaciar el array.
   if Length(PanelesHabitaciones) > 0 then
       begin
        for i := 0 to Length(PanelesHabitaciones)-1 do
@@ -219,7 +177,7 @@ begin
           end;
       end;
 
-   //a partir de aqui es copiado del activate.
+   //guardar los nº de habitaciones
     i:=0;
     cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;  //esta variable recogera la cantidad de habitaciones de la bbdd
     SetLength(HabitacionesBD, cantidadHabitaciones);
@@ -231,9 +189,6 @@ begin
           i:=i+1;
           Tablas.FDTableHabitaciones.Next;
         end;
-
-        //como tenemos la opción de crear habitaciones, en lugar de crear sus paneles en el activate, lo haremos
-        // en la función de cargardia,
 
 
     //creación de las habitaciones
@@ -259,6 +214,7 @@ begin
         Tablas.FDQuery1.Open;
         tipohabitacion:= Tablas.FDQuery1.FieldByName('tipo').AsString;
 
+        //crear paneles
         PanelHabitacion:=TPanel.create(self);
         PanelHabitacion.Parent:=ScrollBox1;
         PanelHabitacion.Width := 100;
@@ -272,6 +228,7 @@ begin
         PanelHabitacion.Color:=clGreen;
         PanelHabitacion.PopupMenu:= PopupMenu1;
 
+        //crear botones
         BotonHabitacion:=TButton.Create(self);
         BotonHabitacion.Parent:=PanelHabitacion;
         BotonHabitacion.Top:=1;
@@ -281,6 +238,7 @@ begin
         BotonHabitacion.Height:=50;
         BotonHabitacion.Caption:= 'Abrir mes'; //'Habitación'+Inttostr(HabitacionesBD[i]);
 
+        //crear etiquetas
         LabelHabitacion:=TLabel.Create(self);
         LabelHabitacion.Parent:=PanelHabitacion;
         LabelHabitacion.Top:=90;
@@ -290,20 +248,23 @@ begin
         LabelHabitacion.Font.Color := clblack;
 
         columna := columna + 105;
-        PanelesHabitaciones[i]:= PanelHabitacion; //guardamos los paneles en un array global
+        //guardamos los paneles y botones en un arrays globales
+        PanelesHabitaciones[i]:= PanelHabitacion;
         BotonesHabitaciones[i]:=BotonHabitacion;
     end;
 
+
+    //cada botón abrirá la pantalla mes con la habitación seleccionada
     for i := 0 to (Length(BotonesHabitaciones) - 1) do
       begin
          BotonesHabitaciones[i].OnClick := PulsarBotonHabitacion;
       end;
 
-
-
-    CargarDia();
+    CargarDia();  //coloreamos los paneles.
 end;
 
+
+//cierre al salir, señoría.
 
 procedure TPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -317,23 +278,7 @@ begin
     Tablas.FDTableHistoricoentradas.Close;
 end;
 
-procedure TPrincipal.FormCreate(Sender: TObject);
-begin   {
-    //apertura de tablas
-    Tablas.FDTableHabitaciones.Open;
-    Tablas.FDTableEntradas.Open;
-    Tablas.FDQuery1.Open;
-    Tablas.FDTableTemporadas.Open;
-    Tablas.FDTableServicios.Open;
-    Tablas.FDTableEntradasservicios.Open;
-    Tablas.FDTableClientes.Open;
-    Tablas.FDTableHistoricoentradas.Open;  }
-end;
 
-procedure TPrincipal.Habitacin1Click(Sender: TObject);
-begin
-  NuevaHabitacion.ShowModal;
-end;
 
 procedure TPrincipal.CalendarView1Change(Sender: TObject);
 var
@@ -351,42 +296,16 @@ begin
   end;
 end;
 
-procedure TPrincipal.CargarDia();
-var
-PanelHabitacion: TPanel;
-BotonHabitacion: TButton;
-LabelHabitacion: TLabel;
-i: integer;    //será el nº de habitación
-columna:integer;
-fila: integer;
-cantidadHabitaciones: integer;
-tipohabitacion: string;
-begin
-    Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
-    Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
 
-    DatePicker1.Date:= FechaSeleccionada;
-    CalendarView1.Date := FechaSeleccionada;
 
-    ActualizarColores();
 
-end;
-
-procedure TPrincipal.Clientes1Click(Sender: TObject);
-begin
-   InformeClientes.QuickRep1.Preview;
-end;
+//popup de creación de habitaciones
 
 procedure TPrincipal.CrearHabitacin1Click(Sender: TObject);
 var
 seleccion: integer;
 begin
       seleccion := messagedlg('¿Quieres dar de alta una nueva habitación?',mtConfirmation, mbOKCancel, 0);
-
-      if seleccion = mrCancel then
-      begin
-       //ShowMessage('Acción cancelada.');
-      end;
 
        if seleccion = mrOK then
        begin
@@ -395,20 +314,8 @@ begin
     //crear habitación
 end;
 
-procedure TPrincipal.PulsarBotonHabitacion(Sender: TObject);
-var
-boton : TButton;
-begin
-  boton := TButton(Sender);
-  //Showmessage('Has clickado la habitacion'+ IntToStr(boton.Tag));
-  HabitacionSeleccionada := boton.Tag;
-  PantallaMes.showmodal();
-end;
 
-procedure TPrincipal.Servicio1Click(Sender: TObject);
-begin
-  AltaServicio.showmodal;
-end;
+//popup que permite abrir el FormularioDiario desde la pantalla principal
 
 procedure TPrincipal.administrarpopupClick(Sender: TObject); //popup para abrir formulario de reserva de un dia concreto
 var Caller: TObject;
@@ -433,6 +340,25 @@ begin
 
 end;
 
+
+
+//al pulsar el botón que abre la pantalla de mes, guardamos la habitación seleccionada y abrimos dicha pantalla,
+
+procedure TPrincipal.PulsarBotonHabitacion(Sender: TObject);
+var
+boton : TButton;
+begin
+  boton := TButton(Sender);
+  //Showmessage('Has clickado la habitacion'+ IntToStr(boton.Tag));
+  HabitacionSeleccionada := boton.Tag;
+  PantallaMes.showmodal();
+end;
+
+
+
+//todas estas funciones sirven para navegar entre fechas con los distintos componentes.
+//todas ellas deben actualizar la pantalla principal.
+
 procedure TPrincipal.BitBtn1Click(Sender: TObject);
 begin
   FechaSeleccionada:= IncDay(FechaSeleccionada, 1); //nos permite navegar al día siguente
@@ -445,16 +371,21 @@ begin
   CargarDia();
 end;
 
-procedure TPrincipal.creartempClick(Sender: TObject);
-begin
-   CrearTemporada.showmodal;
-end;
 
 procedure TPrincipal.Button1Click(Sender: TObject);
 begin
   FechaSeleccionada:= FechaActual;
   CargarDia();
 end;
+
+procedure TPrincipal.DatePicker1Change(Sender: TObject);
+begin
+   FechaSeleccionada:= DatePicker1.Date;
+   CargarDia();
+end;
+
+
+//abren el formulario de periodo, ya sea para reservar o para anular reservas
 
 procedure TPrincipal.Button2Click(Sender: TObject);
 begin
@@ -469,14 +400,9 @@ begin
 end;
 
 
+//usamos estas funciones para pasar la habitacion y fecha al otro form (pantalla mes)
 
-procedure TPrincipal.DatePicker1Change(Sender: TObject);
-begin
-   FechaSeleccionada:= DatePicker1.Date;
-   CargarDia();
-end;
-
-function TPrincipal.DevolverFechaSeleccionada(): TDate;  //usamos estas funciones para pasar la habitacion y fecha al otro form
+function TPrincipal.DevolverFechaSeleccionada(): TDate;
 begin
     DevolverFechaSeleccionada := FechaSeleccionada;
 end;
@@ -487,7 +413,32 @@ begin
 end;
 
 
+//se encarga tanto de actualizar la fecha seleccionada y mostrada en los componentes como de de colorear
+//los paneles según las reservas/ocupaciones (de colorear se encarga otra función a parte).
 
+procedure TPrincipal.CargarDia();
+var
+PanelHabitacion: TPanel;
+BotonHabitacion: TButton;
+LabelHabitacion: TLabel;
+i: integer;    //será el nº de habitación
+columna:integer;
+fila: integer;
+cantidadHabitaciones: integer;
+tipohabitacion: string;
+begin
+    Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
+    Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
+
+    DatePicker1.Date:= FechaSeleccionada;
+    CalendarView1.Date := FechaSeleccionada;
+
+    ActualizarColores();
+
+end;
+
+
+//se encarga de colorear los paneles
 
 procedure TPrincipal.ActualizarColores();
 var
@@ -504,7 +455,6 @@ begin
     begin
       PanelesHabitaciones[i].Color:=clWebLawnGreen;
     end;
-
 
 
     // COLOREAR RESERVAS
@@ -534,8 +484,6 @@ begin
       end;
 
      end;
-
-
 
 
 

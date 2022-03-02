@@ -8,8 +8,8 @@ uses
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL,
   FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
-  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client;
+  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,   System.DateUtils,
+  FireDAC.Comp.Client, Vcl.StdCtrls;
 
 type
   TTablas = class(TForm)
@@ -64,6 +64,19 @@ type
     DataSource7: TDataSource;
     FDQuery2: TFDQuery;
     FDQuery3: TFDQuery;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    FDQuery4: TFDQuery;
+    FDQuery5: TFDQuery;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+
+
+    function formatearFechaSQL(fecha: TDate):String;
+
   private
     { Private declarations }
   public
@@ -76,5 +89,24 @@ var
 implementation
 
 {$R *.dfm}
+
+//formatea una fecha de tipo TDate a una String que se pueda usar en las FDQueries.
+
+function TTablas.formatearFechaSQL(fecha: TDate): String;
+  var
+  diabusqueda: String;
+  mesbusqueda: String;
+  fechabusqueda: String;
+begin
+    diabusqueda := IntToStr(DayOfTheMonth(fecha));
+    mesbusqueda := IntToStr(MonthOfTheYear(fecha));
+    if length(diabusqueda) < 2 then
+        diabusqueda:= '0'+ diabusqueda;
+    if length(mesbusqueda) < 2 then
+        mesbusqueda:= '0'+ mesbusqueda;
+    fechabusqueda:= IntToStr(YearOf(fecha))+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
+
+    formatearFechaSQL := fechabusqueda;
+end;
 
 end.

@@ -35,6 +35,10 @@ implementation
 uses
   Unit3;
 
+
+
+//botón único para dar de alta.
+
 procedure TAltaCliente.Button1Click(Sender: TObject);
 begin
   if (Edit1.Text <> '') and (DBEdit2.Text <> '') and (DBEdit3.Text <> '') then
@@ -52,11 +56,18 @@ begin
 
 end;
 
+
+// para mostrar el id que hemos introducido desde el formulario
+
 procedure TAltaCliente.ImportarIdentificador(id: String);
 begin
     Edit1.Text := id;
 end;
 
+
+
+//se llama desde los formularios, se encarga de consultar si el id de cliente introducido al hacer una
+//reserva existe, y si no, da la opción de crear uno nuevo (lo cual da paso a abrir este formulario)
 
 function TAltaCliente.AltaEnCaliente(identificador: String): boolean;
 var

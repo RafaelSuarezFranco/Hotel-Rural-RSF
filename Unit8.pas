@@ -20,6 +20,7 @@ type
     Button2: TButton;
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,6 +36,11 @@ implementation
 uses
   Unit3;
 
+
+
+
+//botón para confirmar la creación de temporada
+
 procedure TCrearTemporada.Button1Click(Sender: TObject);
 var
 fechainicio: TDate;
@@ -44,10 +50,9 @@ precio: double;
 
 iteradorfecha: TDate;
 stringFecha: String;
-mes: String;
-dia: String;
 
 registroValido: boolean;
+
 begin
   registroValido := true;
 
@@ -57,7 +62,7 @@ begin
   if RadioGroup1.ItemIndex = 1 then nombre := 'alta';
   precio := StrToFloat(SpinEdit1.Text);
 
-
+    //validaciones pertinentes
 
   if fechainicio > fechafin then
     begin
@@ -76,20 +81,12 @@ begin
     while iteradorfecha <= fechafin do
       begin
 
-        mes:= IntToStr(MonthOfTheYear(iteradorfecha));
-        if length(mes) < 2 then
-          mes:= '0'+ mes;
-
-        dia:= IntToStr(DayOfTheMonth(iteradorfecha));
-        if length(dia) < 2 then
-          dia:= '0'+ dia;
-
-        stringFecha := IntToStr(YearOf(iteradorfecha))+'-'+mes+'-'+dia; //fecha formateada para buscarla
+        stringFecha := Tablas.formatearFechaSQL(iteradorfecha);
 
         Tablas.FDQuery1.Close;
         Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedStr(stringFecha)+' and fechafin>='+quotedStr(stringFecha);
         Tablas.FDQuery1.Open;
-         //showmessage(Tablas.FDQuery1.SQL.Text);
+
         if Tablas.FDQuery1.RecordCount > 0 then registroValido:= false;
 
 
@@ -97,6 +94,8 @@ begin
       end;
 
   end;
+
+  //si la temporada es válida
 
   if registroValido then
     begin
@@ -119,6 +118,12 @@ end;
 procedure TCrearTemporada.Button2Click(Sender: TObject);
 begin
   CrearTemporada.Close;
+end;
+
+procedure TCrearTemporada.FormActivate(Sender: TObject);
+begin
+  Datepicker1.Date := Now();
+  Datepicker2.Date := Now();
 end;
 
 end.

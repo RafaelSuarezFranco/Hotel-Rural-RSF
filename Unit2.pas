@@ -18,14 +18,11 @@ type
     Label3: TLabel;
     Label4: TLabel;
     DatePicker1: TDatePicker;
-    Label5: TLabel;
     ComboBox1: TComboBox;
-    CalendarView1: TCalendarView;
-    MonthCalendar1: TMonthCalendar;
+    Label5: TLabel;
     procedure FormActivate(Sender: TObject);
     function DevolverDiasMes(): integer;
     function DevolverDiaSemana(): integer;
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn1Click(Sender: TObject);
     procedure cargarMes();
     procedure BitBtn2Click(Sender: TObject);
@@ -36,8 +33,6 @@ type
     function DevolverDiaSeleccionado():Integer;
     function DevolverHabitacionSeleccionada1():Integer;
     procedure ComboBox1Change(Sender: TObject);
-    procedure CalendarView1Change(Sender: TObject);
-    procedure MonthCalendar1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -60,6 +55,10 @@ implementation
 
 {$R *.dfm}
  uses Unit1, Unit3, Unit4;
+
+
+ //recoge la fecha y la habitación seleccionada
+ //crea un combobox con las habitaciones para poder cambiar de habitación sin salir de la pantalla.
 
 procedure TPantallaMes.FormActivate(Sender: TObject);
 var
@@ -95,40 +94,11 @@ begin
         end;
 
 
-
-
 end;
 
-procedure TPantallaMes.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-I: integer;
-begin{
-  if Length(PanelesDia) > 0 then
-      begin
-       for i := 0 to Length(PanelesDia)-1 do
-          begin
-          PanelesDia[i].Free;
-          end;
-      end;
-    }
 
-end;
-
-procedure TPantallaMes.MonthCalendar1Click(Sender: TObject);
-var
-fecharespaldo: TDate;
-begin
-  fecharespaldo :=  FechaSeleccionada1;
-  try
-    FechaSeleccionada1:= MonthCalendar1.Date;
-    CargarMes();
-  except
-    FechaSeleccionada1:= fecharespaldo;
-    CargarMes();
-    //si clickamos en el mismo día, esto da un error, es como si se deseleccionase el día y por
-    //tanto la fecha selecionada es igual a 00/00/0000
-  end;
-end;
+// para construir el calendario, debemos conseguir varios datos de la fecha (o el mes) en el que estamos,
+//en primer lugar: su cantidad de días
 
 function TPantallaMes.DevolverDiasMes(): Integer;
 var
@@ -145,6 +115,7 @@ añonum: integer;
   end;
 
 
+//en segundo lugar, qué día de la semana empieza el día 1.
 
 function TPantallaMes.DevolverDiaSemana(): Integer;
 var
@@ -154,10 +125,14 @@ añonum: integer;
 begin
     mesnum:=MonthOfTheYear(FechaSeleccionada1);
     añonum:=YearOf(FechaSeleccionada1);
-    dia:= DayOfTheWeek(EncodeDate(añonum, mesnum, 1));//devuelve el índice del día de semana (1 = lunes) del primer dia de mes
+    dia:= DayOfTheWeek(EncodeDate(añonum, mesnum, 1));
+    //devuelve el índice del día de semana (1 = lunes) del primer dia de mes
     //nos sirve para posicionar el primer dia en el calendario.
     DevolverDiaSemana := dia;
 end;
+
+
+//navegar entre fechas, igual que en la pantalla principal
 
 procedure TPantallaMes.BitBtn1Click(Sender: TObject);
 begin
@@ -173,28 +148,15 @@ begin
 end;
 
 
-
-procedure TPantallaMes.CalendarView1Change(Sender: TObject);
-var
-fecharespaldo: TDate;
-begin
-  fecharespaldo :=  FechaSeleccionada1;
-  try
-    FechaSeleccionada1:= CalendarView1.Date;
-    CargarMes();
-  except
-    FechaSeleccionada1:= fecharespaldo;
-    CargarMes();
-    //si clickamos en el mismo día, esto da un error, es como si se deseleccionase el día y por
-    //tanto la fecha selecionada es igual a 00/00/0000
-  end;
-end;
-
 procedure TPantallaMes.DatePicker1Change(Sender: TObject);
 begin
   FechaSeleccionada1:= DatePicker1.Date;
   CargarMes();
 end;
+
+
+//se encarga de borrar y crear los paneles del mes, de manera que queden ordenados y colocados como si se
+//tratase de un calendario real
 
 procedure TPantallaMes.CargarMes();
 var
@@ -217,7 +179,7 @@ begin
           end;
       end;
 
-    //creación de los días
+    //creación de los días (paneles)
      dia:=1;
      i:= 1;
      fila := 0;
@@ -270,6 +232,7 @@ begin
         //BotonesDia[i]:=BotonDia;
     end;
 
+    //en este caso, cada panel abre el formulario de administración de un día concreto
       for i := 0 to (Length(PanelesDia) - 1) do
       begin
          //BotonesDia[i].OnClick := PulsarBotonDia;
@@ -277,10 +240,11 @@ begin
       end;
      ActualizarColores2();
      DatePicker1.Date := FechaSeleccionada1;
-     CalendarView1.Date := FechaSeleccionada1;
-     MonthCalendar1.Date := FechaSeleccionada1;
+
 end;
 
+
+//permite cambiar la habitación seleccionada.
 
 procedure TPantallaMes.ComboBox1Change(Sender: TObject);
 begin
@@ -288,6 +252,9 @@ begin
   Label2.Caption:= 'Habitación seleccionada: '+ IntToStr(HabitacionSeleccionada1);
   CargarMes;
 end;
+
+
+//click en el panel, abre el formulario diario
 
 procedure TPantallaMes.PulsarBotonDia(Sender: TObject);
 var
@@ -313,6 +280,10 @@ begin
   FormularioDiario.origen := 'pantallames';
   FormularioDiario.showmodal();
 end;
+
+
+
+//pinta los paneles según las reservas, ocupaciones y temporadas
 
 procedure TPantallaMes.ActualizarColores2();
 var
@@ -410,6 +381,10 @@ begin
 
 
 end;
+
+
+
+//probablemente estas funciones no las necesito.
 
 function TPantallaMes.DevolverFechaSeleccionada1(): TDate;
 begin

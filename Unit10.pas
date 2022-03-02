@@ -53,6 +53,8 @@ begin
 end;
 
 
+//alterna los colores de las bandas de los clientse
+
 procedure TInformeClientes.QRBand2BeforePrint(Sender: TQRCustomBand;
   var PrintBand: Boolean);
 
