@@ -1,0 +1,107 @@
+unit Unit14;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls;
+
+type
+  TInformeDinamicoGenerador = class(TForm)
+    RadioGroup1: TRadioGroup;
+    Label1: TLabel;
+    ScrollBox1: TScrollBox;
+    procedure FormActivate(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  InformeDinamicoGenerador: TInformeDinamicoGenerador;
+  listatablas : Array of String;
+  listacampos : Array of String;
+  listacheckbox : Array of Tcheckbox;
+implementation
+
+{$R *.dfm}
+
+  uses
+      Unit3;
+
+
+
+  //sacamos las tablas de la base de datos y las guardamos en un array, rellenamos el radio group con ese array
+
+procedure TInformeDinamicoGenerador.FormActivate(Sender: TObject);
+var
+  i: Integer;
+
+begin
+  RadioGroup1.Items.Clear;
+
+  Tablas.FDQuery6.Close;
+  Tablas.FDQuery6.SQL.Text := ('show tables from hotelrsf');
+  Tablas.FDQuery6.Open;
+
+  SetLength(listatablas, Tablas.FDQuery6.RecordCount);
+
+  Tablas.FDQuery6.first;
+  i := 0;
+  while not Tablas.FDQuery6.Eof do
+      begin
+        listatablas[i] := Tablas.FDQuery6.FieldByName('Tables_in_hotelrsf').Value;
+        RadioGroup1.Items.Add(listatablas[i]);
+
+        Tablas.FDQuery6.next;
+        i := i + 1;
+      end;
+
+
+  RadioGroup1.ItemIndex := 0; //seleccionamos el primero por defecto
+end;
+
+
+
+//genera checkboxes para los campos de la tabla seleccionada
+
+procedure TInformeDinamicoGenerador.RadioGroup1Click(Sender: TObject);
+var
+tablaseleccionada: string;
+i: integer;
+begin
+
+  //borramos los campos primero
+  if Length(listacampos) > 0 then
+      begin
+       for i := 0 to Length(listacampos)-1 do
+          begin
+          listacampos[i].Free;
+          end;
+      end;
+
+
+  tablaseleccionada :=  Radiogroup1.Items[Radiogroup1.ItemIndex];
+
+  Tablas.FDQuery6.Close;
+  Tablas.FDQuery6.SQL.Text := ('SHOW COLUMNS FROM ' + tablaseleccionada);
+  Tablas.FDQuery6.Open;
+
+  SetLength(listacampos, Tablas.FDQuery6.RecordCount);
+
+  Tablas.FDQuery6.first;
+  i := 0;
+  while not Tablas.FDQuery6.Eof do
+      begin
+        listacampos[i] := Tablas.FDQuery6.FieldByName('Field').Value;
+
+
+        Tablas.FDQuery6.next;
+        i := i + 1;
+      end;
+
+end;
+
+end.

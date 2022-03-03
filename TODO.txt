@@ -1,7 +1,6 @@
 visualizar/editar clientes?
 editar habitaciones? borrar/editar temporadas?
 
-crear un método de formateo de fechas para poder buscar fechas con las fdquery, para no copiar el mismo código cada vez que quiero usarlas.
 
 
 informes:

@@ -34,6 +34,10 @@ type
     Factura1: TMenuItem;
     N1: TMenuItem;
     ItinerariodeServicios1: TMenuItem;
+    historialCliente: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    Informedinmico1: TMenuItem;
 
 
 
@@ -60,6 +64,8 @@ type
     procedure Clientes1Click(Sender: TObject);
     procedure Factura1Click(Sender: TObject);
     procedure ItinerariodeServicios1Click(Sender: TObject);
+    procedure historialClienteClick(Sender: TObject);
+    procedure Informedinmico1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -79,7 +85,7 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13;
+ uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14;
 
 
 
@@ -95,6 +101,42 @@ end;
 procedure TPrincipal.Habitacin1Click(Sender: TObject);
 begin
   NuevaHabitacion.ShowModal;
+end;
+
+procedure TPrincipal.historialClienteClick(Sender: TObject);
+var
+idcliente: string;
+begin
+  //la idea es reutilizar factura, para ello vamos a cambiar la consulta 'fdquery2' para filtrar por cliente
+     idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
+     if idcliente <> '' then
+     begin
+
+       if Tablas.FDTableClientes.Locate('identificador', idcliente, []) then
+          begin
+             Tablas.FDQuery2.close;
+             Tablas.FDQuery2.SQL.Text := 'select numerohabitacion as numero, fecha as fechaentrada, estado, cliente, preciofinal from entradas where cliente = '
+             + quotedstr(idcliente) + ' order by fecha';
+             Tablas.FDQuery2.open;
+
+             //ho haremos más filtros, mostramos cualquier fecha, cualquier habitación y cualquier estado.
+             Factura.quickreport1.Preview;
+
+          end else
+          begin
+            showmessage('El ID introducido no coincide con el de ningún cliente existente');
+          end;
+
+     end;
+
+
+
+
+end;
+
+procedure TPrincipal.Informedinmico1Click(Sender: TObject);
+begin
+  InformeDinamicoGenerador.ShowModal;
 end;
 
 procedure TPrincipal.ItinerariodeServicios1Click(Sender: TObject);

@@ -1,0 +1,36 @@
+unit Unit15;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QRCtrls, QuickRpt, Vcl.ExtCtrls;
+
+type
+  TForm15 = class(TForm)
+    QuickRep1: TQuickRep;
+    QRBand1: TQRBand;
+    QRLabel1: TQRLabel;
+    QRBand2: TQRBand;
+    QRShape1: TQRShape;
+    QRBand3: TQRBand;
+    QRShape2: TQRShape;
+    QRBand4: TQRBand;
+    QRSysData1: TQRSysData;
+    QRLabel5: TQRLabel;
+    QRLabel6: TQRLabel;
+    QRSysData2: TQRSysData;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form15: TForm15;
+
+implementation
+
+{$R *.dfm}
+
+end.

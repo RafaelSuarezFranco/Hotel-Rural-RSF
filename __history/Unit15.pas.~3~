@@ -1,0 +1,62 @@
+unit Unit15;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QRCtrls, QuickRpt, Vcl.ExtCtrls;
+
+type
+  TInformeDinamico = class(TForm)
+    QuickRep1: TQuickRep;
+    QRBand1: TQRBand;
+    QRLabel1: TQRLabel;
+    QRBand2: TQRBand;
+    QRShape1: TQRShape;
+    QRBand3: TQRBand;
+    QRShape2: TQRShape;
+    QRBand4: TQRBand;
+    QRSysData1: TQRSysData;
+    QRLabel5: TQRLabel;
+    QRLabel6: TQRLabel;
+    QRSysData2: TQRSysData;
+    procedure FormActivate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+
+  end;
+
+var
+  InformeDinamico: TInformeDinamico;
+  listacampos: Array of String;
+
+implementation
+
+{$R *.dfm}
+
+ uses
+  Unit3, Unit14;
+
+
+procedure TInformeDinamico.FormActivate(Sender: TObject);
+var
+cantidadcampos: integer;
+i: integer;
+begin
+  cantidadcampos := InformeDinamicoGenerador.DevolverCantidadCampos();
+  SetLength(listacampos, cantidadcampos);
+
+  for i := 0 to Length(listacampos)-1 do
+    begin
+      listacampos[i] :=  InformeDinamicoGenerador.DevolverCampo(i);
+    end;
+
+  //ahora que tenemos los campos y la tabla, construimos los elementos del informe
+
+
+
+end;
+
+end.

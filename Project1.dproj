@@ -187,6 +187,14 @@
             <Form>ItinerarioServicios</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Unit14.pas">
+            <Form>InformeDinamicoGenerador</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Unit15.pas">
+            <Form>InformeDinamico</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

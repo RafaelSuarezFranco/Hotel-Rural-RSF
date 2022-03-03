@@ -2,7 +2,7 @@ object ItinerarioServicios: TItinerarioServicios
   Left = 0
   Top = 0
   Caption = 'ItinerarioServicios'
-  ClientHeight = 636
+  ClientHeight = 810
   ClientWidth = 825
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

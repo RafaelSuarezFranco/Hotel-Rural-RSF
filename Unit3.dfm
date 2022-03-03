@@ -74,6 +74,13 @@ object Tablas: TTablas
     Font.Style = [fsBold]
     ParentFont = False
   end
+  object Label8: TLabel
+    Left = 467
+    Top = 456
+    Width = 80
+    Height = 13
+    Caption = 'informe din'#225'mico'
+  end
   object FDConnection1: TFDConnection
     Params.Strings = (
       'DriverID=MySQL'
@@ -402,5 +409,10 @@ object Tablas: TTablas
         'echa = '#39'2022-03-02'#39)
     Left = 584
     Top = 352
+  end
+  object FDQuery6: TFDQuery
+    Connection = FDConnection1
+    Left = 584
+    Top = 440
   end
 end

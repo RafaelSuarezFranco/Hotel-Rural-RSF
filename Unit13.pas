@@ -50,6 +50,10 @@ uses
   Unit3;
 
 
+
+  //nota: este informe de itinerario se genera para la fecha seleccionada en la pantalla principal.
+  //si queremos generar este informe para un día concreto, debemos navegar a ese día primero.
+
   //de la misma manera que con el informe de factura, recorremos la tabla servicios y con el nombre que
   //rescatamos hacemos búsquedas en entradasservicios para la fecha concreta.
 
@@ -90,6 +94,8 @@ if Tablas.FDQuery5.RecordCount = 0 then
    end;
 
 end;
+
+
 
 procedure TItinerarioServicios.imprimirFechas(fecha1: TDate);
  begin

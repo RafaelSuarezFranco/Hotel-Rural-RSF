@@ -37,6 +37,9 @@ implementation
 uses
   Unit3, Unit11;
 
+
+  //valida los parámetros utilizamos y construye la consulta principal de la factura
+
 procedure TFacturaParametros.Button1Click(Sender: TObject);
 var
 camposValidos: boolean;

@@ -73,6 +73,8 @@ type
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
+    FDQuery6: TFDQuery;
+    Label8: TLabel;
 
 
     function formatearFechaSQL(fecha: TDate):String;

@@ -34,6 +34,10 @@ implementation
   uses
     Unit3;
 
+
+
+ //botón para realizar un insert
+
 procedure TAltaServicio.Button1Click(Sender: TObject);
 begin
   if (DBEdit1.Text = '') or (DBEdit2.Text = '') then

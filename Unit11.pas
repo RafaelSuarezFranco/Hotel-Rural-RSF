@@ -87,10 +87,15 @@ procedure TFactura.QRBand3BeforePrint(Sender: TQRCustomBand;
   habitacion: integer;
   precio: double;
   fechabusqueda: String;
+  estado: String;
+
+  banda : TQRBand;
 begin
   fecha := Tablas.FDQuery2.FieldByName('fechaentrada').Value;
   habitacion := Tablas.FDQuery2.FieldByName('numero').Value;
   precio := Tablas.FDQuery2.FieldByName('preciofinal').Value;
+  estado := Tablas.FDQuery2.FieldByName('estado').Value;
+
   CostoTotal:= CostoTotal + precio;
   CantidadDias:= CantidadDias + 1;
 
@@ -105,7 +110,26 @@ begin
 
   Tablas.FDQuery3.open;
 
+
+  //cambiar el color de la banda en función de si está ocupada o reservada
+
+banda := TQRBand(Sender);
+  if estado = 'reservada' then
+    begin
+      banda.Color:= TColor(RGB(252,252,166));
+    end;
+  if estado = 'ocupada' then
+
+    begin
+     banda.Color:=  TColor(RGB(255,150,150));
+    end;
+
+
+
 end;
+
+
+
 
  //muestra un mensaje si una reserva/ocupación no tiene servicios asociados
 
@@ -127,6 +151,10 @@ banda := TQRBand(Sender);
 
 
 end;
+
+
+
+//muestra las fechas seleccionadas
 
  procedure TFactura.imprimirFechas(fecha1: TDate; fecha2: TDate);
  begin

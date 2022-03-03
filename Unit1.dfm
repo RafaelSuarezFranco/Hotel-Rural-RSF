@@ -1,6 +1,7 @@
 object Principal: TPrincipal
   Left = 0
   Top = 0
+  ActiveControl = BitBtn1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Principal'
@@ -176,10 +177,6 @@ object Principal: TPrincipal
     end
     object Creartemp1: TMenuItem
       Caption = '&Informes'
-      object Clientes1: TMenuItem
-        Caption = '&Clientes'
-        OnClick = Clientes1Click
-      end
       object Factura1: TMenuItem
         Caption = '&Factura'
         OnClick = Factura1Click
@@ -187,6 +184,24 @@ object Principal: TPrincipal
       object ItinerariodeServicios1: TMenuItem
         Caption = '&Itinerario de Servicios'
         OnClick = ItinerariodeServicios1Click
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Clientes1: TMenuItem
+        Caption = '&Clientes'
+        OnClick = Clientes1Click
+      end
+      object historialCliente: TMenuItem
+        Caption = '&Historial por cliente'
+        OnClick = historialClienteClick
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object Informedinmico1: TMenuItem
+        Caption = 'Informe din'#225'mico'
+        OnClick = Informedinmico1Click
       end
     end
   end

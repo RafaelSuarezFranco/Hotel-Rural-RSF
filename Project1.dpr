@@ -16,7 +16,9 @@ uses
   Unit10 in 'Unit10.pas' {InformeClientes},
   Unit11 in 'Unit11.pas' {Factura},
   Unit12 in 'Unit12.pas' {FacturaParametros},
-  Unit13 in 'Unit13.pas' {ItinerarioServicios};
+  Unit13 in 'Unit13.pas' {ItinerarioServicios},
+  Unit14 in 'Unit14.pas' {InformeDinamicoGenerador},
+  Unit15 in 'Unit15.pas' {InformeDinamico};
 
 {$R *.res}
 
@@ -37,5 +39,7 @@ begin
   Application.CreateForm(TFactura, Factura);
   Application.CreateForm(TFacturaParametros, FacturaParametros);
   Application.CreateForm(TItinerarioServicios, ItinerarioServicios);
+  Application.CreateForm(TInformeDinamicoGenerador, InformeDinamicoGenerador);
+  Application.CreateForm(TInformeDinamico, InformeDinamico);
   Application.Run;
 end.
