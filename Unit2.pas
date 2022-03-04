@@ -33,6 +33,8 @@ type
     function DevolverDiaSeleccionado():Integer;
     function DevolverHabitacionSeleccionada1():Integer;
     procedure ComboBox1Change(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -95,6 +97,7 @@ begin
 
 
 end;
+
 
 
 // para construir el calendario, debemos conseguir varios datos de la fecha (o el mes) en el que estamos,
@@ -167,7 +170,12 @@ fila: integer;
 cantidadDias: integer;
 diasemana: integer;
 dia: integer;
+
 begin
+  //esconder el panel y mostrarlo cuando termina de cargar parece que añade bastante velocidad de carga.
+  panel1.visible := false;
+
+
       Label1.Caption:= 'Fecha seleccionada: '+ DateToStr(FechaSeleccionada1);
 
       //primero borrar el calendario
@@ -241,6 +249,8 @@ begin
      ActualizarColores2();
      DatePicker1.Date := FechaSeleccionada1;
 
+
+   panel1.visible := true;
 end;
 
 
@@ -399,6 +409,45 @@ end;
 function TPantallaMes.DevolverHabitacionSeleccionada1(): Integer;
 begin
     DevolverHabitacionSeleccionada1 := HabitacionSeleccionada1;
+end;
+
+
+
+
+ // atajos de teclado
+ //nota: hay que poner Principal.keyPreview := true; para que funcionen las teclas en principal
+
+procedure TPantallaMes.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    begin
+      Pantallames.Close;
+    end;
+
+  if Key = VK_UP then    // flecha arriba -> volver a la fecha actual
+    begin
+      FechaSeleccionada1 := Now();
+      cargarMes();
+    end;
+end;
+
+
+procedure TPantallaMes.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+
+  if Key = VK_LEFT then     //flecha izquierda -> mes anterior
+    begin
+      FechaSeleccionada1 := IncMonth(Fechaseleccionada1, -1);
+      cargarMes();
+    end;
+  if Key = VK_RIGHT then   //flecha derecha -> mes siguiente
+    begin
+      FechaSeleccionada1 := IncMonth(Fechaseleccionada1, 1);
+      cargarMes();
+    end;
+
 end;
 
 end.

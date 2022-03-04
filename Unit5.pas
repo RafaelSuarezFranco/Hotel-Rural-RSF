@@ -24,6 +24,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure ModoReserva();
     procedure ModoAnular();
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -410,6 +411,7 @@ begin
 end;
 
 
+
 //altera el propósito de este formulario
 
 procedure TFormularioPeriodo.ModoReserva();
@@ -420,6 +422,19 @@ end;
 procedure TFormularioPeriodo.ModoAnular();
 begin
   ModoDeFormulario:= 'anular';
+end;
+
+
+
+
+ //atajo teclado
+procedure TFormularioPeriodo.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+if Key = VK_ESCAPE then
+    begin
+      FormularioPeriodo.Close;
+    end;
 end;
 
 end.

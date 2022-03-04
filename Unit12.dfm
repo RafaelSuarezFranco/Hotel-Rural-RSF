@@ -61,7 +61,7 @@ object FacturaParametros: TFacturaParametros
     Top = 194
     Width = 85
     Height = 21
-    TabOrder = 0
+    TabOrder = 2
     Text = 'ComboBox1'
   end
   object DatePicker1: TDatePicker
@@ -74,7 +74,7 @@ object FacturaParametros: TFacturaParametros
     Font.Height = -16
     Font.Name = 'Segoe UI'
     Font.Style = []
-    TabOrder = 1
+    TabOrder = 0
   end
   object DatePicker2: TDatePicker
     Left = 184
@@ -86,7 +86,7 @@ object FacturaParametros: TFacturaParametros
     Font.Height = -16
     Font.Name = 'Segoe UI'
     Font.Style = []
-    TabOrder = 2
+    TabOrder = 1
   end
   object Button1: TButton
     Left = 32
@@ -94,7 +94,7 @@ object FacturaParametros: TFacturaParametros
     Width = 129
     Height = 50
     Caption = 'Generar factura'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -103,7 +103,7 @@ object FacturaParametros: TFacturaParametros
     Width = 129
     Height = 50
     Caption = 'Cancelar'
-    TabOrder = 4
+    TabOrder = 5
     OnClick = Button2Click
   end
   object RadioGroup1: TRadioGroup
@@ -122,6 +122,6 @@ object FacturaParametros: TFacturaParametros
       'reservas'
       'ocupaciones')
     ParentFont = False
-    TabOrder = 5
+    TabOrder = 3
   end
 end

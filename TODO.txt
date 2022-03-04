@@ -1,6 +1,8 @@
 visualizar/editar clientes?
 editar habitaciones? borrar/editar temporadas?
 
+pantalla de ayuda
+shortcuts?
 
 
 Reglas establecidas en cuanto a cambios de estado de habitaciones.

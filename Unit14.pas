@@ -150,6 +150,7 @@ sql: string;
 i : integer;
 j : integer;
 contadorcampos : integer;
+contadorcomas : integer;
 begin
 
   //primero de todo, quiero guardar los campos que he seleccionado
@@ -159,6 +160,8 @@ begin
       begin
         if listacheckbox[i].Checked then  contadorcampos := contadorcampos + 1;
       end;
+
+
 
   SetLength(camposseleccionados, contadorcampos);
    j := 0;
@@ -176,13 +179,20 @@ begin
   sql := 'select ';
 
   //campos
+  contadorcomas := contadorcampos-1; //si seleccionamos 4 campos, sabemos que hay que poner 3 comas
+
   for i := 0 to Length(listacampos)-1 do
     begin
       if listacheckbox[i].Checked then
         begin
           sql := sql + ' ' + listacampos[i];
 
-          if i <  Length(listacampos)-1 then sql := sql + ',';
+          if contadorcomas <> 0 then  //gastamos una coma por cada campo, salvo en el último
+            begin
+               sql := sql + ',';
+               contadorcomas := contadorcomas - 1;
+            end;
+
         end;
 
     end;

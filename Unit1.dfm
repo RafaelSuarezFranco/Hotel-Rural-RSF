@@ -1,11 +1,10 @@
 object Principal: TPrincipal
   Left = 0
   Top = 0
-  ActiveControl = BitBtn1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Principal'
-  ClientHeight = 577
+  ClientHeight = 646
   ClientWidth = 1015
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,11 +12,14 @@ object Principal: TPrincipal
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poMainFormCenter
   OnActivate = FormActivate
   OnClose = FormClose
+  OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -51,7 +53,7 @@ object Principal: TPrincipal
     Left = 200
     Top = 120
     Width = 577
-    Height = 385
+    Height = 449
     PopupMenu = PopupMenu2
     TabOrder = 2
   end
@@ -100,7 +102,7 @@ object Principal: TPrincipal
     Top = 424
     Width = 129
     Height = 49
-    Caption = 'Reservar periodo'
+    Caption = '&Reservar periodo'
     TabOrder = 5
     OnClick = Button2Click
   end
@@ -109,7 +111,7 @@ object Principal: TPrincipal
     Top = 488
     Width = 129
     Height = 49
-    Caption = 'Anular periodo'
+    Caption = '&Anular periodo'
     TabOrder = 6
     OnClick = Button3Click
   end

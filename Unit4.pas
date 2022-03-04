@@ -29,6 +29,7 @@ type
     procedure borrarServicios();
     procedure RecalcularPrecio(Sender: TObject);
     procedure ActualizarPrecioTabla();
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -505,7 +506,6 @@ end;
 
 
 
-
 //GESTIÓN DE SERVICIOS (borrarlos, crearlos)
 
 
@@ -671,6 +671,17 @@ begin
 
 end;
 
+
+
+ //atajo teclado
+procedure TFormularioDiario.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    begin
+      FormularioDiario.Close;
+    end;
+end;
 
 
 end.

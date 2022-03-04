@@ -66,6 +66,8 @@ type
     procedure ItinerariodeServicios1Click(Sender: TObject);
     procedure historialClienteClick(Sender: TObject);
     procedure Informedinmico1Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   private
     { Private declarations }
@@ -85,7 +87,8 @@ type
 implementation
 
 {$R *.dfm}
- uses  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14;
+ uses
+  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14;
 
 
 
@@ -182,6 +185,7 @@ end;
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
+
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
@@ -203,6 +207,8 @@ begin
 
     CrearPanelesHabitaciones();
     CargarDia();
+
+
 end;
 
 
@@ -332,6 +338,8 @@ end;
 
 
 
+
+
 procedure TPrincipal.CalendarView1Change(Sender: TObject);
 var
 fecharespaldo: TDate;
@@ -357,7 +365,7 @@ procedure TPrincipal.CrearHabitacin1Click(Sender: TObject);
 var
 seleccion: integer;
 begin
-      seleccion := messagedlg('¿Quieres dar de alta una nueva habitación?',mtConfirmation, mbOKCancel, 0);
+    seleccion := messagedlg('¿Quieres dar de alta una nueva habitación?',mtConfirmation, mbOKCancel, 0);
 
        if seleccion = mrOK then
        begin
@@ -422,6 +430,7 @@ begin
   FechaSeleccionada:= IncDay(FechaSeleccionada, -1); //nos permite navegar al día anterior
   CargarDia();
 end;
+
 
 
 procedure TPrincipal.Button1Click(Sender: TObject);
@@ -541,4 +550,47 @@ begin
 
 end;
 
-end.
+
+ // atajos de teclado
+ //nota: hay que poner Principal.keyPreview := true; para que funcionen las teclas en principal
+
+procedure TPrincipal.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+seleccion : integer;
+begin
+  if Key = VK_ESCAPE then
+    begin
+       seleccion := messagedlg('¿Salir de la aplicación?',mtConfirmation, mbOKCancel, 0);
+
+       if seleccion = mrOK then
+       begin
+          Principal.Close;
+       end;
+    end;
+
+  if Key = VK_UP then    // flecha arriba -> volver al primer día
+    begin
+      FechaSeleccionada := Now();
+      cargarDia();
+    end;
+end;
+
+
+procedure TPrincipal.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+   if Key = VK_LEFT then     //flecha izquierda -> dia anterior
+    begin
+      FechaSeleccionada := IncDay(Fechaseleccionada, -1);
+      cargarDia();
+    end;
+  if Key = VK_RIGHT then   //flecha derecha -> día siguiente
+    begin
+      FechaSeleccionada := IncDay(Fechaseleccionada, 1);
+      cargarDia();
+    end;
+end;
+
+
+ end.

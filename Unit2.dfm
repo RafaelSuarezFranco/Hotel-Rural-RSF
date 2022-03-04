@@ -1,7 +1,7 @@
 object PantallaMes: TPantallaMes
   Left = 0
   Top = 193
-  BorderIcons = [biSystemMenu, biMinimize]
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'PantallaMes'
   ClientHeight = 804
@@ -12,9 +12,12 @@ object PantallaMes: TPantallaMes
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDesktopCenter
   OnActivate = FormActivate
+  OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
