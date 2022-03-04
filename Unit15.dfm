@@ -100,21 +100,21 @@ object InformeDinamico: TInformeDinamico
       KeepOnOnePage = False
       BandType = rbTitle
       object QRLabel1: TQRLabel
-        Left = 216
+        Left = 224
         Top = 8
-        Width = 271
+        Width = 267
         Height = 33
         Size.Values = (
           87.312500000000000000
-          571.500000000000000000
+          592.666666666666700000
           21.166666666666670000
-          717.020833333333300000)
+          706.437500000000000000)
         XLColumn = 0
         XLNumFormat = nfGeneral
         ActiveInPreview = False
         Alignment = taLeftJustify
         AlignToBand = False
-        Caption = 'INFORME DIN'#193'MICO'
+        Caption = 'INFORME GENERAL'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

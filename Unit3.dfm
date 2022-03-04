@@ -412,6 +412,8 @@ object Tablas: TTablas
   end
   object FDQuery6: TFDQuery
     Connection = FDConnection1
+    SQL.Strings = (
+      'select * from entradas')
     Left = 584
     Top = 440
   end

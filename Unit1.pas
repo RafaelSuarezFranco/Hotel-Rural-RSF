@@ -106,6 +106,9 @@ end;
 procedure TPrincipal.historialClienteClick(Sender: TObject);
 var
 idcliente: string;
+nombre: string;
+apellido: string;
+stringcliente: string;
 begin
   //la idea es reutilizar factura, para ello vamos a cambiar la consulta 'fdquery2' para filtrar por cliente
      idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
@@ -114,6 +117,12 @@ begin
 
        if Tablas.FDTableClientes.Locate('identificador', idcliente, []) then
           begin
+            nombre:= Tablas.FDTableClientesnombre.Value;
+            apellido:= Tablas.FDTableClientesapellidos.Value;
+            stringcliente := nombre + ' '+ apellido;
+
+            Factura.imprimirCliente(stringcliente);
+
              Tablas.FDQuery2.close;
              Tablas.FDQuery2.SQL.Text := 'select numerohabitacion as numero, fecha as fechaentrada, estado, cliente, preciofinal from entradas where cliente = '
              + quotedstr(idcliente) + ' order by fecha';
@@ -187,6 +196,7 @@ begin
     Tablas.FDQuery3.Open;
     Tablas.FDQuery4.Open;
     Tablas.FDQuery5.Open;
+    Tablas.FDQuery6.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();

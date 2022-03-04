@@ -44,14 +44,12 @@ type
     QRLabel14: TQRLabel;
     QRLabel15: TQRLabel;
     QRLabel16: TQRLabel;
-    QRLabel17: TQRLabel;
-    QRLabel18: TQRLabel;
-    QRLabel19: TQRLabel;
     procedure QRBand3BeforePrint(Sender: TQRCustomBand; var PrintBand: Boolean);
     procedure FormActivate(Sender: TObject);
     procedure QRSubDetail1BeforePrint(Sender: TQRCustomBand;
       var PrintBand: Boolean);
     procedure imprimirFechas(fecha1: TDate; fecha2: TDate);
+    procedure imprimirCliente(cliente: string);
   private
     { Private declarations }
   public
@@ -158,9 +156,14 @@ end;
 
  procedure TFactura.imprimirFechas(fecha1: TDate; fecha2: TDate);
  begin
-    QRLabel17.Caption := DatetoStr(fecha1);
-    QRLabel19.Caption := DatetoStr(fecha2);
+    QRLabel1.Caption := 'FACTURA - INFORME POR PERIODO';
+    QRLabel16.Caption := 'Del día ' +  DatetoStr(fecha1) + ' al ' + DatetoStr(fecha2);
  end;
 
+  procedure TFactura.imprimirCliente(cliente: String);
+ begin
+    QRLabel1.Caption := 'HISTORIAL DE CLIENTE';
+    QRLabel16.Caption := 'Del cliente: '+ cliente;
+ end;
 
 end.

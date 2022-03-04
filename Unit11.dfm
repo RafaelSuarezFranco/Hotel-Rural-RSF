@@ -127,88 +127,19 @@ object Factura: TFactura
       object QRLabel16: TQRLabel
         Left = 249
         Top = 52
-        Width = 41
+        Width = 94
         Height = 17
         Size.Values = (
           44.979166666666670000
           658.812500000000000000
           137.583333333333300000
-          108.479166666666700000)
+          248.708333333333300000)
         XLColumn = 0
         XLNumFormat = nfGeneral
         ActiveInPreview = False
         Alignment = taLeftJustify
         AlignToBand = False
-        Caption = 'Del d'#237'a'
-        Color = clWhite
-        Transparent = True
-        ExportAs = exptText
-        WrapStyle = BreakOnSpaces
-        VerticalAlignment = tlTop
-        FontSize = 10
-      end
-      object QRLabel17: TQRLabel
-        Left = 296
-        Top = 52
-        Width = 65
-        Height = 17
-        Size.Values = (
-          44.979166666666670000
-          783.166666666666700000
-          137.583333333333300000
-          171.979166666666700000)
-        XLColumn = 0
-        XLNumFormat = nfGeneral
-        ActiveInPreview = False
-        Alignment = taLeftJustify
-        AlignToBand = False
-        Caption = '01-01-2000'
-        Color = clWhite
-        Transparent = True
-        ExportAs = exptText
-        WrapStyle = BreakOnSpaces
-        VerticalAlignment = tlTop
-        FontSize = 10
-      end
-      object QRLabel18: TQRLabel
-        Left = 367
-        Top = 52
-        Width = 11
-        Height = 17
-        Size.Values = (
-          44.979166666666670000
-          971.020833333333300000
-          137.583333333333300000
-          29.104166666666670000)
-        XLColumn = 0
-        XLNumFormat = nfGeneral
-        ActiveInPreview = False
-        Alignment = taLeftJustify
-        AlignToBand = False
-        Caption = 'al'
-        Color = clWhite
-        Transparent = True
-        ExportAs = exptText
-        WrapStyle = BreakOnSpaces
-        VerticalAlignment = tlTop
-        FontSize = 10
-      end
-      object QRLabel19: TQRLabel
-        Left = 384
-        Top = 52
-        Width = 65
-        Height = 17
-        Size.Values = (
-          44.979166666666670000
-          1016.000000000000000000
-          137.583333333333300000
-          171.979166666666700000)
-        XLColumn = 0
-        XLNumFormat = nfGeneral
-        ActiveInPreview = False
-        Alignment = taLeftJustify
-        AlignToBand = False
-        Caption = '02-01-2000'
+        Caption = 'Del d'#237'a o cliente'
         Color = clWhite
         Transparent = True
         ExportAs = exptText

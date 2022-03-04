@@ -46,6 +46,8 @@ implementation
   Unit3, Unit14;
 
 
+  //este método funciona como reemplazo al activate de un informe
+
 procedure TInformeDinamico.QuickRep1BeforePrint(Sender: TCustomQuickRep;
   var PrintReport: Boolean);
 var

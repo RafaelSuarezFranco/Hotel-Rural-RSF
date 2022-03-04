@@ -80,8 +80,16 @@ begin
           Tablas.FDQuery2.ParamByName('estado').AsString := estadoseleccionado;
           Tablas.FDQuery2.open;
 
-          FacturaParametros.Close;
-          Factura.quickreport1.preview;
+          if Tablas.FDQuery2.RecordCount <> 0 then
+            begin
+              FacturaParametros.Close;
+              Factura.quickreport1.preview;
+            end else
+            begin
+              showmessage('No se han encontrado registros para los parámetros especificados');
+            end;
+
+
       end;
 
 end;
