@@ -75,7 +75,8 @@ begin
   CargarMes();
 
 //COMBO HABITACIONES
-
+ // en este caso no vamos a llamar al generador de combos de Tablas porque queremos que al crearse se seleccione una habitación
+ //concreta (aunque podríamos crearlo y luego seleccionarlo aquí haciendo otra búsqueda)
   ComboBox1.Style := csDropDownList;
    i:=0;
     cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;

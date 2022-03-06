@@ -75,10 +75,13 @@ type
     Label7: TLabel;
     FDQuery6: TFDQuery;
     Label8: TLabel;
+    FDQuery7: TFDQuery;
+    Label9: TLabel;
+    FDQuery8: TFDQuery;
 
 
     function formatearFechaSQL(fecha: TDate):String;
-
+    function rellenarComboHabitaciones(combo: TComboBox):TComboBox;
   private
     { Private declarations }
   public
@@ -109,6 +112,33 @@ begin
     fechabusqueda:= IntToStr(YearOf(fecha))+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
 
     formatearFechaSQL := fechabusqueda;
+end;
+
+
+
+//recibe un combobox a rellenar, lo vacía y lo rellena con los números de habitación.
+
+function TTablas.rellenarComboHabitaciones(combo: TComboBox):TComboBox;
+  var
+cantidadHabitaciones: integer;
+i : integer;
+begin
+    i:=0;
+    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;
+
+    combo.Items.Clear; //vaciar el combobox para rellenarlo con las habitaciones
+    Tablas.FDTableHabitaciones.First;
+      while not  Tablas.FDTableHabitaciones.Eof do
+        begin
+          combo.Items.Add(IntToStr(Tablas.FDTableHabitacionesnumero.Value));
+          i:=i+1;
+          Tablas.FDTableHabitaciones.Next;
+        end;
+
+    combo.Style := csDropDownList; //readonly
+    combo.ItemIndex := 0; //selecciona el primero
+
+    rellenarComboHabitaciones := combo;
 end;
 
 end.

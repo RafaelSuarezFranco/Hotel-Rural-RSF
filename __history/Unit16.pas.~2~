@@ -1,0 +1,63 @@
+unit Unit16;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VclTee.TeeGDIPlus, VCLTee.TeEngine,
+  VCLTee.Series, Vcl.ExtCtrls, VCLTee.TeeProcs, VCLTee.Chart, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, Vcl.WinXCalendars;
+
+type
+  TGraficos = class(TForm)
+    Chart1: TChart;
+    Series1: TBarSeries;
+    CalendarView1: TCalendarView;
+    procedure FormActivate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Graficos: TGraficos;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  Unit3;
+
+
+procedure TGraficos.FormActivate(Sender: TObject);
+var
+fecha: TDate;
+total: double;
+
+begin
+    Chart1.Series[0].Clear;
+
+   Tablas.FDQuery7.Close;
+   Tablas.FDQuery7.SQL.Text := 'SELECT SUM(preciofinal) AS total, fecha FROM entradas '+
+   ' WHERE estado = "ocupada" GROUP BY fecha ORDER BY fecha limit 6';
+   Tablas.FDQuery7.Open;
+
+   //Chart1.BottomAxis.LabelsSize := 200;
+
+   Tablas.FDQuery7.first;
+   while not Tablas.FDQuery7.eof do
+      begin
+        fecha := Tablas.FDQuery7.FieldByName('fecha').Value;
+        total := Tablas.FDQuery7.FieldByName('total').Value;
+
+        Chart1.Series[0].AddXY(fecha, total, datetostr(fecha), clTeeColor)  ;
+        Tablas.FDQuery7.next;
+      end;
+
+
+
+end;
+
+end.

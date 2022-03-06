@@ -1,0 +1,184 @@
+object Graficos: TGraficos
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Graficos'
+  ClientHeight = 684
+  ClientWidth = 1044
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnActivate = FormActivate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 880
+    Top = 20
+    Width = 105
+    Height = 23
+    Caption = 'Fecha inicio:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 880
+    Top = 258
+    Width = 84
+    Height = 23
+    Caption = 'Fecha fin:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Chart1: TChart
+    Left = 0
+    Top = 8
+    Width = 827
+    Height = 478
+    ScrollMouseButton = mbLeft
+    Title.Text.Strings = (
+      'Ingresos por d'#237'a')
+    BottomAxis.Automatic = False
+    BottomAxis.AutomaticMaximum = False
+    BottomAxis.AutomaticMinimum = False
+    BottomAxis.Maximum = 4.774022030266175000
+    BottomAxis.Minimum = 0.225977969733828800
+    BottomAxis.Title.Caption = 'fecha (diario)'
+    LeftAxis.Automatic = False
+    LeftAxis.AutomaticMaximum = False
+    LeftAxis.AutomaticMinimum = False
+    LeftAxis.Maximum = 180.607363226629600000
+    LeftAxis.Minimum = 28.570534347494870000
+    LeftAxis.Title.Caption = 'ingresos (ocupaciones)'
+    Panning.MouseWheel = pmwNone
+    RightAxis.Automatic = False
+    RightAxis.AutomaticMaximum = False
+    RightAxis.AutomaticMinimum = False
+    RightAxis.Maximum = 14.431108412469110000
+    RightAxis.MaximumRound = True
+    RightAxis.Minimum = 5.568891587530897000
+    RightAxis.MinimumRound = True
+    RightAxis.Title.Caption = 'cantidad de habitaciones'
+    TopAxis.Automatic = False
+    TopAxis.AutomaticMaximum = False
+    TopAxis.AutomaticMinimum = False
+    TopAxis.Maximum = 0.000000028751726860
+    TopAxis.Minimum = -0.000000028751726860
+    Zoom.MouseButton = mbMiddle
+    Zoom.MouseWheel = pmwNormal
+    TabOrder = 0
+    DefaultCanvas = 'TGDIPlusCanvas'
+    PrintMargins = (
+      15
+      21
+      15
+      21)
+    ColorPaletteIndex = 13
+    object Series1: TBarSeries
+      BarBrush.BackColor = clDefault
+      Marks.Visible = False
+      Marks.Callout.Length = 8
+      Title = 'Gr'#225'fico ingresos'
+      XValues.DateTime = True
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Bar'
+      YValues.Order = loNone
+    end
+    object Series2: TBarSeries
+      HorizAxis = aBothHorizAxis
+      Marks.Visible = False
+      PercentFormat = '0'
+      Title = 'Grafico reservas'
+      ValueFormat = '0'
+      VertAxis = aRightAxis
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Bar'
+      YValues.Order = loNone
+    end
+  end
+  object CalendarView1: TCalendarView
+    Left = 841
+    Top = 49
+    Width = 184
+    Height = 184
+    Date = 44621.000000000000000000
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
+    HeaderInfo.DaysOfWeekFont.Color = clWindowText
+    HeaderInfo.DaysOfWeekFont.Height = -13
+    HeaderInfo.DaysOfWeekFont.Name = 'Segoe UI'
+    HeaderInfo.DaysOfWeekFont.Style = []
+    HeaderInfo.Font.Charset = DEFAULT_CHARSET
+    HeaderInfo.Font.Color = clWindowText
+    HeaderInfo.Font.Height = -15
+    HeaderInfo.Font.Name = 'Segoe UI'
+    HeaderInfo.Font.Style = []
+    OnChange = CalendarView1Change
+    ParentFont = False
+    TabOrder = 1
+  end
+  object CalendarView2: TCalendarView
+    Left = 841
+    Top = 287
+    Width = 184
+    Height = 184
+    Date = 44621.000000000000000000
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
+    HeaderInfo.DaysOfWeekFont.Color = clWindowText
+    HeaderInfo.DaysOfWeekFont.Height = -13
+    HeaderInfo.DaysOfWeekFont.Name = 'Segoe UI'
+    HeaderInfo.DaysOfWeekFont.Style = []
+    HeaderInfo.Font.Charset = DEFAULT_CHARSET
+    HeaderInfo.Font.Color = clWindowText
+    HeaderInfo.Font.Height = -15
+    HeaderInfo.Font.Name = 'Segoe UI'
+    HeaderInfo.Font.Style = []
+    OnChange = CalendarView2Change
+    ParentFont = False
+    TabOrder = 2
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 40
+    Top = 492
+    Width = 201
+    Height = 53
+    Caption = 'Estado'
+    Columns = 2
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ItemIndex = 0
+    Items.Strings = (
+      'reservado'
+      'ocupado')
+    ParentFont = False
+    TabOrder = 3
+    OnClick = RadioGroup1Click
+  end
+end

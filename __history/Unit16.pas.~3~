@@ -1,0 +1,118 @@
+unit Unit16;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VclTee.TeeGDIPlus, VCLTee.TeEngine,
+  VCLTee.Series, Vcl.ExtCtrls, VCLTee.TeeProcs, VCLTee.Chart, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, Vcl.WinXCalendars, Vcl.StdCtrls, System.DateUtils;
+
+type
+  TGraficos = class(TForm)
+    Chart1: TChart;
+    CalendarView1: TCalendarView;
+    Label1: TLabel;
+    Label2: TLabel;
+    CalendarView2: TCalendarView;
+    Series1: TBarSeries;
+    RadioGroup1: TRadioGroup;
+    procedure FormActivate(Sender: TObject);
+    procedure CalendarView1Change(Sender: TObject);
+    procedure CalendarView2Change(Sender: TObject);
+    procedure actualizarGrafico();
+    procedure RadioGroup1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Graficos: TGraficos;
+  fechainicio: TDate;
+  fechafin: TDate;
+  estado: string;
+implementation
+
+{$R *.dfm}
+
+uses
+  Unit3;
+
+
+procedure TGraficos.CalendarView1Change(Sender: TObject);
+begin
+   fechainicio:= CalendarView1.Date;
+   actualizarGrafico();
+end;
+
+procedure TGraficos.CalendarView2Change(Sender: TObject);
+begin
+   fechafin:= CalendarView2.Date;
+   actualizarGrafico();
+end;
+
+procedure TGraficos.FormActivate(Sender: TObject);
+
+begin
+  estado := 'reservada';
+  fechainicio := Now();       //inicializamos el gráfico con fecha de hoy a un mes en adelante
+  fechafin :=  IncMonth(Now(), 1);
+  CalendarView1.Date :=  fechainicio;
+  CalendarView2.Date :=  fechafin;
+
+  //hay un pequeño error por el cual si hacemos zoom en el gráfico (en delphi) se desactivan estas propiedades, que son
+  //necesarias para visualizar el gráfico.
+  Chart1.BottomAxis.Automatic := true;
+  Chart1.LeftAxis.Automatic := true;
+
+  actualizarGrafico();
+end;
+
+
+
+procedure TGraficos.RadioGroup1Click(Sender: TObject);
+begin
+  if RadioGroup1.ItemIndex = 0 then estado := 'reservada';
+  if RadioGroup1.ItemIndex = 1 then estado := 'ocupada';
+  actualizarGrafico();
+end;
+
+procedure TGraficos.actualizarGrafico();
+var
+fecha: TDate;
+total: double;
+fechai : string;
+fechaF: string;
+begin
+    Chart1.Series[0].Clear;
+
+    fechai := Tablas.formatearFechaSQL(fechainicio);
+    fechaf := Tablas.formatearFechaSQL(fechafin);
+
+   Tablas.FDQuery7.Close;
+   Tablas.FDQuery7.SQL.Text := 'SELECT SUM(preciofinal) AS total, fecha FROM entradas '+
+   ' WHERE estado = '+quotedstr(estado)+' and fecha >='+quotedstr(fechai)+' and fecha <= '+quotedstr(fechaf)
+   +' GROUP BY fecha ORDER BY fecha';
+   showmessage(Tablas.FDQuery7.SQL.Text);
+   Tablas.FDQuery7.Open;
+
+   //Chart1.BottomAxis.LabelsSize := 200;
+
+   Tablas.FDQuery7.first;
+   while not Tablas.FDQuery7.eof do
+      begin
+        fecha := Tablas.FDQuery7.FieldByName('fecha').Value;
+        total := Tablas.FDQuery7.FieldByName('total').Value;
+
+        Chart1.Series[0].AddXY(fecha, total, datetostr(fecha), clTeeColor)  ;
+        Tablas.FDQuery7.next;
+      end;
+
+
+
+end;
+
+
+end.

@@ -57,4 +57,4 @@ Utilizamos distintos colores para distinguir a simple vista el estado de las hab
 - ![#FFFF00](https://via.placeholder.com/15/FFFF00/000000?text=+) `Amarillo` 'clyellow': reservado.
 - ![#7cfc00](https://via.placeholder.com/15/7cfc00/000000?text=+) `Verde césped` 'clWebLawnGreen': libre - temporada baja.
 - ![#32cd32](https://via.placeholder.com/15/32cd32/000000?text=+) `Verde lima` 'clWebLimeGreen' (algo más oscuro que el anterior): libre - temporada media.
-- ![#228b22](https://via.placeholder.com/15/228b22/000000?text=+) `Verde bosque` 'clWebForestGreen' (más oscuro que los anteriores): - temporada alta.
+- ![#228b22](https://via.placeholder.com/15/228b22/000000?text=+) `Verde bosque` 'clWebForestGreen' (más oscuro que los anteriores): libre - temporada alta.

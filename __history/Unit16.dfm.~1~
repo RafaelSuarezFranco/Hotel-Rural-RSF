@@ -1,0 +1,47 @@
+object Graficos: TGraficos
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Graficos'
+  ClientHeight = 563
+  ClientWidth = 843
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnActivate = FormActivate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Chart1: TChart
+    Left = 0
+    Top = 19
+    Width = 827
+    Height = 478
+    ScrollMouseButton = mbLeft
+    Title.Text.Strings = (
+      'Ingresos por d'#237'a')
+    BottomAxis.Title.Caption = 'fecha (diario)'
+    LeftAxis.Title.Caption = 'ingresos (ocupaciones)'
+    Panning.MouseWheel = pmwNone
+    Zoom.MouseButton = mbMiddle
+    Zoom.MouseWheel = pmwNormal
+    TabOrder = 0
+    DefaultCanvas = 'TGDIPlusCanvas'
+    ColorPaletteIndex = 13
+    object Series1: TBarSeries
+      BarBrush.BackColor = clDefault
+      Marks.Visible = False
+      Marks.Callout.Length = 8
+      Title = 'Gr'#225'fico prueba'
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Bar'
+      YValues.Order = loNone
+    end
+  end
+end

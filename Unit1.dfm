@@ -43,8 +43,8 @@ object Principal: TPrincipal
     Caption = 'Fecha actual:'
   end
   object Label3: TLabel
-    Left = 813
-    Top = 8
+    Left = 864
+    Top = 46
     Width = 60
     Height = 13
     Caption = 'Saltar al d'#237'a:'
@@ -76,8 +76,8 @@ object Principal: TPrincipal
     OnClick = BitBtn2Click
   end
   object DatePicker1: TDatePicker
-    Left = 813
-    Top = 27
+    Left = 575
+    Top = 29
     Date = 44593.000000000000000000
     DateFormat = 'dd/MM/yyyy'
     Font.Charset = DEFAULT_CHARSET
@@ -204,6 +204,17 @@ object Principal: TPrincipal
       object Informedinmico1: TMenuItem
         Caption = 'Informe din'#225'mico'
         OnClick = Informedinmico1Click
+      end
+    end
+    object G1: TMenuItem
+      Caption = '&Gr'#225'ficos'
+      object IngresosReservas1: TMenuItem
+        Caption = 'Ingresos - &Reservas'
+        OnClick = IngresosReservas1Click
+      end
+      object IngresosServicios1: TMenuItem
+        Caption = 'Ingresos - &Servicios'
+        OnClick = IngresosServicios1Click
       end
     end
   end

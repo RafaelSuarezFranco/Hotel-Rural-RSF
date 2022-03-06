@@ -29,7 +29,6 @@ type
 
 var
   FacturaParametros: TFacturaParametros;
-  Habitacionescombo : Array of Integer; //contiene los nº de habitaciones
 
 implementation
 
@@ -107,21 +106,7 @@ var
 i: integer;
 cantidadHabitaciones: integer;
 begin
-  ComboBox1.Style := csDropDownList;
-   i:=0;
-    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;
-    SetLength(Habitacionescombo, cantidadHabitaciones);
-    Combobox1.Items.Clear; //vaciar el combobox para rellenarlo con las habitaciones
-    Tablas.FDTableHabitaciones.First;
-      while not  Tablas.FDTableHabitaciones.Eof do
-        begin
-          Habitacionescombo[i]:= Tablas.FDTableHabitacionesnumero.Value;
-          Combobox1.Items.Add(IntToStr(Tablas.FDTableHabitacionesnumero.Value));
-          i:=i+1;
-          Tablas.FDTableHabitaciones.Next;
-        end;
-
-   Combobox1.ItemIndex := 0;
+   Combobox1 := Tablas.rellenarComboHabitaciones(Combobox1);
 
    DatePicker1.Date := Now();
    DatePicker2.Date := Now();

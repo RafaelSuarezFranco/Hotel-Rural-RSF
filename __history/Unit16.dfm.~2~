@@ -1,0 +1,91 @@
+object Graficos: TGraficos
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Graficos'
+  ClientHeight = 568
+  ClientWidth = 1044
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  OnActivate = FormActivate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Chart1: TChart
+    Left = 0
+    Top = 19
+    Width = 827
+    Height = 478
+    ScrollMouseButton = mbLeft
+    Title.Text.Strings = (
+      'Ingresos por d'#237'a')
+    BottomAxis.Automatic = False
+    BottomAxis.AutomaticMaximum = False
+    BottomAxis.AutomaticMinimum = False
+    BottomAxis.Maximum = 5.309969767004781000
+    BottomAxis.Minimum = -0.309969767004764800
+    BottomAxis.Title.Caption = 'fecha (diario)'
+    LeftAxis.Automatic = False
+    LeftAxis.AutomaticMaximum = False
+    LeftAxis.AutomaticMinimum = False
+    LeftAxis.Maximum = 617.097428162094200000
+    LeftAxis.Minimum = 33.118205289843830000
+    LeftAxis.Title.Caption = 'ingresos (ocupaciones)'
+    Panning.MouseWheel = pmwNone
+    RightAxis.Automatic = False
+    RightAxis.AutomaticMaximum = False
+    RightAxis.AutomaticMinimum = False
+    RightAxis.Maximum = 0.000000018637067785
+    RightAxis.Minimum = -0.000000018637067785
+    TopAxis.Automatic = False
+    TopAxis.AutomaticMaximum = False
+    TopAxis.AutomaticMinimum = False
+    TopAxis.Maximum = 0.000000018637067785
+    TopAxis.Minimum = -0.000000018637067785
+    Zoom.MouseButton = mbMiddle
+    Zoom.MouseWheel = pmwNormal
+    TabOrder = 0
+    DefaultCanvas = 'TGDIPlusCanvas'
+    ColorPaletteIndex = 13
+    object Series1: TBarSeries
+      BarBrush.BackColor = clDefault
+      Marks.Visible = False
+      Marks.Callout.Length = 8
+      Title = 'Gr'#225'fico prueba'
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Bar'
+      YValues.Order = loNone
+    end
+  end
+  object CalendarView1: TCalendarView
+    Left = 833
+    Top = 49
+    Width = 200
+    Height = 203
+    Date = 44621.000000000000000000
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
+    HeaderInfo.DaysOfWeekFont.Color = clWindowText
+    HeaderInfo.DaysOfWeekFont.Height = -13
+    HeaderInfo.DaysOfWeekFont.Name = 'Segoe UI'
+    HeaderInfo.DaysOfWeekFont.Style = []
+    HeaderInfo.Font.Charset = DEFAULT_CHARSET
+    HeaderInfo.Font.Color = clWindowText
+    HeaderInfo.Font.Height = -15
+    HeaderInfo.Font.Name = 'Segoe UI'
+    HeaderInfo.Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+  end
+end

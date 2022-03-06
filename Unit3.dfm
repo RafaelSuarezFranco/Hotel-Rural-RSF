@@ -81,12 +81,21 @@ object Tablas: TTablas
     Height = 13
     Caption = 'informe din'#225'mico'
   end
+  object Label9: TLabel
+    Left = 433
+    Top = 592
+    Width = 117
+    Height = 13
+    Caption = 'queries para los gr'#225'ficos'
+  end
   object FDConnection1: TFDConnection
     Params.Strings = (
       'DriverID=MySQL'
       'Database=hotelrsf'
-      'User_Name=root'
-      'Password=admin')
+      'User_Name=usuario'
+      'Password=Sevilla1%'
+      'Server=torredelrey.ddns.net'
+      'Port=4006')
     Connected = True
     LoginPrompt = False
     Left = 32
@@ -174,7 +183,6 @@ object Tablas: TTablas
     Top = 192
   end
   object FDQuery1: TFDQuery
-    Active = True
     Connection = FDConnection1
     SQL.Strings = (
       'select * from entradas;')
@@ -187,7 +195,6 @@ object Tablas: TTablas
     Top = 32
   end
   object FDTableTemporadas: TFDTable
-    Active = True
     IndexFieldNames = 'id'
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.temporadas'
@@ -227,7 +234,6 @@ object Tablas: TTablas
     Top = 280
   end
   object FDTableServicios: TFDTable
-    Active = True
     IndexFieldNames = 'id'
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.servicios'
@@ -292,7 +298,6 @@ object Tablas: TTablas
     Top = 432
   end
   object FDTableHistoricoentradas: TFDTable
-    Active = True
     IndexFieldNames = 'id'
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.historicoentradas'
@@ -338,7 +343,6 @@ object Tablas: TTablas
     Top = 512
   end
   object FDTableClientes: TFDTable
-    Active = True
     IndexFieldNames = 'id'
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.clientes'
@@ -416,5 +420,28 @@ object Tablas: TTablas
       'select * from entradas')
     Left = 584
     Top = 440
+  end
+  object FDQuery7: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'SELECT SUM(preciofinal) AS total, fecha as fechaentrada FROM ent' +
+        'radas WHERE estado = "ocupada" GROUP BY fecha ORDER BY fecha LIM' +
+        'IT 6')
+    Left = 584
+    Top = 568
+  end
+  object FDQuery8: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'SELECT SUM(s.precioservicio) AS total, es.nombreservicio AS serv' +
+        'icio FROM entradasservicios es, servicios s '
+      'WHERE es.nombreservicio = s.nombreservicio AND '
+      
+        'numerohabitacion = 5 GROUP BY es.nombreservicio ORDER BY  SUM(s.' +
+        'precioservicio)')
+    Left = 656
+    Top = 568
   end
 end

@@ -38,6 +38,9 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     Informedinmico1: TMenuItem;
+    G1: TMenuItem;
+    IngresosReservas1: TMenuItem;
+    IngresosServicios1: TMenuItem;
 
 
 
@@ -68,6 +71,8 @@ type
     procedure Informedinmico1Click(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure IngresosReservas1Click(Sender: TObject);
+    procedure IngresosServicios1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -88,7 +93,7 @@ implementation
 
 {$R *.dfm}
  uses
-  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14;
+  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16, Unit17;
 
 
 
@@ -112,7 +117,7 @@ idcliente: string;
 nombre: string;
 apellido: string;
 stringcliente: string;
-begin
+  begin
   //la idea es reutilizar factura, para ello vamos a cambiar la consulta 'fdquery2' para filtrar por cliente
      idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
      if idcliente <> '' then
@@ -151,6 +156,8 @@ begin
   InformeDinamicoGenerador.ShowModal;
 end;
 
+
+
 procedure TPrincipal.ItinerariodeServicios1Click(Sender: TObject);
 begin
 
@@ -175,13 +182,23 @@ begin
   InformeClientes.QuickRep1.Preview;
 end;
 
+ procedure TPrincipal.IngresosReservas1Click(Sender: TObject);
+begin
+   GraficosReservas.ShowModal;
+end;
+
+
+procedure TPrincipal.IngresosServicios1Click(Sender: TObject);
+begin
+   GraficosServicios.ShowModal;
+end;
 
 
 
 
 
 
-//abrimos las tablas e inicialiamos las fechas, creamos los paneles y los coloreamos
+//abrimos las tablas e inicializamos las fechas, creamos los paneles y los coloreamos
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
@@ -201,6 +218,8 @@ begin
     Tablas.FDQuery4.Open;
     Tablas.FDQuery5.Open;
     Tablas.FDQuery6.Open;
+    Tablas.FDQuery7.Open;
+    Tablas.FDQuery8.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
@@ -488,7 +507,7 @@ fila: integer;
 cantidadHabitaciones: integer;
 tipohabitacion: string;
 begin
-    Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
+    //Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
     Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
 
     DatePicker1.Date:= FechaSeleccionada;
@@ -591,6 +610,10 @@ begin
       cargarDia();
     end;
 end;
+
+
+
+
 
 
  end.

@@ -4,7 +4,7 @@ object FormularioPeriodo: TFormularioPeriodo
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'FormularioPeriodo'
-  ClientHeight = 577
+  ClientHeight = 592
   ClientWidth = 407
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -138,5 +138,17 @@ object FormularioPeriodo: TFormularioPeriodo
     Width = 185
     Height = 153
     TabOrder = 5
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 573
+    Width = 407
+    Height = 19
+    Panels = <>
+    ParentColor = True
+    SimplePanel = True
+    ExplicitLeft = 208
+    ExplicitTop = 296
+    ExplicitWidth = 0
   end
 end
