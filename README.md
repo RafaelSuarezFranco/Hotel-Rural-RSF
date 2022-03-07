@@ -11,15 +11,19 @@ posibilidad.
 
 - Visualizar el estado de las habitaciones día por día.
 - Cambiar el estado de una habitación para un día concreto.
-- Crear nuevas habitaciones.
 - Reservar un periodo concreto.
 - Anular reservas y ocupaciones de un periodo concreto.
 - Crear nuevas temporadas.
+- Crear nuevas habitaciones.
+- Crear nuevos servicios.
+- Crear informes.
+- Crear gráficos.
 - Acceder a la vista mensual de una habitación.
 
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/principal.png)
-![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/nuevahabitacion.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/creartemporada.png)
 
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/nuevahabitacion.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/creartemporada.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altaservicio.png)
 <h3>Pantalla mensual</h3>
 
 - Visualizar el estado de una habitación mes a mes.
@@ -36,6 +40,27 @@ posibilidad.
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/formulariodiario.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/formularioperiodo.png)
 
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altacliente.png)
+
+<h3>Informes</h3>
+
+Podemos generar los siguientes tipos de informes en PDF:
+- Factura: Reservas/ocupaciones para un periodo y habitación concretos, incluyendo servicios.
+- Itinerario de Servicios: Imprime una lista de habitaciones que tienen contratados ciertos servicios para un día concreto.
+- Clientes: Muestra un listado de clientes.
+- Historial de cliente: Muestra todas las reservas y ocupaciones realizadas por un cliente concreto, incluyendo servicios.
+- Informe dinámico: Permite realizar un informe sobre cualquier tabla de la base de datos, eligiendo los campos a mostrar.
+
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/facturaparametros.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/factura.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/itinerario.png)
+
+<h3>Gráficos</h3>
+
+- Ingresos por reservas: Muestra los ingresos de las reservas u ocupaciones entre dos fechas concretas. También muestra la cantidad de habitaciones reservadas/ocupadas.
+- Ingresos por servicios: Muestra los ingresos generados por todos los servicios para reservas u ocupaciones entre dos fechas concretas, de una habitación concreta o de todas.
+
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/graficoreservas.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/graficoservicios.png)
 
 <h2>Reglas establecidas en cuanto a cambios de estado de habitaciones.</h2>
 
