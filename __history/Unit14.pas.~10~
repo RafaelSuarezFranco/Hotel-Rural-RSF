@@ -214,22 +214,13 @@ begin
   if Radiogroup3.ItemIndex = 1 then sql := sql + ' desc';
 
   //showmessage(sql);
-  if contadorcampos > 0 then
-    begin
-       Tablas.FDQuery6.Close;
-       Tablas.FDQuery6.SQL.Text := sql;
-       Tablas.FDQuery6.Open;
-    end;
+
+  Tablas.FDQuery6.Close;
+  Tablas.FDQuery6.SQL.Text := sql;
+  Tablas.FDQuery6.Open;
 
   cantidadcampos := contadorcampos;
-
-  if contadorcampos > 0 then
-   begin
-    InformeDinamico.QuickRep1.Preview;
-   end else
-   begin
-     showmessage('El informe debe contener al menos un campo.');
-   end;
+  InformeDinamico.QuickRep1.Preview;
 end;
 
 
