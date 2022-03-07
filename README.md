@@ -17,14 +17,14 @@ posibilidad.
 - Crear nuevas temporadas.
 - Acceder a la vista mensual de una habitación.
 
-![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_2.png)
-![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_6.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_7.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/principal.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/nuevahabitacion.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/creartemporada.png)
 
 <h3>Pantalla mensual</h3>
 
 - Visualizar el estado de una habitación mes a mes.
 - Cambiar el estado de una habitación para un día concreto.
-![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_3.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/pantallames.png)
 
 <h3>Formularios de reserva</h3>
 
@@ -33,9 +33,9 @@ posibilidad.
 - Cambiar el precio final que tendrá la habitación para un día concreto, independientemente de la temporada o servicios contratados.
 - Gestionar el estado de las habitaciones, siguiendo las reglas del siguiente apartado.
 
-![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_4.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_5.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/formulariodiario.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/formularioperiodo.png)
 
-![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/Screenshot_8.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altacliente.png)
 
 <h2>Reglas establecidas en cuanto a cambios de estado de habitaciones.</h2>
 
