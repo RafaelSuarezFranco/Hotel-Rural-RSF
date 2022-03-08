@@ -25,6 +25,7 @@ type
     procedure actualizarGrafico();
     procedure RadioGroup1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -46,6 +47,13 @@ implementation
 uses
   Unit3;
 
+  {
+  Series[0] -> gráfico de ingresos (color azul)
+  Series[1] -> gráfico de reservas (amarillo) u ocupaciones (rojo)
+  }
+
+
+  //permite imprimir el gráfico (pdf)
 
 procedure TGraficosReservas.Button1Click(Sender: TObject);
 begin
@@ -58,6 +66,9 @@ begin
   end;
 end;
 
+
+
+//procedimientos para cambiar las fechas límites de la consulta del gráfico, con las validaciones pertientes
 
 procedure TGraficosReservas.CalendarView1Change(Sender: TObject);
 var
@@ -107,6 +118,10 @@ begin
   end;
 end;
 
+
+
+//inicializar variables por defecto y algunas propiedades para que el gráfico funcione bien
+
 procedure TGraficosReservas.FormActivate(Sender: TObject);
  var
  cantidadhabitaciones :integer;
@@ -140,6 +155,8 @@ end;
 
 
 
+  //muestra ocupaciones o reservas en el gráfico
+
 procedure TGraficosReservas.RadioGroup1Click(Sender: TObject);
 begin
   if RadioGroup1.ItemIndex = 0 then
@@ -155,6 +172,10 @@ begin
     end;
   actualizarGrafico();
 end;
+
+
+
+//refresca el gráfico con los parámetros que vamos cambiando en la interfaz
 
 procedure TGraficosReservas.actualizarGrafico();
 var
@@ -198,5 +219,11 @@ begin
 
 end;
 
+
+procedure TGraficosReservas.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+     if Key = VK_ESCAPE then  GraficosReservas.Close;
+end;
 
 end.

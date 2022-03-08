@@ -21,6 +21,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -110,6 +111,12 @@ begin
 
    DatePicker1.Date := Now();
    DatePicker2.Date := Now();
+end;
+
+procedure TFacturaParametros.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then  FacturaParametros.Close;
 end;
 
 end.

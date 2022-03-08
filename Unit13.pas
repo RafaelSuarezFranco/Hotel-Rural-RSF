@@ -96,6 +96,7 @@ if Tablas.FDQuery5.RecordCount = 0 then
 end;
 
 
+//mostramos la fecha del itinerario
 
 procedure TItinerarioServicios.imprimirFechas(fecha1: TDate);
  begin

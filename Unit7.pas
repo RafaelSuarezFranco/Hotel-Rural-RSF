@@ -19,6 +19,7 @@ type
     Button2: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -98,6 +99,13 @@ end;
 procedure TNuevaHabitacion.Button2Click(Sender: TObject);
 begin
      NuevaHabitacion.Close;
+end;
+
+
+procedure TNuevaHabitacion.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key = VK_ESCAPE then  NuevaHabitacion.Close;
 end;
 
 end.

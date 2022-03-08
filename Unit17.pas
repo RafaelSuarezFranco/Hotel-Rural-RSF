@@ -30,6 +30,7 @@ type
     procedure CalendarView2Change(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -52,6 +53,9 @@ implementation
 Uses
   Unit3;
 
+
+//inicializar variables por defecto, rellenar combo habitaciones, etc
+
 procedure TGraficosServicios.FormActivate(Sender: TObject);
 begin
     primeraejecucion:= true;
@@ -71,6 +75,8 @@ end;
 
 
 
+//permite imprimir el gráfico (pdf)
+
 procedure TGraficosServicios.Button1Click(Sender: TObject);
 begin
   try
@@ -82,6 +88,9 @@ begin
   end;
 end;
 
+
+
+//procedimientos para cambiar las fechas límites de la consulta del gráfico, con las validaciones pertientes
 
 procedure TGraficosServicios.CalendarView1Change(Sender: TObject);
 var
@@ -131,6 +140,10 @@ begin
   end;
 end;
 
+
+
+//en caso de que queramos un gráfico que abarque todas las habitaciones
+
 procedure TGraficosServicios.CheckBox1Click(Sender: TObject);
 begin
   if CheckBox1.Checked then
@@ -142,6 +155,10 @@ begin
 
 end;
 
+
+
+//en caso de que queramos un gráfico con información de una sola habitación
+
 procedure TGraficosServicios.ComboBox1Change(Sender: TObject);
 begin
    habitacion := combobox1.items[combobox1.Itemindex];
@@ -149,6 +166,9 @@ begin
    Checkbox1.Checked := false;
 end;
 
+
+
+//alterna entre reserva u ocupación
 
 procedure TGraficosServicios.RadioGroup1Click(Sender: TObject);
 begin
@@ -163,6 +183,10 @@ begin
   actualizarGrafico();
 end;
 
+
+
+//refresca el gráfico con los parámetros escogidos en la interfaz
+
 procedure TGraficosServicios.actualizarGrafico();
 var
 nombreservicio: string;
@@ -170,10 +194,10 @@ total :double;
 fechai : string;
 fechaf: string;
 sql : string;
-  begin
+ begin
      Chart1.Series[0].Clear;
 
-     fechai := Tablas.formatearFechaSQL(fechainicio);
+    fechai := Tablas.formatearFechaSQL(fechainicio);
     fechaf := Tablas.formatearFechaSQL(fechafin);
 
     Tablas.FDQuery8.Close;
@@ -211,8 +235,15 @@ sql : string;
     end;
 
 
-  end;
+ end;
 
 
+
+
+procedure TGraficosServicios.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+     if Key = VK_ESCAPE then  GraficosServicios.Close;
+end;
 
 end.

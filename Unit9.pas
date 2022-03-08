@@ -19,6 +19,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -52,6 +53,11 @@ begin
 
 end;
 
+
+
+
+
+
 procedure TAltaServicio.Button2Click(Sender: TObject);
 begin
   Tablas.FDTableServicios.Cancel;
@@ -61,6 +67,16 @@ end;
 procedure TAltaServicio.FormActivate(Sender: TObject);
 begin
    Tablas.FDTableServicios.Append;
+end;
+
+procedure TAltaServicio.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+ if Key = VK_ESCAPE then
+    begin
+      Tablas.FDTableServicios.Cancel;
+      AltaServicio.Close;
+    end;
 end;
 
 end.

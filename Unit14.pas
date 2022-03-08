@@ -22,6 +22,7 @@ type
     function DevolverCampo(i: integer): String;
     function DevolverCantidadCampos(): Integer;
     function DevolverTabla(): String;
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -32,12 +33,12 @@ var
   InformeDinamicoGenerador: TInformeDinamicoGenerador;
   listatablas : Array of String;
   listacampos : Array of String;
-  listacampostipos: Array of String;
   listacheckbox : Array of Tcheckbox;
 
   cantidadcampos: integer;
   camposseleccionados: Array of String;
   tablaseleccionada: string;
+
 implementation
 
 {$R *.dfm}
@@ -47,7 +48,7 @@ implementation
 
 
 
-  //sacamos las tablas de la base de datos y las guardamos en un array, rellenamos el radio group con ese array
+//sacamos las tablas de la base de datos y las guardamos en un array, rellenamos el radio group con ese array
 
 procedure TInformeDinamicoGenerador.FormActivate(Sender: TObject);
 var
@@ -79,6 +80,7 @@ end;
 
 
 
+
 //genera checkboxes para los campos de la tabla seleccionada
 
 procedure TInformeDinamicoGenerador.RadioGroup1Click(Sender: TObject);
@@ -106,7 +108,6 @@ begin
   Tablas.FDQuery6.Open;
 
   SetLength(listacampos, Tablas.FDQuery6.RecordCount);
-  SetLength(listacampostipos, Tablas.FDQuery6.RecordCount);
   SetLength(listacheckbox, Tablas.FDQuery6.RecordCount);
 
   saltodelinea:= Round(370 / Tablas.FDQuery6.RecordCount); //para que los campos salgan repartidos
@@ -116,8 +117,7 @@ begin
   while not Tablas.FDQuery6.Eof do
       begin
         listacampos[i] := Tablas.FDQuery6.FieldByName('Field').Value;
-        //guardamos los tipos también para construir bien la query.
-        listacampostipos[i] :=  Tablas.FDQuery6.FieldByName('Type').Value;
+
         //crear los checkboxes
         campocheck:=TCheckbox.create(self);
         campocheck.Parent:=Scrollbox1;
@@ -214,7 +214,7 @@ begin
   if Radiogroup3.ItemIndex = 1 then sql := sql + ' desc';
 
   //showmessage(sql);
-  if contadorcampos > 0 then
+  if contadorcampos > 0 then   //ejecutamos si hay algún campo seleccionado
     begin
        Tablas.FDQuery6.Close;
        Tablas.FDQuery6.SQL.Text := sql;
@@ -232,6 +232,8 @@ begin
    end;
 end;
 
+
+//estas funciones se utilizan para mandar información al informe
 
 function TInformeDinamicoGenerador.DevolverCampo(i: integer): String;
 begin
@@ -255,5 +257,12 @@ begin
   InformeDinamicoGenerador.Close;
 end;
 
+
+
+procedure TInformeDinamicoGenerador.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+   if Key = VK_ESCAPE then  InformeDinamicoGenerador.Close;
+end;
 
 end.

@@ -51,8 +51,7 @@ type
       var PrintBand: Boolean);
     procedure imprimirFechas(fecha1: TDate; fecha2: TDate);
     procedure imprimirCliente(cliente: string);
-    procedure QRExpBarChart1DisplayChartVal(sender: TObject; valStr: string;
-      barNum, barLeft, barWidth, barHeight: Integer; out NewValstr: string);
+
   private
     { Private declarations }
   public
@@ -74,9 +73,12 @@ implementation
 
 procedure TFactura.FormActivate(Sender: TObject);
 begin
-  CostoTotal:=0;
-  CantidadDias:=0;
+
 end;
+
+
+//este informe vale tanto para una factura de una habitación como para el historial de un cliente
+
 
 //para hacer agrupaciones, la idea es recorrer la tabla con los datos por los que vamos a agrupar, y por cada registro,
 //con esos datos, hacemos una consulta para rellenar los subdetalles. Es un group by artesanal, por así decirlo.
@@ -92,6 +94,9 @@ procedure TFactura.QRBand3BeforePrint(Sender: TQRCustomBand;
 
   banda : TQRBand;
 begin
+  //la consulta principal viene dada desde fuera, pero la subconsulta la construimos aquí, dado que debe
+  //cambiar según la información obtenida de la consulta principal
+
   fecha := Tablas.FDQuery2.FieldByName('fechaentrada').Value;
   habitacion := Tablas.FDQuery2.FieldByName('numero').Value;
   precio := Tablas.FDQuery2.FieldByName('preciofinal').Value;
@@ -120,7 +125,6 @@ banda := TQRBand(Sender);
       banda.Color:= TColor(RGB(252,252,166));
     end;
   if estado = 'ocupada' then
-
     begin
      banda.Color:=  TColor(RGB(255,150,150));
     end;
@@ -131,13 +135,6 @@ end;
 
 
 
-
- procedure TFactura.QRExpBarChart1DisplayChartVal(sender: TObject;
-  valStr: string; barNum, barLeft, barWidth, barHeight: Integer;
-  out NewValstr: string);
-begin
-
-end;
 
 //muestra un mensaje si una reserva/ocupación no tiene servicios asociados
 
@@ -170,6 +167,7 @@ end;
     QRLabel16.Caption := 'Del día ' +  DatetoStr(fecha1) + ' al ' + DatetoStr(fecha2);
  end;
 
+ //muestra el cliente seleccionado
   procedure TFactura.imprimirCliente(cliente: String);
  begin
     QRLabel1.Caption := 'HISTORIAL DE CLIENTE';

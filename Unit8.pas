@@ -21,6 +21,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -110,10 +111,14 @@ begin
       CrearTemporada.Close;
     end else
     begin
-      showmessage('El periodo introducido se mezcla con una temporada existente.');
+      showmessage('El periodo introducido se cruza con una temporada existente.');
     end;
 
 end;
+
+
+
+
 
 procedure TCrearTemporada.Button2Click(Sender: TObject);
 begin
@@ -124,6 +129,12 @@ procedure TCrearTemporada.FormActivate(Sender: TObject);
 begin
   Datepicker1.Date := Now();
   Datepicker2.Date := Now();
+end;
+
+procedure TCrearTemporada.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then  CrearTemporada.Close;
 end;
 
 end.
