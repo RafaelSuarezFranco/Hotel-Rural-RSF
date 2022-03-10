@@ -4,6 +4,14 @@ editar habitaciones? borrar/editar temporadas?
 pantalla de ayuda
 shortcuts?
 
+servicios -> no meter uno con el mismo nombre
+en general, comprobar las claves primarias
+
+implementar usuarios y perfiles (administrador)
+
+
+
+
 
 Reglas establecidas en cuanto a cambios de estado de habitaciones.
 
