@@ -46,15 +46,8 @@ begin
      showmessage('Por favor, introduce los dos campos.');
   end else
   begin
-      if not Tablas.FDTableServicios.Locate('nombreservicio', DBEdit1.Text, []) then
-      begin
-          Tablas.FDTableServicios.Post;
-          AltaServicio.Close;
-      end else
-      begin
-        showmessage('Ya existe un servicio con ese nombre, por favor, escoge otro.');
-      end;
-
+     Tablas.FDTableServicios.Post;
+   AltaServicio.Close;
   end;
 
 

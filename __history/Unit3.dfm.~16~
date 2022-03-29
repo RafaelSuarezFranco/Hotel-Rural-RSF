@@ -92,7 +92,7 @@ object Tablas: TTablas
     Params.Strings = (
       'DriverID=MySQL'
       'Database=hotelrsf'
-      'User_Name=root'
+      'User_Name=usuario'
       'Password=Sevilla1%'
       'Server=torredelrey.ddns.net'
       'Port=4006')

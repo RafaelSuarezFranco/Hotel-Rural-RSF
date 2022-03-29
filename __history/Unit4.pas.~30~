@@ -19,27 +19,35 @@ type
     Label3: TLabel;
     Button1: TButton;
     Label5: TLabel;
-    Panel1: TPanel;
-    Label12: TLabel;
-    SpinEdit1: TSpinEdit;
+    ScrollBox1: TScrollBox;
     Label10: TLabel;
+    Label12: TLabel;
+    Edit2: TEdit;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     function actualizarServicios(): Boolean;
     procedure borrarServicios();
     procedure RecalcularPrecio(Sender: TObject);
     procedure ActualizarPrecioTabla();
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
     { Public declarations }
+    dia: integer;
+    mes: integer;
+    año: integer;
+    Habitacion: Integer;
+    origen: string; //variable de control para saber si venimos de principal o pantallames. es importante
+    //para controlar si debemos refrescar o no la pantallames, porque puede dar un invalid pointer si el origen
+    //es la pantalla ppal (y no se ha inicializado la pantalla mes).
   end;
 
 var
   FormularioDiario: TFormularioDiario;
   Estado: String;
   Fecha: TDate;
-  Habitacion: Integer;
+  //Habitacion: Integer;
   Cliente: String;
   Preciofinal: Double;
   fechabusqueda: String;
@@ -59,8 +67,12 @@ implementation
 {$R *.dfm}
  uses Unit1, Unit2, Unit3, Unit6;
 
+
+//único botón del formulario, guardará los cambios realizados siempre y cuando sean válidos
+
 procedure TFormularioDiario.Button1Click(Sender: TObject);
 var
+precio: double;
 seleccion: integer;
 accionRealizada: boolean;
 accionCancelada: boolean;
@@ -77,12 +89,12 @@ begin
   if (RadioGroup1.ItemIndex = 0) and (Estado <> 'libre') then
     begin
       accionCancelada:=false;
-      // en primer lugar, si es una ocupación, solo podemos borrarla si es del día de hoy  (o futura)
+      // en primer lugar, si es una ocupación, solo podemos borrarla si es del día de hoy (o futura)
     if (Estado = 'ocupada') and (DiaPasado = true) then
      begin
           showmessage('No se puede borrar una ocupación que ya ha ocurrido en el pasado.')
      end else
-     begin  //por el contrario, las reservas pasadas si se pueden anular (o marcar como ocupadas
+     begin  //por el contrario, las reservas pasadas si se pueden anular (o marcar como ocupadas)
 
 
       seleccion := messagedlg('Vas a dejar libre una habitación que estaba reservada/ocupada. Esto borrará su registro y los correspondientes datos. ¿Estás seguro?',mtWarning , mbOKCancel, 0);
@@ -125,8 +137,8 @@ begin
 
         while not Tablas.FDTableEntradas.eof do
          begin
-
-          if Tablas.FDTableEntradasFecha.Value = Fecha then  //borramos las entradas de esta habitacion para esta fecha
+          //borramos las entradas de esta habitacion para esta fecha
+          if Tablas.FDTableEntradasFecha.Value = Fecha then
             begin
             Tablas.FDTableEntradas.Delete;
             end
@@ -136,7 +148,7 @@ begin
             end;
           
           end;
-        ShowMessage('El registo de esta habitación para la fecha concreta ha sido borrado.');
+        ShowMessage('El registro de esta habitación para la fecha concreta ha sido borrado.');
         Tablas.FDTableEntradas.Filtered:=False;
         accionRealizada := true;
        end;
@@ -158,7 +170,24 @@ begin
             Showmessage('El campo del cliente no puede estar vacío.');
             accionValida := false;
           end;
-       ///
+
+        if (RadioGroup1.ItemIndex = 1) and (DiaPasado = True) then
+          begin
+            Showmessage('No se puede reservar en un día pasado');
+            accionValida := false;
+          end;
+
+       //vamos a ser generosos y pensar que al usuario se le podría haber olvidado marcar una ocupación que ya ha pasado
+       //con una semana de margen. Por tanto, solo podemos marcar de libre a ocupada si es hoy, o como mucho, hace 7 días
+        if (RadioGroup1.ItemIndex = 2) then
+          begin
+            if (Fecha > Now()) or (Fecha < IncDay(Now(), -8)) then
+            begin
+            Showmessage('Solo se puede marcar una habitación libre como ocupada en el día presente, o como muy tarde, con 7 días de retraso');
+            accionValida := false;
+            end;
+          end;
+        // esta condición no va en perjuicio de que cualquier reserva que quede en el pasado pueda ser marcada como libre u ocupada.
 
 
 
@@ -167,6 +196,7 @@ begin
 
           AltaCliente.ImportarIdentificador(Edit1.Text); //preventivamente, mandamos el identificador al formulario.
           clienteValido := AltaCliente.AltaEnCaliente(Edit1.Text); //abre el alta de cliente si no existe.
+
 
           if not clienteValido then
             begin
@@ -186,31 +216,37 @@ begin
 
             if seleccion = mrOK then
               begin
-               Tablas.FDTableEntradas.append;
-               Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
-               Tablas.FDTableEntradasfecha.Value := Fecha;
-               if RadioGroup1.ItemIndex = 1 then
-                  Tablas.FDTableEntradasestado.Value:= 'reservada';
-               if RadioGroup1.ItemIndex = 2 then
-                  Tablas.FDTableEntradasestado.Value:= 'ocupada';
+                try
+                precio:= strtofloat(Edit2.Text);
 
-               Tablas.FDTableEntradascliente.Value:= Edit1.Text;
-               PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
-               Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text); //el precio es lo que aparezca en el spinner,
-               // que de base es el precio final calculado, pero puede ser cambiado manualmente.
 
-               if StrToInt(SpinEdit1.Text) < 0 then //si se intenta guardar el registro con precio menor o igual a 0
-                 begin
-                   showmessage('Error: El precio final no puede ser menor que 0');
-                 end
-                 else
-                 begin
-                   Tablas.FDTableEntradas.post;
+                Tablas.FDTableEntradas.append;
+                Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
+                Tablas.FDTableEntradasfecha.Value := Fecha;
+                if RadioGroup1.ItemIndex = 1 then
+                   Tablas.FDTableEntradasestado.Value:= 'reservada';
+                if RadioGroup1.ItemIndex = 2 then
+                   Tablas.FDTableEntradasestado.Value:= 'ocupada';
 
-                   accionRealizada:= True;
+                Tablas.FDTableEntradascliente.Value:= Edit1.Text;
+                PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
+                Tablas.FDTableEntradaspreciofinal.Value := precio; //el precio es lo que aparezca en el tedit,
+                // que de base es el precio final calculado, pero puede ser cambiado manualmente.
+
+                if precio < 0 then //si se intenta guardar el registro con precio menor o igual a 0
+                  begin
+                     showmessage('Error: El precio final no puede ser menor que 0');
+                   end
+                   else
+                   begin
+                     Tablas.FDTableEntradas.post;
+
+                     accionRealizada:= True;
+                   end;
+
+                except
+                  showmessage('El precio debe ser de tipo numérico.');
                  end;
-
-
               end;
              end;
 
@@ -219,8 +255,12 @@ begin
       end;
 
     //OCUPAR UNA HABITACION QUE ESTABA RESERVADA (¿hemos quedado en que crea un nuevo registro a parte del de la reserva?)
-    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') then
+    //tambien hemos establecido que solo podemos pasar de reservada o ocupada si es hoy, o pasado.
+    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') and (Fecha < Now()) then
       begin
+        try
+           precio:= strtofloat(Edit2.Text);
+
           Tablas.FDTableEntradas.append;
 
           Tablas.FDTableEntradasnumerohabitacion.Value := Habitacion;
@@ -229,15 +269,22 @@ begin
 
           Tablas.FDTableEntradascliente.Value:= Cliente; //usamos el cliente almacenado, en caso de que escribamos algo distinto.
           PrecioFinal:= PrecioBase + TemporadaPrecio; //calcular el precio final con servicios, etc.
-          Tablas.FDTableEntradaspreciofinal.Value := StrToInt(SpinEdit1.Text);
+          Tablas.FDTableEntradaspreciofinal.Value := precio;
           
           Tablas.FDTableEntradas.post;
           
           accionRealizada:= true;
+        except
+          showmessage('El campo precio debe ser un numérico.');
+        end;
+      end;
+    if (RadioGroup1.ItemIndex = 2) and (Estado = 'reservada') and (Fecha > Now()) then
+      begin
+         showmessage('No se puede marcar como ocupada una reserva que está en el futuro.  ');
       end;
 
 
-    //PASAR DE OCUPACION A RESERVA? no lo creo
+    //PASAR DE OCUPACIÓN A RESERVA? no lo creo
     if (RadioGroup1.ItemIndex = 1) and (Estado = 'ocupada') then
     begin
       showmessage('Estás intentado reservar una habitación ocupada. Si quieres reservar la habitación, libérala primero (Marca "libre")');
@@ -255,11 +302,18 @@ begin
     begin
      //cerramos y actualizamos la pantalla del mes (y la principal, si hemos actualizado el día de hoy).
      FormularioDiario.Close;
-     PantallaMes.cargarMes;
+     if origen = 'pantallames' then PantallaMes.cargarMes;
      Principal.cargarDia;
     end;
 
+
 end;
+
+
+
+//se encarga inicializar el formulario con los datos del registro pertienente, si lo hubiera.
+//la idea de este formulario es jugar con el estado actual y compararlos con los cambios que se hagan en dicho
+//formulario.
 
 procedure TFormularioDiario.FormActivate(Sender: TObject);
 var
@@ -268,16 +322,10 @@ i: integer;
 diabusqueda: String;
 mesbusqueda: String;
 
-dia: integer;
-mes: integer;
-año: integer;
-
 servicioCheck: TCheckbox;
 
 begin
-  dia:= PantallaMes.DevolverDiaSeleccionado;
-  mes:= MonthOfTheYear(PantallaMes.DevolverFechaSeleccionada1);
-  año:= YearOf(PantallaMes.DevolverFechaSeleccionada1);
+
   Fecha:= EncodeDate(año, mes, dia); //Tdate del formulario
 
   if Fecha < IncDay(Now(), -1) then
@@ -288,6 +336,17 @@ begin
     DiaPasado:= False;
   end;
 
+  //borrar los checkboxs y recrearlos, puede dar errores si hay muchos y se crean más de la cuenta
+    if Length(CheckboxServicios) > 0 then
+      begin
+       for i := 0 to Length(CheckboxServicios)-1 do
+          begin
+          CheckboxServicios[i].Free;
+          end;
+      end;
+
+
+
   diabusqueda := IntToStr(dia);
   mesbusqueda := IntToStr(mes);
   if length(diabusqueda) < 2 then
@@ -296,8 +355,10 @@ begin
     mesbusqueda:= '0'+ mesbusqueda;
   fechabusqueda:= IntToStr(año)+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
 
-  Habitacion:= PantallaMes.DevolverHabitacionSeleccionada1();
   //buscamos en la tabla con en nº y fecha seleccionados, con lo que vamos encontrando, vamos rellenando el formulario
+
+  //la idea de este formulario es guardar el estado actual cuando se ejecuta el activate (en función de fecha y habitación seleccionada)
+  //y luego al pulsar el botón, comparar ese estado con lo que se ha seleccionado en el formulario.
   Tablas.FDQuery1.Close;
   Tablas.FDQuery1.SQL.Text:= 'Select * from entradas where numerohabitacion='+IntToStr(Habitacion)+' and fecha = '+quotedStr(fechabusqueda);
   Tablas.FDQuery1.Open;
@@ -312,7 +373,9 @@ begin
     Estado := 'reservada';
     Cliente:= Tablas.FDQuery1.FieldByName('cliente').AsString;
     end;
-  if Tablas.FDQuery1.Locate('estado', 'ocupada', []) then  //si hay dos registros, uno de reserva y otro de ocupacion, consideramos el de ocupación
+
+   //si hay dos registros, uno de reserva y otro de ocupacion, consideramos el de ocupación
+  if Tablas.FDQuery1.Locate('estado', 'ocupada', []) then
     begin
      Estado := 'ocupada';
       Cliente:= Tablas.FDQuery1.FieldByName('cliente').AsString;
@@ -335,11 +398,11 @@ begin
     if Estado = 'libre' then
     begin
       RadioGroup1.ItemIndex:=0;
-      Panel1.Visible := False;
+      ScrollBox1.Visible := False;
     end
     else
     begin
-      Panel1.Visible := True;
+      ScrollBox1.Visible := True;
     end;
 
     if Estado = 'reservada' then
@@ -352,9 +415,7 @@ begin
     Label6.Caption:= IntToStr(Habitacion);
     Label7.Caption:= DateToStr(Fecha);
     Edit1.Text:=Cliente;
-    //Label3.Caption:=FloatToStr(Preciofinal);
 
-    //showmessage(Estado+Cliente);
 
     //SERVICIOS
 
@@ -370,12 +431,13 @@ begin
         nombresServicios[i] := Tablas.FDTableServiciosnombreservicio.Value;
 
         servicioCheck:=TCheckbox.create(self);
-        servicioCheck.Parent:=Panel1;
+        servicioCheck.Parent:=ScrollBox1;
 
         servicioCheck.Tag:=i;
         servicioCheck.Top:=i*20+30;
         servicioCheck.Left:=15;
         servicioCheck.Caption:=nombresServicios[i] + ' ('+FloatToStr(Tablas.FDTableServiciosprecioservicio.Value)+'€)';
+        servicioCheck.Width:= 180;
 
         PreciosServicios[i] := Tablas.FDTableServiciosprecioservicio.Value;
         CheckboxServicios[i]:= servicioCheck;
@@ -385,10 +447,6 @@ begin
         Tablas.FDTableServicios.Next;
         i:=i+1;
        end;
-
-
-
-
 
 
        //hay que checkear aquellos que tengan un registro en la tabla entradasservicios
@@ -417,7 +475,6 @@ begin
 
 
 
-
    //si la habitación estaba libre, mostramos su precio base de la tabla de habitaciones.
 
     Tablas.FDTableHabitaciones.Filtered:=True;
@@ -429,14 +486,15 @@ begin
 
     if Estado = 'libre' then
      begin
-        Label3.Caption:=FloatToStr(PrecioCalculado);
-        SpinEdit1.Text:=FloatToStr(PrecioCalculado);
+        Label3.Caption:= FloatToStr(Round(PrecioCalculado*100)/100);
+        edit2.Text := FloatToStr(Round(PrecioCalculado*100)/100);
         PrecioCalculado := PrecioBase + TemporadaPrecio;
      end
      else
      begin
         Label3.Caption:=FloatToStr(PrecioFinal); //si no estaba libre, mostramos su precio final (que incluirá servicios o lo que hubiera)
-        SpinEdit1.Text:=FloatToStr(PrecioFinal);
+        Label3.Caption:= FloatToStr(Round(PrecioFinal*100)/100);
+        edit2.Text := FloatToStr(Round(PrecioFinal*100)/100);
         PrecioCalculado := PrecioFinal;
      end;
 
@@ -448,12 +506,13 @@ end;
 
 
 
-
 //GESTIÓN DE SERVICIOS (borrarlos, crearlos)
 
 
+//este procedimiento es exclusivo para cuando vamos a liberar una habitación,
+// dado que hay que borrar todos sus servicios
 
-procedure TFormularioDiario.BorrarServicios(); //este procedimiento es exclusivo para cuando vamos a liberar una habitación, dado que hay que borrar sus servicios
+procedure TFormularioDiario.BorrarServicios();
 begin
   Tablas.FDTableEntradasservicios.Filtered:=True;
     Tablas.FDTableEntradasservicios.Filter:='numerohabitacion='+IntToStr(Habitacion);
@@ -462,18 +521,23 @@ begin
       begin
         if Tablas.FDTableEntradasserviciosfecha.Value = Fecha then
           begin
-            Tablas.FDTableEntradasservicios.Delete; //borramos los registros de esta habitación para la fecha concreta.
+          //borramos los registros de esta habitación para la fecha concreta.
+            Tablas.FDTableEntradasservicios.Delete;
 
           end
           else
           begin
-            Tablas.FDTableEntradasservicios.next; //esto hay que meterlo en un else porque si borra algo, se salta el siguiente
+          //esto hay que meterlo en un else porque si borra algo, se salta el siguiente
+            Tablas.FDTableEntradasservicios.next;
           end;
 
       end;
     Tablas.FDTableEntradasservicios.Filtered:=False;
 
 end;
+
+
+//en cualquier otro caso, debemos comparar cada servicio cada vez que marcamos/desmarcamos algo
 
 function TFormularioDiario.ActualizarServicios(): Boolean;
 var  //PROBABLEMENTE HAY QUE PULIR LAS OPCIONES DE ESTA FUNCIÓN
@@ -483,30 +547,7 @@ begin
   servicioscambiados:= false;
   //solo daremos de alta servicios si la habitación no va a estar libre. Es decir, si el radio botón está en libre, (se encarga el procedimiento anterior)
   //borramos los registros, en caso contrario, borramos o creamos dependiendo de cada caso.
-  if RadioGroup1.ItemIndex <> 0 then
- { begin
-    Tablas.FDTableEntradasservicios.Filtered:=True;
-    Tablas.FDTableEntradasservicios.Filter:='numerohabitacion='+IntToStr(Habitacion);
-    Tablas.FDTableEntradasservicios.First;
-    while not Tablas.FDTableEntradasservicios.eof do
-      begin
-        if Tablas.FDTableEntradasserviciosfecha.Value = Fecha then
-          begin
-            Tablas.FDTableEntradasservicios.Delete; //borramos los registros de esta habitación para la fecha concreta.
-
-          end
-          else
-          begin
-            Tablas.FDTableEntradasservicios.next; //esto hay que meterlo en un else porque si borra algo, se salta el siguiente
-          end;
-
-      end;
-    Tablas.FDTableEntradasservicios.Filtered:=False;
-    servicioscambiados := True;
-  end
-
-
-  else //si el estado quedará como reservado u ocupado.   }
+if RadioGroup1.ItemIndex <> 0 then
   begin
     for i := 0 to Length(CheckboxServicios)-1 do
       begin
@@ -550,13 +591,16 @@ begin
 
    if (RadioGroup1.ItemIndex <> 0) and (Estado = 'libre') and (Edit1.Text = '') then
       servicioscambiados:=false; //corrige un pequeño error por el cual si una habitacion libre se intenta
-      //reservar con unos servicios pero no es mete el nombre de cliente, simplmente se guardan los servicios
+      //reservar con unos servicios pero no se mete el nombre de cliente, simplemente se guardan los servicios
       //(pero no se hace la reserva porque falta el cliente)
 
   end;
   ActualizarServicios := servicioscambiados;//devolvemos si hemos cambiado o no algo.
 
 end;
+
+
+//recalcula en caliente el precio final, si cambiamos los servicios seleccionados
 
 procedure TFormularioDiario.RecalcularPrecio(Sender: TObject);
 var
@@ -565,52 +609,79 @@ var
 begin
    checkbox := TCheckbox(Sender);
    i := checkbox.Tag;
+   //si checkeamos un servicio, sumamos
    if  CheckboxServicios[i].Checked then
     begin
       PrecioCalculado := PrecioCalculado + PreciosServicios[i];
-      SpinEdit1.Text := FloatToStr(PrecioCalculado);
+
+      edit2.Text := FloatToStr(Round(PrecioCalculado*100)/100);
     end;
+    //si desmarcamos un servicio, restamos
      if  not CheckboxServicios[i].Checked then
     begin
       PrecioCalculado := PrecioCalculado - PreciosServicios[i];
-      SpinEdit1.Text := FloatToStr(PrecioCalculado);
+
+      edit2.Text := FloatToStr(Round(PrecioCalculado*100)/100);
     end;
 
 
 
 end;
 
+
+
+//permite hacer un update del precio, si una vez ocupado/reservado, queremos cambiarlo
 
 procedure TFormularioDiario.ActualizarPrecioTabla();
-//var
+var
+precio: double;
 begin
-  if StrToFloat(SpinEdit1.Text) <> Preciofinal then  //si hemos cambiado el precio de alguna manera, hay que actualizarlo.
-   if StrToInt(SpinEdit1.Text) >= 0 then //si se intenta guardar el registro con precio menor o igual a 0, no dejamos
-   begin
-    begin
-      Tablas.FDTableEntradas.Filtered := True;
-      Tablas.FDTableEntradas.Filter := 'numerohabitacion='+IntToStr(Habitacion);
-      Tablas.FDTableEntradas.First;
-      while not  Tablas.FDTableEntradas.eof do
-        begin
-          if Tablas.FDTableEntradasfecha.Value = Fecha then
-          begin
-            Tablas.FDTableEntradas.Edit;
-            Tablas.FDTableEntradaspreciofinal.Value := StrToFloat(SpinEdit1.Text);
-            Tablas.FDTableEntradas.Post;
-          end;
+  try
+    precio:= strtofloat(Edit2.Text);
 
-           Tablas.FDTableEntradas.Next;
-        end;
-      Tablas.FDTableEntradas.Filtered := False;
-    end;
-   end
-   else
+  if precio <> Preciofinal then  //si hemos cambiado el precio de alguna manera, hay que actualizarlo.
    begin
-     showmessage('El precio no puede ser menor que 0');
+   if precio >= 0 then //si se intenta guardar el registro con precio menor o igual a 0, no dejamos
+      begin
+        Tablas.FDTableEntradas.Filtered := True;
+        Tablas.FDTableEntradas.Filter := 'numerohabitacion='+IntToStr(Habitacion);
+        Tablas.FDTableEntradas.First;
+        while not  Tablas.FDTableEntradas.eof do
+          begin
+            if Tablas.FDTableEntradasfecha.Value = Fecha then
+              begin
+                Tablas.FDTableEntradas.Edit;
+                Tablas.FDTableEntradaspreciofinal.Value := precio;
+                Tablas.FDTableEntradas.Post;
+              end;
+
+             Tablas.FDTableEntradas.Next;
+          end;
+        Tablas.FDTableEntradas.Filtered := False;
+      end else
+      begin
+       showmessage('El precio no puede ser menor que 0');
+      end;
    end;
+
+
+  except
+   showmessage('Error al actualizar precio. Por favor, no introduzcas datos no numéricos en el campo precio.');
+  end;
+
 end;
 
+
+
+ //atajo teclado
+procedure TFormularioDiario.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    begin
+      FormularioDiario.Close;
+    end;
+end;
 
 
 end.

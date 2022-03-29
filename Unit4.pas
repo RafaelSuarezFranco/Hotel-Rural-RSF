@@ -148,7 +148,7 @@ begin
             end;
           
           end;
-        ShowMessage('El registo de esta habitación para la fecha concreta ha sido borrado.');
+        ShowMessage('El registro de esta habitación para la fecha concreta ha sido borrado.');
         Tablas.FDTableEntradas.Filtered:=False;
         accionRealizada := true;
        end;
@@ -235,6 +235,7 @@ begin
 
                 if precio < 0 then //si se intenta guardar el registro con precio menor o igual a 0
                   begin
+                      Tablas.FDTableEntradas.cancel;
                      showmessage('Error: El precio final no puede ser menor que 0');
                    end
                    else
@@ -301,9 +302,11 @@ begin
     if accionRealizada then
     begin
      //cerramos y actualizamos la pantalla del mes (y la principal, si hemos actualizado el día de hoy).
+
+     //if origen = 'pantallames' then PantallaMes.cargarMes;
+     if origen = 'pantallames' then PantallaMes.ActualizarColores2;
+     if origen = 'principal' then Principal.cargarDia;
      FormularioDiario.Close;
-     if origen = 'pantallames' then PantallaMes.cargarMes;
-     Principal.cargarDia;
     end;
 
 

@@ -72,7 +72,7 @@ begin
   Label1.Caption:= 'Fecha seleccionada: '+ DateToStr(FechaSeleccionada1);
   Label2.Caption:= 'Habitación seleccionada: '+ IntToStr(HabitacionSeleccionada1);
 
-  CargarMes();
+    CargarMes();
 
 //COMBO HABITACIONES
  // en este caso no vamos a llamar al generador de combos de Tablas porque queremos que al crearse se seleccione una habitación
@@ -180,13 +180,15 @@ begin
       Label1.Caption:= 'Fecha seleccionada: '+ DateToStr(FechaSeleccionada1);
 
       //primero borrar el calendario
-      if Length(PanelesDia) > 0 then
+
+  if Length(PanelesDia) > 0 then
       begin
        for i := 0 to Length(PanelesDia)-1 do
           begin
-          PanelesDia[i].Free;
+              PanelesDia[i].Free;
           end;
       end;
+
 
     //creación de los días (paneles)
      dia:=1;
