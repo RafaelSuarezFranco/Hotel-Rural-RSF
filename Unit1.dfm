@@ -173,6 +173,10 @@ object Principal: TPrincipal
         Caption = 'Temporada'
         OnClick = creartempClick
       end
+      object Usuario1: TMenuItem
+        Caption = 'Usuario'
+        OnClick = Usuario1Click
+      end
       object N1: TMenuItem
         Caption = '-'
       end

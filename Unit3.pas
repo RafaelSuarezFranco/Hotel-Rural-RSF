@@ -3,13 +3,16 @@ unit Unit3;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL,
   FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
-  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,   System.DateUtils,
-  FireDAC.Comp.Client, Vcl.StdCtrls;
+  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  System.DateUtils,
+  FireDAC.Comp.Client, Vcl.StdCtrls, IdGlobal, IdHash, System.RegularExpressions,
+  IdHashMessageDigest;
 
 type
   TTablas = class(TForm)
@@ -78,10 +81,19 @@ type
     FDQuery7: TFDQuery;
     Label9: TLabel;
     FDQuery8: TFDQuery;
+    FDTableUsuarios: TFDTable;
+    FDTableUsuariosid: TFDAutoIncField;
+    FDTableUsuariosusuario: TStringField;
+    FDTableUsuarioscorreo: TStringField;
+    FDTableUsuarioscliente: TStringField;
+    FDTableUsuariosperfil: TStringField;
+    FDTableUsuarioscontraseña: TStringField;
 
-
-    function formatearFechaSQL(fecha: TDate):String;
-    function rellenarComboHabitaciones(combo: TComboBox):TComboBox;
+    function formatearFechaSQL(fecha: TDate): String;
+    function rellenarComboHabitaciones(combo: TComboBox): TComboBox;
+    function passwordHash(password: String): String;
+    function IsMatch(const Input, Pattern: string): boolean;
+    function emailFormatoValido(const EmailAddress: string): boolean;
   private
     { Private declarations }
   public
@@ -94,51 +106,97 @@ var
 implementation
 
 {$R *.dfm}
-
-//formatea una fecha de tipo TDate a una String que se pueda usar en las FDQueries.
+// formatea una fecha de tipo TDate a una String que se pueda usar en las FDQueries.
 
 function TTablas.formatearFechaSQL(fecha: TDate): String;
-  var
+var
   diabusqueda: String;
   mesbusqueda: String;
   fechabusqueda: String;
 begin
-    diabusqueda := IntToStr(DayOfTheMonth(fecha));
-    mesbusqueda := IntToStr(MonthOfTheYear(fecha));
-    if length(diabusqueda) < 2 then
-        diabusqueda:= '0'+ diabusqueda;
-    if length(mesbusqueda) < 2 then
-        mesbusqueda:= '0'+ mesbusqueda;
-    fechabusqueda:= IntToStr(YearOf(fecha))+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
+  diabusqueda := IntToStr(DayOfTheMonth(fecha));
+  mesbusqueda := IntToStr(MonthOfTheYear(fecha));
+  if length(diabusqueda) < 2 then
+    diabusqueda := '0' + diabusqueda;
+  if length(mesbusqueda) < 2 then
+    mesbusqueda := '0' + mesbusqueda;
+  fechabusqueda := IntToStr(YearOf(fecha)) + '-' + mesbusqueda + '-' +
+    diabusqueda; // fecha formateada para buscarla con SQL
 
-    formatearFechaSQL := fechabusqueda;
+  formatearFechaSQL := fechabusqueda;
 end;
 
 
 
-//recibe un combobox a rellenar, lo vacía y lo rellena con los números de habitación.
+// recibe un combobox a rellenar, lo vacía y lo rellena con los números de habitación.
 
-function TTablas.rellenarComboHabitaciones(combo: TComboBox):TComboBox;
-  var
-cantidadHabitaciones: integer;
-i : integer;
+function TTablas.rellenarComboHabitaciones(combo: TComboBox): TComboBox;
+var
+  cantidadHabitaciones: integer;
+  i: integer;
 begin
-    i:=0;
-    cantidadHabitaciones:= Tablas.FDTableHabitaciones.RecordCount;
+  i := 0;
+  cantidadHabitaciones := Tablas.FDTableHabitaciones.RecordCount;
 
-    combo.Items.Clear; //vaciar el combobox para rellenarlo con las habitaciones
-    Tablas.FDTableHabitaciones.First;
-      while not  Tablas.FDTableHabitaciones.Eof do
-        begin
-          combo.Items.Add(IntToStr(Tablas.FDTableHabitacionesnumero.Value));
-          i:=i+1;
-          Tablas.FDTableHabitaciones.Next;
-        end;
+  combo.Items.Clear; // vaciar el combobox para rellenarlo con las habitaciones
+  Tablas.FDTableHabitaciones.First;
+  while not Tablas.FDTableHabitaciones.Eof do
+  begin
+    combo.Items.Add(IntToStr(Tablas.FDTableHabitacionesnumero.Value));
+    i := i + 1;
+    Tablas.FDTableHabitaciones.Next;
+  end;
 
-    combo.Style := csDropDownList; //readonly
-    combo.ItemIndex := 0; //selecciona el primero
+  combo.Style := csDropDownList; // readonly
+  combo.ItemIndex := 0; // selecciona el primero
 
-    rellenarComboHabitaciones := combo;
+  rellenarComboHabitaciones := combo;
 end;
+
+
+
+  //convierte una cadena en un hash MD5
+
+function TTablas.passwordHash(password: String): String;
+var
+    hashString : TIdHashMessageDigest5;
+begin
+ hashString  := nil;
+    try
+        hashString  := TIdHashMessageDigest5.Create;
+        passwordHash := IdGlobal.IndyLowerCase ( hashString .HashStringAsHex ( password ) );
+    finally
+        hashString.Free;
+    end;
+end;
+
+
+
+
+
+
+
+
+//validar el formato de un correo
+function TTablas.IsMatch(const Input, Pattern: string): boolean;
+begin
+  Result := TRegEx.IsMatch(Input, Pattern);
+end;
+
+
+function TTablas.emailFormatoValido(const EmailAddress: string): boolean;
+const
+  EMAIL_REGEX = '^((?>[a-zA-Z\d!#$%&''*+\-/=?^_`{|}~]+\x20*|"((?=[\x01-\x7f])'
+             +'[^"\\]|\\[\x01-\x7f])*"\x20*)*(?<angle><))?((?!\.)'
+             +'(?>\.?[a-zA-Z\d!#$%&''*+\-/=?^_`{|}~]+)+|"((?=[\x01-\x7f])'
+             +'[^"\\]|\\[\x01-\x7f])*")@(((?!-)[a-zA-Z\d\-]+(?<!-)\.)+[a-zA-Z]'
+             +'{2,}|\[(((?(?<!\[)\.)(25[0-5]|2[0-4]\d|[01]?\d?\d))'
+             +'{4}|[a-zA-Z\d\-]*[a-zA-Z\d]:((?=[\x01-\x7f])[^\\\[\]]|\\'
+             +'[\x01-\x7f])+)\])(?(angle)>)$';
+begin
+  Result := IsMatch(EmailAddress, EMAIL_REGEX);
+end;
+
+
 
 end.

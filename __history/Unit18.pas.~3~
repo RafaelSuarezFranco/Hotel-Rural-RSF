@@ -1,0 +1,89 @@
+unit Unit18;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls,
+  Data.DB, Vcl.Mask;
+
+type
+  TAltaUsuario = class(TForm)
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    DataSource1: TDataSource;
+    Label2: TLabel;
+    DBEdit2: TDBEdit;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    Label5: TLabel;
+    DBEdit5: TDBEdit;
+    Button1: TButton;
+    Button2: TButton;
+    RadioGroup1: TRadioGroup;
+    Label4: TLabel;
+    Edit1: TEdit;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  AltaUsuario: TAltaUsuario;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  Unit3;
+
+procedure TAltaUsuario.Button1Click(Sender: TObject);
+begin
+  if (DBEdit1.Text = '') or (DBEdit2.Text = '') or (DBEdit3.Text = '') or
+    (DBEdit5.Text = '') then
+  begin
+    showmessage('Por favor, rellena todos los campos');
+  end
+  else
+  begin
+
+    if RadioGroup1.ItemIndex = 0 then Tablas.FDTableUsuariosperfil.Value := 'cliente';
+    if RadioGroup1.ItemIndex = 1 then Tablas.FDTableUsuariosperfil.Value := 'admin';
+
+    //comprobar que las contraseñas coinciden.
+    if DBEdit5.Text <> Edit1.Text then
+      begin
+        showmessage('Las contraseñas no coinciden.');
+      end else
+      begin
+        // convertimos la passwd en hash md5
+        Tablas.FDTableUsuarioscontraseña.value:= Tablas.passwordHash(Edit1.Text);
+
+        Tablas.FDTableUsuarios.Post;
+        showmessage('Usuario creado con éxito.');
+        AltaUsuario.Close;
+      end;
+
+
+  end;
+
+end;
+
+procedure TAltaUsuario.Button2Click(Sender: TObject);
+begin
+  Tablas.FDTableUsuarios.cancel;
+  AltaUsuario.Close;
+end;
+
+procedure TAltaUsuario.FormActivate(Sender: TObject);
+begin
+  Tablas.FDTableUsuarios.append;
+end;
+
+end.

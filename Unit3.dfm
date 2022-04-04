@@ -1,8 +1,8 @@
-object Tablas: TTablas
+﻿object Tablas: TTablas
   Left = 0
   Top = 0
   Caption = 'Tablas'
-  ClientHeight = 666
+  ClientHeight = 661
   ClientWidth = 744
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -82,8 +82,8 @@ object Tablas: TTablas
     Caption = 'informe din'#225'mico'
   end
   object Label9: TLabel
-    Left = 433
-    Top = 592
+    Left = 457
+    Top = 544
     Width = 117
     Height = 13
     Caption = 'queries para los gr'#225'ficos'
@@ -428,8 +428,8 @@ object Tablas: TTablas
         'SELECT SUM(preciofinal) AS total, fecha as fechaentrada FROM ent' +
         'radas WHERE estado = "ocupada" GROUP BY fecha ORDER BY fecha LIM' +
         'IT 6')
-    Left = 584
-    Top = 568
+    Left = 608
+    Top = 520
   end
   object FDQuery8: TFDQuery
     Connection = FDConnection1
@@ -441,7 +441,50 @@ object Tablas: TTablas
       
         'numerohabitacion = 5 GROUP BY es.nombreservicio ORDER BY  SUM(s.' +
         'precioservicio)')
-    Left = 656
-    Top = 568
+    Left = 680
+    Top = 520
+  end
+  object FDTableUsuarios: TFDTable
+    Active = True
+    IndexFieldNames = 'id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'hotelrsf.usuarios'
+    TableName = 'hotelrsf.usuarios'
+    Left = 232
+    Top = 592
+    object FDTableUsuariosid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+    end
+    object FDTableUsuariosusuario: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'usuario'
+      Origin = 'usuario'
+      Size = 50
+    end
+    object FDTableUsuarioscorreo: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'correo'
+      Origin = 'correo'
+      Size = 50
+    end
+    object FDTableUsuarioscliente: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'cliente'
+      Origin = 'cliente'
+      Size = 50
+    end
+    object FDTableUsuariosperfil: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'perfil'
+      Origin = 'perfil'
+      Size = 50
+    end
+    object FDTableUsuarioscontraseña: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'contrase'#241'a'
+      Origin = '`contrase'#241'a`'
+      Size = 50
+    end
   end
 end

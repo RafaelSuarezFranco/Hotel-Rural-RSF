@@ -41,6 +41,7 @@ type
     G1: TMenuItem;
     IngresosReservas1: TMenuItem;
     IngresosServicios1: TMenuItem;
+    Usuario1: TMenuItem;
 
 
 
@@ -73,6 +74,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure IngresosReservas1Click(Sender: TObject);
     procedure IngresosServicios1Click(Sender: TObject);
+    procedure Usuario1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -93,7 +95,7 @@ implementation
 
 {$R *.dfm}
  uses
-  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16, Unit17;
+  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16, Unit17, Unit18;
 
 
 
@@ -171,6 +173,11 @@ begin
   AltaServicio.showmodal;
 end;
 
+procedure TPrincipal.Usuario1Click(Sender: TObject);
+begin
+  AltaUsuario.showmodal;
+end;
+
 procedure TPrincipal.creartempClick(Sender: TObject);
 begin
    CrearTemporada.showmodal;
@@ -212,6 +219,7 @@ begin
     Tablas.FDTableEntradasservicios.Open;
     Tablas.FDTableClientes.Open;
     Tablas.FDTableHistoricoentradas.Open;
+    Tablas.FDTableUsuarios.Open;
 
     Tablas.FDQuery2.Open;
     Tablas.FDQuery3.Open;
