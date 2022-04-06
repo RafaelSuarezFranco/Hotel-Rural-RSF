@@ -87,7 +87,7 @@ type
     FDTableUsuarioscorreo: TStringField;
     FDTableUsuarioscliente: TStringField;
     FDTableUsuariosperfil: TStringField;
-    FDTableUsuarioscontraseña: TStringField;
+    FDTableUsuariospassword: TStringField;
 
     function formatearFechaSQL(fecha: TDate): String;
     function rellenarComboHabitaciones(combo: TComboBox): TComboBox;
@@ -98,6 +98,11 @@ type
     { Private declarations }
   public
     { Public declarations }
+
+    //datos del usuario logeado.
+    perfil: string;
+    cliente: string;
+    usuario: string;
   end;
 
 var

@@ -1,4 +1,4 @@
-﻿object Tablas: TTablas
+object Tablas: TTablas
   Left = 0
   Top = 0
   Caption = 'Tablas'
@@ -445,7 +445,6 @@
     Top = 520
   end
   object FDTableUsuarios: TFDTable
-    Active = True
     IndexFieldNames = 'id'
     Connection = FDConnection1
     UpdateOptions.UpdateTableName = 'hotelrsf.usuarios'
@@ -455,6 +454,7 @@
     object FDTableUsuariosid: TFDAutoIncField
       FieldName = 'id'
       Origin = 'id'
+      ReadOnly = True
     end
     object FDTableUsuariosusuario: TStringField
       AutoGenerateValue = arDefault
@@ -480,10 +480,10 @@
       Origin = 'perfil'
       Size = 50
     end
-    object FDTableUsuarioscontraseña: TStringField
+    object FDTableUsuariospassword: TStringField
       AutoGenerateValue = arDefault
-      FieldName = 'contrase'#241'a'
-      Origin = '`contrase'#241'a`'
+      FieldName = 'password'
+      Origin = '`password`'
       Size = 50
     end
   end

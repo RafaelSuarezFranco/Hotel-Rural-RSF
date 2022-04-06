@@ -21,7 +21,8 @@ uses
   Unit15 in 'Unit15.pas' {InformeDinamico},
   Unit16 in 'Unit16.pas' {GraficosReservas},
   Unit17 in 'Unit17.pas' {GraficosServicios},
-  Unit18 in 'Unit18.pas' {AltaUsuario};
+  Unit18 in 'Unit18.pas' {AltaUsuario},
+  Unit19 in 'Unit19.pas' {Login};
 
 {$R *.res}
 
@@ -47,5 +48,6 @@ begin
   Application.CreateForm(TGraficosReservas, GraficosReservas);
   Application.CreateForm(TGraficosServicios, GraficosServicios);
   Application.CreateForm(TAltaUsuario, AltaUsuario);
+  Application.CreateForm(TLogin, Login);
   Application.Run;
 end.

@@ -144,7 +144,7 @@ begin
   if registroValido then
     begin
       // convertimos la passwd en hash md5
-      Tablas.FDTableUsuarioscontraseña.value:= Tablas.passwordHash(Edit1.Text);
+      Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
 
       Tablas.FDTableUsuarios.Post;
       showmessage('Usuario creado con éxito.');

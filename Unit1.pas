@@ -42,6 +42,7 @@ type
     IngresosReservas1: TMenuItem;
     IngresosServicios1: TMenuItem;
     Usuario1: TMenuItem;
+    Button4: TButton;
 
 
 
@@ -75,6 +76,7 @@ type
     procedure IngresosReservas1Click(Sender: TObject);
     procedure IngresosServicios1Click(Sender: TObject);
     procedure Usuario1Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -95,7 +97,7 @@ implementation
 
 {$R *.dfm}
  uses
-  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16, Unit17, Unit18;
+  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16, Unit17, Unit18, Unit19;
 
 
 
@@ -487,6 +489,11 @@ begin
   FormularioPeriodo.showmodal;
 end;
 
+
+procedure TPrincipal.Button4Click(Sender: TObject);
+begin
+  Login.ShowModal;
+end;
 
 //usamos estas funciones para pasar la habitacion y fecha al otro form (pantalla mes)
 

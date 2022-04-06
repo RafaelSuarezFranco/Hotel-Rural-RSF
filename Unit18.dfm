@@ -88,7 +88,7 @@ object AltaUsuario: TAltaUsuario
     Top = 256
     Width = 249
     Height = 21
-    DataField = 'contrase'#241'a'
+    DataField = 'password'
     DataSource = DataSource1
     PasswordChar = '*'
     TabOrder = 4
@@ -99,7 +99,7 @@ object AltaUsuario: TAltaUsuario
     Width = 89
     Height = 41
     Caption = 'Aceptar'
-    TabOrder = 5
+    TabOrder = 6
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -108,7 +108,7 @@ object AltaUsuario: TAltaUsuario
     Width = 91
     Height = 41
     Caption = 'Cancelar'
-    TabOrder = 6
+    TabOrder = 7
     OnClick = Button2Click
   end
   object RadioGroup1: TRadioGroup
@@ -130,7 +130,7 @@ object AltaUsuario: TAltaUsuario
     Width = 249
     Height = 21
     PasswordChar = '*'
-    TabOrder = 7
+    TabOrder = 5
   end
   object DataSource1: TDataSource
     DataSet = Tablas.FDTableUsuarios

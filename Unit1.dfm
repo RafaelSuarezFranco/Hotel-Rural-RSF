@@ -140,6 +140,15 @@ object Principal: TPrincipal
     ParentFont = False
     TabOrder = 7
   end
+  object Button4: TButton
+    Left = 56
+    Top = 168
+    Width = 75
+    Height = 25
+    Caption = 'Button4'
+    TabOrder = 8
+    OnClick = Button4Click
+  end
   object PopupMenu1: TPopupMenu
     Left = 912
     Top = 392
