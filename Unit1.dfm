@@ -16,6 +16,7 @@ object Principal: TPrincipal
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poMainFormCenter
+  StyleElements = [seClient, seBorder]
   OnActivate = FormActivate
   OnClose = FormClose
   OnKeyDown = FormKeyDown
@@ -49,8 +50,36 @@ object Principal: TPrincipal
     Height = 13
     Caption = 'Saltar al d'#237'a:'
   end
+  object Label4: TLabel
+    Left = 8
+    Top = 608
+    Width = 40
+    Height = 13
+    Caption = 'Usuario:'
+  end
+  object Label5: TLabel
+    Left = 8
+    Top = 625
+    Width = 28
+    Height = 13
+    Caption = 'Perfil:'
+  end
+  object Label6: TLabel
+    Left = 54
+    Top = 608
+    Width = 31
+    Height = 13
+    Caption = 'Label6'
+  end
+  object Label7: TLabel
+    Left = 54
+    Top = 625
+    Width = 31
+    Height = 13
+    Caption = 'Label7'
+  end
   object ScrollBox1: TScrollBox
-    Left = 200
+    Left = 183
     Top = 120
     Width = 577
     Height = 449
@@ -141,11 +170,11 @@ object Principal: TPrincipal
     TabOrder = 7
   end
   object Button4: TButton
-    Left = 56
-    Top = 168
-    Width = 75
+    Left = 10
+    Top = 577
+    Width = 63
     Height = 25
-    Caption = 'Button4'
+    Caption = 'Logout'
     TabOrder = 8
     OnClick = Button4Click
   end

@@ -129,9 +129,9 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
-        <UWP_DelphiLogo44>Capturas hotel\logo44.ico</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>Capturas hotel\logo150.ico</UWP_DelphiLogo150>
-        <Icon_MainIcon>Capturas hotel\logo150.ico</Icon_MainIcon>
+        <UWP_DelphiLogo44>Capturas hotel\logo\logo border  simple.png</UWP_DelphiLogo44>
+        <Icon_MainIcon>Capturas hotel\logo\logo-border-simple.ico</Icon_MainIcon>
+        <UWP_DelphiLogo150>Capturas hotel\logo\logo border  simple.png</UWP_DelphiLogo150>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -246,7 +246,7 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <Deployment Version="3">
-                <DeployFile LocalName="Capturas hotel\logo44.ico" Configuration="Debug" Class="UWP_DelphiLogo44">
+                <DeployFile LocalName="Capturas hotel\logo\logo border  simple.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo44x44.png</RemoteName>
@@ -256,13 +256,6 @@
                 <DeployFile LocalName="Project1.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Project1.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Capturas hotel\logo150.ico" Configuration="Debug" Class="UWP_DelphiLogo150">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

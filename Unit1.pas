@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,    ShellAPI ,
   Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, Vcl.WinXCalendars;
 
 type
@@ -42,6 +42,10 @@ type
     IngresosReservas1: TMenuItem;
     IngresosServicios1: TMenuItem;
     Usuario1: TMenuItem;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
     Button4: TButton;
 
 
@@ -170,6 +174,8 @@ begin
   ItinerarioServicios.quickreport1.Preview;
 end;
 
+
+
 procedure TPrincipal.Servicio1Click(Sender: TObject);
 begin
   AltaServicio.showmodal;
@@ -211,7 +217,7 @@ end;
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
-
+    Login.ShowModal;
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
@@ -237,6 +243,8 @@ begin
     CrearPanelesHabitaciones();
     CargarDia();
 
+    Label6.Caption := Tablas.usuario;
+    Label7.Caption := Tablas.perfil;
 
 end;
 
@@ -489,10 +497,11 @@ begin
   FormularioPeriodo.showmodal;
 end;
 
-
+ //básicamente, reinicia la aplicación.
 procedure TPrincipal.Button4Click(Sender: TObject);
 begin
-  Login.ShowModal;
+  ShellExecute(Handle, nil, PChar(Application.ExeName), nil, nil, SW_SHOWNORMAL);
+  Application.Terminate; // or, if this is the main form, simply Close;
 end;
 
 //usamos estas funciones para pasar la habitacion y fecha al otro form (pantalla mes)
@@ -630,5 +639,4 @@ end;
 
 
 
-
- end.
+end.

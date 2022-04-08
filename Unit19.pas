@@ -17,8 +17,10 @@ type
     Label3: TLabel;
     Image1: TImage;
     Label4: TLabel;
+    Button2: TButton;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,11 +38,13 @@ implementation
 
 procedure TLogin.Button1Click(Sender: TObject);
 var
+ppal : TPrincipal;
+
 conNombreUsuario:boolean;
 conCorreo:boolean;
 usuarioValido:boolean;
 password:string;
-
+  //nota: el botón tiene default = true para que al pulsar enter, se ejecute lo mismo del botón.
 begin
 //comprobar si el usuario existe, ya sea por correo o nombre usuario.
 conNombreUsuario := false;
@@ -100,8 +104,6 @@ password := Tablas.passwordHash(Edit2.Text);
     end else
     begin
       Tablas.usuario := Edit1.Text;
-      if conCorreo then
-
 
       if not usuarioValido then showmessage('Contraseña incorrecta.');
     end;
@@ -110,13 +112,38 @@ password := Tablas.passwordHash(Edit2.Text);
    if usuarioValido then
     begin
       showmessage('Acceso concedido.');
+      ppal := TPrincipal.Create(Application);
+      Login.Close;
     end;
 
 end;
 
+procedure TLogin.Button2Click(Sender: TObject);
+begin
+  Principal.Close;
+end;
+
 procedure TLogin.FormActivate(Sender: TObject);
 begin
-//
+
+ //apertura de tablas
+    Tablas.FDTableHabitaciones.Open;
+    Tablas.FDTableEntradas.Open;
+    Tablas.FDQuery1.Open;
+    Tablas.FDTableTemporadas.Open;
+    Tablas.FDTableServicios.Open;
+    Tablas.FDTableEntradasservicios.Open;
+    Tablas.FDTableClientes.Open;
+    Tablas.FDTableHistoricoentradas.Open;
+    Tablas.FDTableUsuarios.Open;
+
+    Tablas.FDQuery2.Open;
+    Tablas.FDQuery3.Open;
+    Tablas.FDQuery4.Open;
+    Tablas.FDQuery5.Open;
+    Tablas.FDQuery6.Open;
+    Tablas.FDQuery7.Open;
+    Tablas.FDQuery8.Open;
 end;
 
 end.

@@ -12,6 +12,16 @@ implementar usuarios y perfiles (administrador)
 
 
 
+optimizar consultas?
+diseño app movil
+guardar credenciales en un archivo o en alguna parte?
+uso de encriptación y hash
+hay forma de saber si el servidor esta caido y por tanto, mostrar un mensaje en pantalla?
+
+
+
+
+
 
 Reglas establecidas en cuanto a cambios de estado de habitaciones.
 

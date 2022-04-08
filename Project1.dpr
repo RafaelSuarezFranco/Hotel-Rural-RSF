@@ -31,6 +31,7 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('TabletDark');
   Application.CreateForm(TPrincipal, Principal);
+  Application.CreateForm(TLogin, Login);
   Application.CreateForm(TPantallaMes, PantallaMes);
   Application.CreateForm(TTablas, Tablas);
   Application.CreateForm(TFormularioDiario, FormularioDiario);
@@ -48,6 +49,5 @@ begin
   Application.CreateForm(TGraficosReservas, GraficosReservas);
   Application.CreateForm(TGraficosServicios, GraficosServicios);
   Application.CreateForm(TAltaUsuario, AltaUsuario);
-  Application.CreateForm(TLogin, Login);
   Application.Run;
 end.
