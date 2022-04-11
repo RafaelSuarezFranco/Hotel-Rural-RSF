@@ -75,6 +75,7 @@ PrecioFinal: Double;
 PrecioServiciosTotal: Double;
 fechabusqueda: String;
 
+borrarServicioCliente: boolean; //si un cliente anula sus reservas, tenemos que controlar que servicios anular
 
 fecha1: TDate;
 fecha2: TDate;
@@ -253,11 +254,58 @@ begin
 
       if seleccion = mrOK then
        begin
-          StatusBar1.SimpleText := 'Anulando reservas...';
+
           Tablas.FDTableEntradas.Filtered := True;
           Tablas.FDTableEntradas.Filter := 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
 
+
+
+ //borrar los servicios contratados  HAY QUE BORRAR SERVICIOS PRIMERO PORQUE HAY QUE CONSULTAR LAS ENTRADAS ANTES DE BORRARLAS
+                Tablas.FDTableentradasservicios.Filtered:= True;
+                Tablas.FDTableentradasservicios.Filter:= 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
+                Tablas.FDTableentradasservicios.First;
+                while not Tablas.FDTableentradasservicios.eof do
+                  begin
+
+                    borrarServicioCliente := false;
+                    fechabusqueda := Tablas.formatearFechaSQL(Tablas.FDTableEntradasserviciosfecha.Value);
+
+                    Tablas.FDQuery1.Close;
+                    Tablas.FDQuery1.SQL.Text := 'select * from entradas where fecha='+quotedStr(fechabusqueda)+
+                    ' and numerohabitacion='+inttostr(Tablas.FDTableEntradasserviciosnumerohabitacion.Value)+
+                    ' and cliente=' + quotedstr(Tablas.cliente);
+                    Tablas.FDQuery1.Open;
+                    if Tablas.FDQuery1.RecordCount > 0 then borrarServicioCliente := true;
+
+
+
+
+                    StatusBar1.SimpleText := 'Anulando servicios...';
+                     if (Tablas.FDTableentradasserviciosfecha.Value > fecha1) and (Tablas.FDTableentradasserviciosfecha.Value < fecha2) then
+                      begin   //si la fecha está dentro del periodo de anulación (para la habitación concreta)
+                      if ((Tablas.perfil = 'cliente') and (borrarServicioCliente = true)) or (Tablas.perfil = 'admin') then
+                          begin
+                             Tablas.FDTableentradasservicios.Delete;
+                          end else
+                          begin
+                             Tablas.FDTableentradasservicios.Next;
+                          end;
+
+                      end else
+                      begin
+                        Tablas.FDTableentradasservicios.Next;
+                      end;
+
+                  end;
+
+                Tablas.FDTableentradasservicios.Filtered:= false;
+
+
+
+
+          //BORRAR ENTRADAS
           Tablas.FDTableEntradas.First;
+           StatusBar1.SimpleText := 'Anulando reservas...';
           //fechaentrada:= DatePicker1.Date;
 
           while not Tablas.FDTableEntradas.eof do
@@ -265,48 +313,77 @@ begin
 
                 if (Tablas.FDTableEntradasfecha.Value > fecha1) and (Tablas.FDTableEntradasfecha.Value < fecha2) then
                        begin
+                        //si es un cliente anulando, solo anula las que estan a su nombre. si es admin, anula todo lo que haya.
+                        if ((Tablas.perfil = 'cliente') and (Tablas.FDTableEntradascliente.value = Tablas.cliente)) or (Tablas.perfil = 'admin') then
+                          begin
+                            Tablas.FDTableHistoricoentradas.Append;  //añadir al histórico
+                            Tablas.FDTableHistoricoentradasnumerohabitacion.value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
+                            Tablas.FDTableHistoricoentradasfecha.Value := Tablas.FDTableEntradasfecha.Value;
+                            Tablas.FDTableHistoricoentradascliente.Value := Tablas.FDTableEntradascliente.Value;
+                            Tablas.FDTableHistoricoentradaspreciofinal.Value := Tablas.FDTableEntradaspreciofinal.Value;
+                            Tablas.FDTableHistoricoentradasestado.Value := Tablas.FDTableEntradasestado.Value;
+                            Tablas.FDTableHistoricoentradas.Post;
 
-                        Tablas.FDTableHistoricoentradas.Append;  //añadir al histórico
-                        Tablas.FDTableHistoricoentradasnumerohabitacion.value := StrToInt(ComboBox1.Items[Combobox1.ItemIndex]);
-                        Tablas.FDTableHistoricoentradasfecha.Value := Tablas.FDTableEntradasfecha.Value;
-                        Tablas.FDTableHistoricoentradascliente.Value := Tablas.FDTableEntradascliente.Value;
-                        Tablas.FDTableHistoricoentradaspreciofinal.Value := Tablas.FDTableEntradaspreciofinal.Value;
-                        Tablas.FDTableHistoricoentradasestado.Value := Tablas.FDTableEntradasestado.Value;
-                        Tablas.FDTableHistoricoentradas.Post;
 
+                            Tablas.FDTableEntradas.Delete;
+                          end else
+                          begin
+                           Tablas.FDTableEntradas.Next;
+                          end;
 
-                        Tablas.FDTableEntradas.Delete;
-                       end
-                       else
+                       end else
                        begin
                         Tablas.FDTableEntradas.Next;
                        end;
 
-                end;
 
+                end;
+          {
           //borrar los servicios contratados
           Tablas.FDTableentradasservicios.Filtered:= True;
           Tablas.FDTableentradasservicios.Filter:= 'numerohabitacion='+ComboBox1.Items[Combobox1.ItemIndex];
           Tablas.FDTableentradasservicios.First;
           while not Tablas.FDTableentradasservicios.eof do
             begin
+
+              borrarServicioCliente := false;
+              fechabusqueda := Tablas.formatearFechaSQL(Tablas.FDTableEntradasserviciosfecha.Value);
+
+              Tablas.FDQuery1.Close;
+              Tablas.FDQuery1.SQL.Text := 'select * from entradas where fecha='+quotedStr(fechabusqueda)+
+              ' and numerohabitacion='+inttostr(Tablas.FDTableEntradasserviciosnumerohabitacion.Value)+
+              ' and cliente=' + quotedstr(Tablas.cliente);
+              Tablas.FDQuery1.Open;
+              if Tablas.FDQuery1.RecordCount > 0 then borrarServicioCliente := true;
+
+
+
+
               StatusBar1.SimpleText := 'Anulando servicios...';
                if (Tablas.FDTableentradasserviciosfecha.Value > fecha1) and (Tablas.FDTableentradasserviciosfecha.Value < fecha2) then
                 begin   //si la fecha está dentro del periodo de anulación (para la habitación concreta)
-                   Tablas.FDTableentradasservicios.Delete;
-                end
-                else
+                if ((Tablas.perfil = 'cliente') and (borrarServicioCliente = true)) or (Tablas.perfil = 'admin') then
+                    begin
+                       Tablas.FDTableentradasservicios.Delete;
+                    end else
+                    begin
+                       Tablas.FDTableentradasservicios.Next;
+                    end;
+
+                end else
                 begin
-                   Tablas.FDTableentradasservicios.Next;
+                  Tablas.FDTableentradasservicios.Next;
                 end;
+
             end;
 
           Tablas.FDTableentradasservicios.Filtered:= false;
-
+           }
 
           Tablas.FDTableEntradas.Filtered := False;
           StatusBar1.SimpleText := 'Reservas y servicios anulados.';
-          showmessage('Todas las reservas y ocupaciones del periodo especificado se han anulado');
+          if Tablas.perfil = 'cliente' then showmessage('Las reservas del cliente '+Tablas.cliente+' se han anulado.');
+          if Tablas.perfil = 'admin' then showmessage('Todas las reservas y ocupaciones del periodo especificado se han anulado');
           registroValido := true;
        end;
 
@@ -331,6 +408,10 @@ i: integer;
 cantidadHabitaciones: integer;
 servicioCheck: TCheckbox;
 begin
+
+    Edit1.ReadOnly := False;
+    Edit1.Text:= '';
+
     StatusBar1.SimpleText := '';
 //hay algunos elementos que no hace falta mostrar si estamos en modo de anular reservas
   if ModoDeFormulario = 'reserva' then
@@ -349,6 +430,12 @@ begin
     end;
 
 
+ if Tablas.perfil = 'cliente' then
+  begin
+    Edit1.Text := Tablas.cliente;
+    Edit1.ReadOnly := True;
+  end;
+
 
 //COMBO HABITACIONES
 
@@ -356,7 +443,7 @@ begin
 
    DatePicker1.Date := Now; //resetear el formulario al dia de hoy, sin cliente especificado.
    DatePicker2.Date := Now;
-   Edit1.Text:= '';
+
 
 
     //SERVICIOS

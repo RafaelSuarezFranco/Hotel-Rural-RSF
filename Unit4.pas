@@ -30,6 +30,7 @@ type
     procedure RecalcularPrecio(Sender: TObject);
     procedure ActualizarPrecioTabla();
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+
   private
     { Private declarations }
   public
@@ -328,6 +329,18 @@ mesbusqueda: String;
 servicioCheck: TCheckbox;
 
 begin
+    //reiniciamos todo lo que hemos tocado en caso de que venga un cliente
+   Cliente := '';
+   Edit1.Text := '';
+   Edit1.ReadOnly := false;
+
+for i := 0 to FormularioDiario.ControlCount -1  do
+  begin
+    FormularioDiario.Controls[i].Visible := true;
+  end;
+
+   //
+
 
   Fecha:= EncodeDate(año, mes, dia); //Tdate del formulario
 
@@ -338,6 +351,8 @@ begin
   begin
     DiaPasado:= False;
   end;
+
+
 
   //borrar los checkboxs y recrearlos, puede dar errores si hay muchos y se crean más de la cuenta
     if Length(CheckboxServicios) > 0 then
@@ -501,7 +516,37 @@ begin
         PrecioCalculado := PrecioFinal;
      end;
 
+
+
+   //GESTION DE CLIENTE
+  //si el cliente entra a administrar una habitación, tendrá restricciones.
+  if Tablas.perfil = 'cliente' then
+    begin
+        if (Tablas.cliente <> Cliente) and (Cliente <> '') then //si el cliente no está vacío y no es el que está logeado:
+          begin
+
+          for i := 0 to FormularioDiario.ControlCount -1  do
+              begin   //por privacidad, escondemos los controles para que no se vea el dni ni nada.
+                FormularioDiario.Controls[i].Visible := false;
+              end;
+
+
+              showMessage('Lo sentimos, la habitación está reservada/ocupada por otra persona.');
+              PostMessage(Handle, WM_CLOSE, 0, 0);
+              modalresult := mrCancel;
+          end;
+
+          if Cliente = '' then
+            begin
+              Cliente := Tablas.cliente;
+              Edit1.Text := Tablas.cliente;
+              Edit1.ReadOnly := true;
+            end;
+    end;
+
+
 end;
+
 
 
 

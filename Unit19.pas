@@ -38,13 +38,13 @@ implementation
 
 procedure TLogin.Button1Click(Sender: TObject);
 var
-ppal : TPrincipal;
-
 conNombreUsuario:boolean;
 conCorreo:boolean;
 usuarioValido:boolean;
 password:string;
+
   //nota: el botón tiene default = true para que al pulsar enter, se ejecute lo mismo del botón.
+
 begin
 //comprobar si el usuario existe, ya sea por correo o nombre usuario.
 conNombreUsuario := false;
@@ -111,8 +111,7 @@ password := Tablas.passwordHash(Edit2.Text);
 
    if usuarioValido then
     begin
-      showmessage('Acceso concedido.');
-      ppal := TPrincipal.Create(Application);
+      //showmessage('Acceso concedido.');
       Login.Close;
     end;
 

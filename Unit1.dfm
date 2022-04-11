@@ -52,31 +52,45 @@ object Principal: TPrincipal
   end
   object Label4: TLabel
     Left = 8
-    Top = 608
+    Top = 592
     Width = 40
     Height = 13
     Caption = 'Usuario:'
   end
   object Label5: TLabel
     Left = 8
-    Top = 625
+    Top = 609
     Width = 28
     Height = 13
     Caption = 'Perfil:'
   end
   object Label6: TLabel
     Left = 54
-    Top = 608
+    Top = 592
     Width = 31
     Height = 13
     Caption = 'Label6'
   end
   object Label7: TLabel
     Left = 54
-    Top = 625
+    Top = 609
     Width = 31
     Height = 13
     Caption = 'Label7'
+  end
+  object Label8: TLabel
+    Left = 8
+    Top = 625
+    Width = 37
+    Height = 13
+    Caption = 'Cliente:'
+  end
+  object Label9: TLabel
+    Left = 54
+    Top = 625
+    Width = 31
+    Height = 13
+    Caption = 'Label9'
   end
   object ScrollBox1: TScrollBox
     Left = 183
@@ -128,7 +142,7 @@ object Principal: TPrincipal
   end
   object Button2: TButton
     Left = 48
-    Top = 424
+    Top = 408
     Width = 129
     Height = 49
     Caption = '&Reservar periodo'
@@ -137,7 +151,7 @@ object Principal: TPrincipal
   end
   object Button3: TButton
     Left = 48
-    Top = 488
+    Top = 463
     Width = 129
     Height = 49
     Caption = '&Anular periodo'
@@ -171,7 +185,7 @@ object Principal: TPrincipal
   end
   object Button4: TButton
     Left = 10
-    Top = 577
+    Top = 561
     Width = 63
     Height = 25
     Caption = 'Logout'

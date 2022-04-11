@@ -47,6 +47,8 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Button4: TButton;
+    Label8: TLabel;
+    Label9: TLabel;
 
 
 
@@ -245,6 +247,7 @@ begin
 
     Label6.Caption := Tablas.usuario;
     Label7.Caption := Tablas.perfil;
+    Label9.Caption := Tablas.cliente;
 
 end;
 

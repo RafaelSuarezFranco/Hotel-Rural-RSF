@@ -147,8 +147,5 @@ object FormularioPeriodo: TFormularioPeriodo
     Panels = <>
     ParentColor = True
     SimplePanel = True
-    ExplicitLeft = 208
-    ExplicitTop = 296
-    ExplicitWidth = 0
   end
 end
