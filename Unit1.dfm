@@ -19,6 +19,7 @@ object Principal: TPrincipal
   StyleElements = [seClient, seBorder]
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
@@ -211,7 +212,7 @@ object Principal: TPrincipal
   object MainMenu1: TMainMenu
     Left = 48
     Top = 40
-    object CrearTemporada1: TMenuItem
+    object CrearEntidades: TMenuItem
       Caption = '&Crear'
       object Habitacin1: TMenuItem
         Caption = 'Habitaci'#243'n'
@@ -246,9 +247,9 @@ object Principal: TPrincipal
       object N2: TMenuItem
         Caption = '-'
       end
-      object Clientes1: TMenuItem
+      object TodosClientes: TMenuItem
         Caption = '&Clientes'
-        OnClick = Clientes1Click
+        OnClick = TodosClientesClick
       end
       object historialCliente: TMenuItem
         Caption = '&Historial por cliente'
@@ -262,7 +263,7 @@ object Principal: TPrincipal
         OnClick = Informedinmico1Click
       end
     end
-    object G1: TMenuItem
+    object graficos: TMenuItem
       Caption = '&Gr'#225'ficos'
       object IngresosReservas1: TMenuItem
         Caption = 'Ingresos - &Reservas'

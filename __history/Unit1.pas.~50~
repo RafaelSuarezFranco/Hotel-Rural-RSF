@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,    ShellAPI ,
   Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, Vcl.WinXCalendars;
 
 type
@@ -38,9 +38,17 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     Informedinmico1: TMenuItem;
-    Button4: TButton;
     G1: TMenuItem;
     IngresosReservas1: TMenuItem;
+    IngresosServicios1: TMenuItem;
+    Usuario1: TMenuItem;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Button4: TButton;
+    Label8: TLabel;
+    Label9: TLabel;
 
 
 
@@ -72,6 +80,9 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure IngresosReservas1Click(Sender: TObject);
+    procedure IngresosServicios1Click(Sender: TObject);
+    procedure Usuario1Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -92,7 +103,7 @@ implementation
 
 {$R *.dfm}
  uses
-  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16;
+  Unit2, Unit3, Unit4, Unit5, Unit6, Unit7, Unit8, Unit9, Unit10, Unit11, Unit12, Unit13, Unit14, Unit16, Unit17, Unit18, Unit19;
 
 
 
@@ -165,9 +176,16 @@ begin
   ItinerarioServicios.quickreport1.Preview;
 end;
 
+
+
 procedure TPrincipal.Servicio1Click(Sender: TObject);
 begin
   AltaServicio.showmodal;
+end;
+
+procedure TPrincipal.Usuario1Click(Sender: TObject);
+begin
+  AltaUsuario.showmodal;
 end;
 
 procedure TPrincipal.creartempClick(Sender: TObject);
@@ -183,8 +201,15 @@ end;
 
  procedure TPrincipal.IngresosReservas1Click(Sender: TObject);
 begin
-   Graficos.ShowModal;
+   GraficosReservas.ShowModal;
 end;
+
+
+procedure TPrincipal.IngresosServicios1Click(Sender: TObject);
+begin
+   GraficosServicios.ShowModal;
+end;
+
 
 
 
@@ -194,7 +219,7 @@ end;
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
-
+    Login.ShowModal;
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
@@ -204,6 +229,7 @@ begin
     Tablas.FDTableEntradasservicios.Open;
     Tablas.FDTableClientes.Open;
     Tablas.FDTableHistoricoentradas.Open;
+    Tablas.FDTableUsuarios.Open;
 
     Tablas.FDQuery2.Open;
     Tablas.FDQuery3.Open;
@@ -211,6 +237,7 @@ begin
     Tablas.FDQuery5.Open;
     Tablas.FDQuery6.Open;
     Tablas.FDQuery7.Open;
+    Tablas.FDQuery8.Open;
 
     FechaActual := Now();
     FechaSeleccionada:= Now();
@@ -218,6 +245,9 @@ begin
     CrearPanelesHabitaciones();
     CargarDia();
 
+    Label6.Caption := Tablas.usuario;
+    Label7.Caption := Tablas.perfil;
+    Label9.Caption := Tablas.cliente;
 
 end;
 
@@ -470,6 +500,12 @@ begin
   FormularioPeriodo.showmodal;
 end;
 
+ //básicamente, reinicia la aplicación.
+procedure TPrincipal.Button4Click(Sender: TObject);
+begin
+  ShellExecute(Handle, nil, PChar(Application.ExeName), nil, nil, SW_SHOWNORMAL);
+  Application.Terminate; // or, if this is the main form, simply Close;
+end;
 
 //usamos estas funciones para pasar la habitacion y fecha al otro form (pantalla mes)
 
@@ -498,7 +534,7 @@ fila: integer;
 cantidadHabitaciones: integer;
 tipohabitacion: string;
 begin
-    Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
+    //Label1.Caption:= 'Fecha seleccionada: '+DateToStr(FechaSeleccionada);
     Label2.Caption:= 'Fecha actual: '+DateToStr(FechaActual);
 
     DatePicker1.Date:= FechaSeleccionada;
@@ -606,5 +642,4 @@ end;
 
 
 
-
- end.
+end.

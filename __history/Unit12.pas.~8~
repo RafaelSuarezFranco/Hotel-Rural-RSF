@@ -72,27 +72,13 @@ begin
         fechabusqueda2:= Tablas.formatearFechaSQL(DatePicker2.Date);
 
         Factura.imprimirFechas(DatePicker1.Date, DatePicker2.Date);
-        //si un admin hace una factura
-         if Tablas.perfil = 'admin' then
-          begin
-            Tablas.FDQuery2.close;
-            Tablas.FDQuery2.SQL.Text := 'select numerohabitacion as numero, fecha as fechaentrada, estado, cliente, preciofinal from entradas where fecha >= '
-            +quotedStr(fechabusqueda1)+' and fecha <= ' + quotedStr(fechabusqueda2) + ' and numerohabitacion = :numeroh and estado = :estado order by fecha';
-            Tablas.FDQuery2.ParamByName('numeroh').AsInteger := StrToInt(Combobox1.Items[Combobox1.ItemIndex]);
-            Tablas.FDQuery2.ParamByName('estado').AsString := estadoseleccionado;
-            Tablas.FDQuery2.open;
-          end;
-         //si un cliente hace una factura (misma consulta pero añadimos cliente).
-        if Tablas.perfil = 'cliente' then
-          begin
-            Tablas.FDQuery2.close;
-            Tablas.FDQuery2.SQL.Text := 'select numerohabitacion as numero, fecha as fechaentrada, estado, cliente, preciofinal from entradas where fecha >= '
-            +quotedStr(fechabusqueda1)+' and fecha <= ' + quotedStr(fechabusqueda2) + ' and numerohabitacion = :numeroh and estado = :estado and '+
-            'cliente='+quotedstr(Tablas.cliente)+' order by fecha';
-            Tablas.FDQuery2.ParamByName('numeroh').AsInteger := StrToInt(Combobox1.Items[Combobox1.ItemIndex]);
-            Tablas.FDQuery2.ParamByName('estado').AsString := estadoseleccionado;
-            Tablas.FDQuery2.open;
-          end;
+
+          Tablas.FDQuery2.close;
+          Tablas.FDQuery2.SQL.Text := 'select numerohabitacion as numero, fecha as fechaentrada, estado, cliente, preciofinal from entradas where fecha >= '
+          +quotedStr(fechabusqueda1)+' and fecha <= ' + quotedStr(fechabusqueda2) + ' and numerohabitacion = :numeroh and estado = :estado order by fecha';
+          Tablas.FDQuery2.ParamByName('numeroh').AsInteger := StrToInt(Combobox1.Items[Combobox1.ItemIndex]);
+          Tablas.FDQuery2.ParamByName('estado').AsString := estadoseleccionado;
+          Tablas.FDQuery2.open;
 
           if Tablas.FDQuery2.RecordCount <> 0 then
             begin

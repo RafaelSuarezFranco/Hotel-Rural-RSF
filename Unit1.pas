@@ -24,13 +24,13 @@ type
     PopupMenu2: TPopupMenu;
     CrearHabitacin1: TMenuItem;
     MainMenu1: TMainMenu;
-    CrearTemporada1: TMenuItem;
+    CrearEntidades: TMenuItem;
     Creartemp1: TMenuItem;
     creartemp: TMenuItem;
     Servicio1: TMenuItem;
     Habitacin1: TMenuItem;
     CalendarView1: TCalendarView;
-    Clientes1: TMenuItem;
+    TodosClientes: TMenuItem;
     Factura1: TMenuItem;
     N1: TMenuItem;
     ItinerariodeServicios1: TMenuItem;
@@ -38,7 +38,7 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     Informedinmico1: TMenuItem;
-    G1: TMenuItem;
+    graficos: TMenuItem;
     IngresosReservas1: TMenuItem;
     IngresosServicios1: TMenuItem;
     Usuario1: TMenuItem;
@@ -72,7 +72,7 @@ type
     procedure Habitacin1Click(Sender: TObject);
     procedure Servicio1Click(Sender: TObject);
     procedure CalendarView1Change(Sender: TObject);
-    procedure Clientes1Click(Sender: TObject);
+    procedure TodosClientesClick(Sender: TObject);
     procedure Factura1Click(Sender: TObject);
     procedure ItinerariodeServicios1Click(Sender: TObject);
     procedure historialClienteClick(Sender: TObject);
@@ -83,6 +83,7 @@ type
     procedure IngresosServicios1Click(Sender: TObject);
     procedure Usuario1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
 
   private
     { Private declarations }
@@ -99,6 +100,8 @@ type
     BotonesHabitaciones : Array of TButton;
     HabitacionSeleccionada: integer;
     HabitacionesBD : Array of integer; //contiene los nº de habitaciones
+
+    login1 : boolean;  //controlar si se ha producido un login
 implementation
 
 {$R *.dfm}
@@ -129,7 +132,16 @@ apellido: string;
 stringcliente: string;
   begin
   //la idea es reutilizar factura, para ello vamos a cambiar la consulta 'fdquery2' para filtrar por cliente
-     idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
+     if Tablas.perfil = 'admin' then
+      begin
+        idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
+      end;
+     if Tablas.perfil = 'cliente' then      //si un cliente esta logeado, solo puede ver su propio historial.
+      begin
+        idcliente := Tablas.cliente;
+      end;
+
+
      if idcliente <> '' then
      begin
 
@@ -193,7 +205,7 @@ begin
    CrearTemporada.showmodal;
 end;
 
-procedure TPrincipal.Clientes1Click(Sender: TObject);
+procedure TPrincipal.TodosClientesClick(Sender: TObject);
 begin
   Tablas.FDTableClientes.IndexFieldNames := 'apellidos';
   InformeClientes.QuickRep1.Preview;
@@ -212,14 +224,24 @@ end;
 
 
 
-
+procedure TPrincipal.FormCreate(Sender: TObject);
+begin
+   login1 := false;
+end;
 
 
 //abrimos las tablas e inicializamos las fechas, creamos los paneles y los coloreamos
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
-    Login.ShowModal;
+    if login1 = false then
+      begin
+        //para enseñar el login primero de todo, lo mostramos con showmodal mientras se activa el principal. Hay que meterlo en esta
+        //condicion porque al cerrar algunas ventanas de informes,se reactiva el principal y por tanto se muestra el login otra vez.
+         Login.ShowModal;
+         login1 := true;
+      end;
+
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
     Tablas.FDTableEntradas.Open;
@@ -249,6 +271,24 @@ begin
     Label7.Caption := Tablas.perfil;
     Label9.Caption := Tablas.cliente;
 
+    //escondemos o mostramos el menu en función del perfil.
+    if Tablas.perfil = 'cliente' then
+      begin
+        CrearEntidades.Visible := false;
+        graficos.Visible := false;
+        ItinerariodeServicios1.Visible := false;
+        TodosClientes.Visible :=false;
+        Informedinmico1.Visible :=false;
+      end;
+
+    if Tablas.perfil = 'admin' then
+      begin
+        CrearEntidades.Visible := true;
+        graficos.Visible := true;
+        ItinerariodeServicios1.Visible := true;
+        TodosClientes.Visible :=true;
+        Informedinmico1.Visible := true;
+      end;
 end;
 
 
@@ -375,6 +415,8 @@ begin
     Tablas.FDTableClientes.Close;
     Tablas.FDTableHistoricoentradas.Close;
 end;
+
+
 
 
 
