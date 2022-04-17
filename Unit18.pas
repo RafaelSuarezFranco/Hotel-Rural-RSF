@@ -4,9 +4,12 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls,
-  Data.DB, Vcl.Mask;
+  System.Classes, Vcl.Graphics,   IdEMailAddress, IdGlobal, IdAttachmentFile,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls,   System.Math,
+  Data.DB, Vcl.Mask, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL,
+  IdSSLOpenSSL, IdMessage, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient, IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase,
+  IdSMTP;
 
 type
   TAltaUsuario = class(TForm)
@@ -24,6 +27,9 @@ type
     RadioGroup1: TRadioGroup;
     Label4: TLabel;
     Edit1: TEdit;
+    IdSMTP1: TIdSMTP;
+    IdMessage1: TIdMessage;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;   // to allow SSL authenticate //
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
@@ -31,6 +37,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    permisos: string;
   end;
 
 var
@@ -49,7 +56,64 @@ clienteValido: boolean;
 clienteTieneUsuario: boolean; //no queremos que un cliente tenga varios usuarios.
 registroValido: boolean;
 correoValido: boolean;
+
+codigoVerificacion : string;
+codigoInput: string;
+
 begin
+  IdMessage1.Clear;
+
+// IO HANDLER SETTINGS //
+  With IdSSLIOHandlerSocketOpenSSL1 do
+  begin
+
+    Destination := 'smtp.gmail.com:587';
+    Host := 'smtp.gmail.com';
+    MaxLineAction := maException;
+    Port := 587;
+    SSLOptions.Method := sslvTLSv1;
+    SSLOptions.Mode := sslmUnassigned;
+    SSLOptions.VerifyMode := [];
+    SSLOptions.VerifyDepth := 0;
+  end;
+//SETTING SMTP COMPONENT DATA //
+  IdSMTP1.Host := 'smtp.gmail.com';
+  IdSMTP1.Port := 587;
+  IdSMTP1.Username := 'hotelrafaelsuarezfranco@gmail.com'; // please change to your gmail address //
+  IdSMTP1.Password := 'hotelrsf127';
+  IdSMTP1.IOHandler := IdSSLIOHandlerSocketOpenSSL1;
+  //IdSMTP1.AuthType := satDefault;
+  IdSMTP1.UseTLS := utUseExplicitTLS;
+// SETTING email MESSAGE DATA //
+
+
+  //Attachmentfile := TIdAttachmentFile.Create(IdMessage1.MessageParts,'C:\File1.txt');
+
+  IdMessage1.From.Address :=  'hotelrafaelsuarezfranco@gmail.com'; // please change to your gmail address //;
+  IdMessage1.Recipients.EMailAddresses := 'rafasuarezfranco127@gmail.com';
+  IdMessage1.Subject := 'Test Email Subject';
+  IdMessage1.Body.Text := 'Test Email Body';
+  //IdMessage1.Priority := mpHigh;
+  TRY
+    IdSMTP1.Connect();
+    IdSMTP1.Send(IdMessage1);
+    ShowMessage('Email sent');
+    IdSMTP1.Disconnect();
+  except on e:Exception do
+    begin
+      ShowMessage(e.Message);
+      IdSMTP1.Disconnect();
+    end;
+  END;
+//  AttachmentFile.Free;
+
+    {
+   codigoVerificacion := inttostr(RandomRange(100000, 999999));
+   codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', codigoVerificacion);
+   showmessage(codigoVerificacion);
+     }
+
+
   registroValido := true;
   clienteValido := false;
   clienteTieneUsuario := false;
@@ -143,12 +207,19 @@ begin
 
   if registroValido then
     begin
-      // convertimos la passwd en hash md5
-      Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
+      if permisos = 'cliente' then
+        begin
+           codigoVerificacion := inttostr(RandomRange(100000, 999999));
+           codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', codigoVerificacion);
+           showmessage(codigoVerificacion);
+        end;
 
-      Tablas.FDTableUsuarios.Post;
-      showmessage('Usuario creado con éxito.');
-      AltaUsuario.Close;
+          // convertimos la passwd en hash md5
+          Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
+
+          Tablas.FDTableUsuarios.Post;
+          showmessage('Usuario creado con éxito.');
+          AltaUsuario.Close;
     end;
 
 end;
@@ -163,6 +234,16 @@ procedure TAltaUsuario.FormActivate(Sender: TObject);
 begin
   Tablas.FDTableUsuarios.append;
   Edit1.Text := '';
+
+  if permisos = 'cliente' then
+    begin
+      RadioGroup1.Enabled := false;
+    end;
+
+  if permisos = 'admin' then
+    begin
+      RadioGroup1.Enabled := true;
+    end;
 end;
 
 end.

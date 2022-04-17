@@ -197,6 +197,7 @@ end;
 
 procedure TPrincipal.Usuario1Click(Sender: TObject);
 begin
+  AltaUsuario.permisos := 'admin';
   AltaUsuario.showmodal;
 end;
 

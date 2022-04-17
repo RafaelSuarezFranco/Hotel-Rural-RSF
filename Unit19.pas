@@ -18,9 +18,15 @@ type
     Image1: TImage;
     Label4: TLabel;
     Button2: TButton;
+    Label5: TLabel;
+    Label6: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Label5MouseEnter(Sender: TObject);
+    procedure Label5MouseLeave(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure Label5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -34,7 +40,7 @@ implementation
 
 {$R *.dfm}
   uses
-    Unit1, Unit3;
+    Unit1, Unit3, Unit18;
 
 procedure TLogin.Button1Click(Sender: TObject);
 var
@@ -84,7 +90,7 @@ password := Tablas.passwordHash(Edit2.Text);
       Tablas.FDTableUsuarios.First;
       while not Tablas.FDTableUsuarios.Eof do
         begin
-          if Tablas.FDTableUsuariospassword.Value = password then
+        if Tablas.FDTableUsuariospassword.Value = password then
             begin
               usuarioValido := true;
               Tablas.perfil := Tablas.FDTableUsuariosperfil.Value;
@@ -144,5 +150,40 @@ begin
     Tablas.FDQuery7.Open;
     Tablas.FDQuery8.Open;
 end;
+
+
+ //label registrarse
+procedure TLogin.Label5Click(Sender: TObject);
+begin
+  AltaUsuario.permisos := 'cliente';
+  AltaUsuario.showmodal;
+end;
+
+
+
+
+
+
+
+
+//efecto de hover
+procedure TLogin.Label5MouseEnter(Sender: TObject);
+begin
+  TLabel(sender).StyleElements :=[seClient,seBorder];
+end;
+
+procedure TLogin.Label5MouseLeave(Sender: TObject);
+begin
+  TLabel(sender).StyleElements :=[seFont,seClient,seBorder];
+end;
+
+
+procedure TLogin.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+seleccion : integer;
+begin
+  if Key = VK_ESCAPE then Principal.Close;
+end;
+
 
 end.

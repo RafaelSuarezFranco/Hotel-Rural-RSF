@@ -136,4 +136,30 @@ object AltaUsuario: TAltaUsuario
     DataSet = Tablas.FDTableUsuarios
     Left = 232
   end
+  object IdSMTP1: TIdSMTP
+    SASLMechanisms = <>
+    Left = 112
+  end
+  object IdMessage1: TIdMessage
+    AttachmentEncoding = 'MIME'
+    BccList = <>
+    CCList = <>
+    Encoding = meDefault
+    FromList = <
+      item
+      end>
+    Recipients = <>
+    ReplyTo = <>
+    ConvertPreamble = True
+    Left = 168
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 48
+  end
 end
