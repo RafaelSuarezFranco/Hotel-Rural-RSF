@@ -88,14 +88,12 @@ begin
 
 
   //Attachmentfile := TIdAttachmentFile.Create(IdMessage1.MessageParts,'C:\File1.txt');
-  {
+
   IdMessage1.From.Address :=  'hotelrafaelsuarezfranco@gmail.com'; // please change to your gmail address //;
   IdMessage1.Recipients.EMailAddresses := 'rafasuarezfranco127@gmail.com';
   IdMessage1.Subject := 'Test Email Subject';
   IdMessage1.Body.Text := 'Test Email Body';
-  }
   //IdMessage1.Priority := mpHigh;
-  {
   TRY
     IdSMTP1.Connect();
     IdSMTP1.Send(IdMessage1);
@@ -107,12 +105,13 @@ begin
       IdSMTP1.Disconnect();
     end;
   END;
-  }
 //  AttachmentFile.Free;
 
-
-
-
+    {
+   codigoVerificacion := inttostr(RandomRange(100000, 999999));
+   codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', codigoVerificacion);
+   showmessage(codigoVerificacion);
+     }
 
 
   registroValido := true;
@@ -210,56 +209,17 @@ begin
     begin
       if permisos = 'cliente' then
         begin
-          codigoVerificacion := inttostr(RandomRange(100000, 999999));
-
-          IdMessage1.From.Address :=  'hotelrafaelsuarezfranco@gmail.com';
-          IdMessage1.Recipients.EMailAddresses := DBEdit2.Text;
-          IdMessage1.Subject := 'Confirmar cuenta de Hotel RSF';
-          IdMessage1.Body.Text := 'Bienvenido al Hotel RSF, '+DBEdit1.Text+'. Su código de verificación es: '+codigoVerificacion;
-
-
-          TRY
-            IdSMTP1.Connect();
-            IdSMTP1.Send(IdMessage1);
-            //ShowMessage('Email sent');
-
-            while codigoInput <> codigoVerificacion do
-              begin
-                codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', '');
-              end;
-
-            if codigoInput = codigoVerificacion then
-              begin
-                Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
-
-                Tablas.FDTableUsuarios.Post;
-                showmessage('Usuario creado con éxito.');
-                AltaUsuario.Close;
-
-              end;
-
-
-            IdSMTP1.Disconnect();
-          except on e:Exception do
-            begin
-              ShowMessage(e.Message);
-              IdSMTP1.Disconnect();
-            end;
-          END;
-
-           //codigoVerificacion := inttostr(RandomRange(100000, 999999));
-           //codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', codigoVerificacion);
-           //showmessage(codigoVerificacion);
+           codigoVerificacion := inttostr(RandomRange(100000, 999999));
+           codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', codigoVerificacion);
+           showmessage(codigoVerificacion);
         end;
 
           // convertimos la passwd en hash md5
-          {
           Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
 
           Tablas.FDTableUsuarios.Post;
           showmessage('Usuario creado con éxito.');
           AltaUsuario.Close;
-          }
     end;
 
 end;

@@ -141,7 +141,7 @@ object AltaUsuario: TAltaUsuario
     Left = 112
   end
   object IdMessage1: TIdMessage
-    AttachmentEncoding = 'UUE'
+    AttachmentEncoding = 'MIME'
     BccList = <>
     CCList = <>
     Encoding = meDefault
