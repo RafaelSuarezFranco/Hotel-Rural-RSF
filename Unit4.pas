@@ -333,6 +333,7 @@ begin
    Cliente := '';
    Edit1.Text := '';
    Edit1.ReadOnly := false;
+   RadioGroup1.Buttons[2].Enabled:= True;
 
 for i := 0 to FormularioDiario.ControlCount -1  do
   begin
@@ -534,14 +535,30 @@ for i := 0 to FormularioDiario.ControlCount -1  do
               showMessage('Lo sentimos, la habitación está reservada/ocupada por otra persona.');
               PostMessage(Handle, WM_CLOSE, 0, 0);
               modalresult := mrCancel;
+          end else
+          begin
+              if DiaPasado = true then
+                begin  //un cliente no puede administrar una habitación en el pasado.
+                   showMessage('Lo sentimos, no puede administrar una habitación en un día pasado.');
+                    PostMessage(Handle, WM_CLOSE, 0, 0);
+                    modalresult := mrCancel;
+                end;
+
           end;
 
-          if Cliente = '' then
-            begin
+        if Cliente = '' then
+          begin
               Cliente := Tablas.cliente;
               Edit1.Text := Tablas.cliente;
-              Edit1.ReadOnly := true;
-            end;
+          end;
+
+
+          //un cliente no puede marcar ocupado en ningún caso.
+          RadioGroup1.Buttons[2].Enabled:= false;
+
+          //en cualquier caso, el cliente no puede manipular los edits (su DNI y precio de la habitación).
+          Edit1.ReadOnly := true;
+          Edit2.ReadOnly := true;
     end;
 
 
