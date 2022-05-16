@@ -25,7 +25,6 @@ object AltaServicio: TAltaServicio
     Width = 177
     Height = 18
     Caption = 'Nombre del nuevo servicio:'
-    FocusControl = DBEdit1
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
@@ -39,7 +38,6 @@ object AltaServicio: TAltaServicio
     Width = 118
     Height = 18
     Caption = 'Precio del servicio:'
-    FocusControl = DBEdit2
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -15
@@ -47,31 +45,13 @@ object AltaServicio: TAltaServicio
     Font.Style = []
     ParentFont = False
   end
-  object DBEdit1: TDBEdit
-    Left = 32
-    Top = 48
-    Width = 193
-    Height = 21
-    DataField = 'nombreservicio'
-    DataSource = DataSource1
-    TabOrder = 0
-  end
-  object DBEdit2: TDBEdit
-    Left = 32
-    Top = 120
-    Width = 193
-    Height = 21
-    DataField = 'precioservicio'
-    DataSource = DataSource1
-    TabOrder = 1
-  end
   object Button1: TButton
     Left = 32
     Top = 160
     Width = 89
     Height = 41
     Caption = 'Aceptar'
-    TabOrder = 2
+    TabOrder = 0
     OnClick = Button1Click
   end
   object Button2: TButton
@@ -80,12 +60,23 @@ object AltaServicio: TAltaServicio
     Width = 91
     Height = 41
     Caption = 'Cancelar'
-    TabOrder = 3
+    TabOrder = 1
     OnClick = Button2Click
   end
-  object DataSource1: TDataSource
-    DataSet = Tablas.FDTableServicios
-    Left = 184
-    Top = 72
+  object Edit1: TEdit
+    Left = 32
+    Top = 48
+    Width = 177
+    Height = 21
+    TabOrder = 2
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    Left = 32
+    Top = 112
+    Width = 177
+    Height = 21
+    TabOrder = 3
+    Text = 'Edit2'
   end
 end

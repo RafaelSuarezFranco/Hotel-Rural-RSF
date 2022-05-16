@@ -49,6 +49,11 @@ type
     Button4: TButton;
     Label8: TLabel;
     Label9: TLabel;
+    EditarEntidades: TMenuItem;
+    Habitacin2: TMenuItem;
+    Servicio2: TMenuItem;
+    emporada1: TMenuItem;
+    Usuario2: TMenuItem;
 
 
 
@@ -84,6 +89,11 @@ type
     procedure Usuario1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure EditarEntidadesClick(Sender: TObject);
+    procedure Habitacin2Click(Sender: TObject);
+    procedure Servicio2Click(Sender: TObject);
+    procedure emporada1Click(Sender: TObject);
+    procedure Usuario2Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -114,15 +124,42 @@ implementation
 
 //procedimientos del menú superior
 
+
+
+//CREAR HABITACION, ETC
+procedure TPrincipal.Habitacin1Click(Sender: TObject);
+begin
+  NuevaHabitacion.modo := 'crear';
+  NuevaHabitacion.ShowModal;
+end;
+
+  procedure TPrincipal.creartempClick(Sender: TObject);
+begin
+   CrearTemporada.showmodal;
+end;
+
+procedure TPrincipal.Servicio1Click(Sender: TObject);
+begin
+  AltaServicio.modo := 'crear';
+  AltaServicio.showmodal;
+end;
+
+
+procedure TPrincipal.Usuario1Click(Sender: TObject);
+begin
+  AltaUsuario.permisos := 'admin';
+  AltaUsuario.showmodal;
+end;
+
+
+
+
+//INFORMES
 procedure TPrincipal.Factura1Click(Sender: TObject);
 begin
   FacturaParametros.showmodal;
 end;
 
-procedure TPrincipal.Habitacin1Click(Sender: TObject);
-begin
-  NuevaHabitacion.ShowModal;
-end;
 
 procedure TPrincipal.historialClienteClick(Sender: TObject);
 var
@@ -190,27 +227,15 @@ end;
 
 
 
-procedure TPrincipal.Servicio1Click(Sender: TObject);
-begin
-  AltaServicio.showmodal;
-end;
-
-procedure TPrincipal.Usuario1Click(Sender: TObject);
-begin
-  AltaUsuario.permisos := 'admin';
-  AltaUsuario.showmodal;
-end;
-
-procedure TPrincipal.creartempClick(Sender: TObject);
-begin
-   CrearTemporada.showmodal;
-end;
 
 procedure TPrincipal.TodosClientesClick(Sender: TObject);
 begin
   Tablas.FDTableClientes.IndexFieldNames := 'apellidos';
   InformeClientes.QuickRep1.Preview;
 end;
+
+
+//GRAFICOS
 
  procedure TPrincipal.IngresosReservas1Click(Sender: TObject);
 begin
@@ -222,6 +247,66 @@ procedure TPrincipal.IngresosServicios1Click(Sender: TObject);
 begin
    GraficosServicios.ShowModal;
 end;
+
+
+
+
+//EDITAR HABITACIONES, ETC
+
+procedure TPrincipal.Habitacin2Click(Sender: TObject);
+var
+ numero: string;
+begin
+    numero := inputbox('Nº Habitación', 'Introduzca el número de la habitación a editar', '');
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from habitaciones where numero='+numero;
+    Tablas.FDQuery1.Open;
+
+    if Tablas.FDQuery1.RecordCount = 1 then
+    begin
+      NuevaHabitacion.modo := 'editar';
+      NuevaHabitacion.habitacionEdit := numero;
+      NuevaHabitacion.ShowModal;
+    end
+    else showmessage('No existe una habitación con ese número.');
+
+end;
+
+procedure TPrincipal.Servicio2Click(Sender: TObject);
+var
+nombre: string;
+begin
+    nombre := inputbox('Nombre de servicio', 'Introduzca el nombre del servicio a editar', '');
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from servicios where nombreservicio='+quotedstr(nombre);
+    Tablas.FDQuery1.Open;
+
+if Tablas.FDQuery1.RecordCount = 1 then
+    begin
+      AltaServicio.modo := 'editar';
+      AltaServicio.servicioEdit := nombre;
+      AltaServicio.precioEdit := Tablas.FDQuery1.FieldByName('precioservicio').Value;
+      AltaServicio.showmodal;
+    end
+    else showmessage('No existe un servicio con ese nombre.');
+
+
+end;
+
+
+procedure TPrincipal.emporada1Click(Sender: TObject);
+begin
+    CrearTemporada.showmodal;
+end;
+
+
+procedure TPrincipal.Usuario2Click(Sender: TObject);
+begin
+    AltaUsuario.permisos := 'admin';
+  AltaUsuario.showmodal;
+end;
+
+
 
 
 
@@ -280,6 +365,7 @@ begin
         ItinerariodeServicios1.Visible := false;
         TodosClientes.Visible :=false;
         Informedinmico1.Visible :=false;
+        EditarEntidades.Visible := false;
       end;
 
     if Tablas.perfil = 'admin' then
@@ -289,6 +375,7 @@ begin
         ItinerariodeServicios1.Visible := true;
         TodosClientes.Visible :=true;
         Informedinmico1.Visible := true;
+        EditarEntidades.Visible := true;
       end;
 end;
 
@@ -560,6 +647,12 @@ end;
 function TPrincipal.DevolverHabitacionSeleccionada(): Integer;
 begin
     DevolverHabitacionSeleccionada := HabitacionSeleccionada;
+end;
+
+
+procedure TPrincipal.EditarEntidadesClick(Sender: TObject);
+begin
+
 end;
 
 

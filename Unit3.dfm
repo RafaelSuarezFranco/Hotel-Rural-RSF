@@ -96,7 +96,6 @@ object Tablas: TTablas
       'Password=Sevilla1%'
       'Server=torredelrey.ddns.net'
       'Port=4006')
-    Connected = True
     LoginPrompt = False
     Left = 32
     Top = 32

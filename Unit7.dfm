@@ -15,6 +15,7 @@ object NuevaHabitacion: TNuevaHabitacion
   KeyPreview = True
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnActivate = FormActivate
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
   TextHeight = 13

@@ -234,6 +234,26 @@ object Principal: TPrincipal
         Caption = '-'
       end
     end
+    object EditarEntidades: TMenuItem
+      Caption = '&Editar'
+      OnClick = EditarEntidadesClick
+      object Habitacin2: TMenuItem
+        Caption = 'Habitaci'#243'n'
+        OnClick = Habitacin2Click
+      end
+      object Servicio2: TMenuItem
+        Caption = 'Servicio'
+        OnClick = Servicio2Click
+      end
+      object emporada1: TMenuItem
+        Caption = 'Temporada'
+        OnClick = emporada1Click
+      end
+      object Usuario2: TMenuItem
+        Caption = 'Usuario'
+        OnClick = Usuario2Click
+      end
+    end
     object Creartemp1: TMenuItem
       Caption = '&Informes'
       object Factura1: TMenuItem

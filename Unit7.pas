@@ -20,10 +20,13 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    modo: string;
+    habitacionEdit: string;
   end;
 
 var
@@ -73,7 +76,7 @@ begin
     showmessage('El precio debe ser un dato numérico.');
   end;
 
-  if Tablas.FDTableHabitaciones.Locate('numero', nhabitacion, []) then
+  if Tablas.FDTableHabitaciones.Locate('numero', nhabitacion, []) and (modo = 'crear') then
     begin
        registroValido:=false;
         showmessage('El nº de habitación ya existe, por favor, escoge otro.');
@@ -81,7 +84,7 @@ begin
 
 
   //una vez hemos comprobado que todo está correcto, creamos el registro
-  if registroValido then
+  if (registroValido = true) and (modo = 'crear') then
     begin
       Tablas.FDTableHabitaciones.Append;
       Tablas.FDTableHabitacionesnumero.value := nhabitacion;
@@ -94,6 +97,20 @@ begin
       Principal.CargarDia;
     end;
 
+    //si estamos editando
+    if (registroValido = true) and (modo = 'editar') then
+      begin
+        Tablas.FDTableHabitaciones.Locate('numero', habitacionEdit, []);
+        Tablas.FDTableHabitaciones.Edit;
+        Tablas.FDTableHabitacionespreciobase.Value := StrToInt(Edit1.Text);
+        Tablas.FDTableHabitacionestipo.Value := Edit2.Text;
+        Tablas.FDTableHabitaciones.Post;
+        NuevaHabitacion.Close;
+        Principal.CrearPanelesHabitaciones;
+        Principal.CargarDia;
+      end;
+
+
 end;
 
 procedure TNuevaHabitacion.Button2Click(Sender: TObject);
@@ -101,6 +118,30 @@ begin
      NuevaHabitacion.Close;
 end;
 
+
+procedure TNuevaHabitacion.FormActivate(Sender: TObject);
+begin
+    if modo = 'editar' then
+      begin
+         Button1.Caption := 'Editar';
+         SpinEdit1.Value := StrToInt(habitacionEdit);
+         SpinEdit1.ReadOnly := True;
+
+          Tablas.FDQuery1.Close;
+          Tablas.FDQuery1.SQL.Text := 'select * from habitaciones where numero='+habitacionEdit;
+          Tablas.FDQuery1.Open;
+
+          Edit1.Text := Tablas.FDQuery1.FieldByName('preciobase').Value;
+          Edit2.Text := Tablas.FDQuery1.FieldByName('tipo').Value;
+      end else
+      begin
+         Button1.Caption := 'Crear';
+         SpinEdit1.Value := 0;
+         SpinEdit1.ReadOnly := False;
+         Edit1.Text := '';
+         Edit2.Text := '';
+      end;
+end;
 
 procedure TNuevaHabitacion.FormKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
