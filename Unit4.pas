@@ -329,7 +329,7 @@ mesbusqueda: String;
 servicioCheck: TCheckbox;
 
 begin
-    //reiniciamos todo lo que hemos tocado en caso de que venga un cliente
+    //reiniciamos todo lo que hemos tocado en caso de que venga un admin
    Cliente := '';
    Edit1.Text := '';
    Edit1.ReadOnly := false;

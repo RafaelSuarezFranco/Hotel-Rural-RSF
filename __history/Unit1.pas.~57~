@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, System.DateUtils,    ShellAPI ,
   Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.Menus, Vcl.WinXCalendars;
 
 type
@@ -24,13 +24,13 @@ type
     PopupMenu2: TPopupMenu;
     CrearHabitacin1: TMenuItem;
     MainMenu1: TMainMenu;
-    CrearTemporada1: TMenuItem;
+    CrearEntidades: TMenuItem;
     Creartemp1: TMenuItem;
     creartemp: TMenuItem;
     Servicio1: TMenuItem;
     Habitacin1: TMenuItem;
     CalendarView1: TCalendarView;
-    Clientes1: TMenuItem;
+    TodosClientes: TMenuItem;
     Factura1: TMenuItem;
     N1: TMenuItem;
     ItinerariodeServicios1: TMenuItem;
@@ -38,15 +38,22 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     Informedinmico1: TMenuItem;
-    G1: TMenuItem;
+    graficos: TMenuItem;
     IngresosReservas1: TMenuItem;
     IngresosServicios1: TMenuItem;
     Usuario1: TMenuItem;
-    Button4: TButton;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
+    Button4: TButton;
+    Label8: TLabel;
+    Label9: TLabel;
+    EditarEntidades: TMenuItem;
+    Habitacin2: TMenuItem;
+    Servicio2: TMenuItem;
+    emporada1: TMenuItem;
+    Usuario2: TMenuItem;
 
 
 
@@ -70,7 +77,7 @@ type
     procedure Habitacin1Click(Sender: TObject);
     procedure Servicio1Click(Sender: TObject);
     procedure CalendarView1Change(Sender: TObject);
-    procedure Clientes1Click(Sender: TObject);
+    procedure TodosClientesClick(Sender: TObject);
     procedure Factura1Click(Sender: TObject);
     procedure ItinerariodeServicios1Click(Sender: TObject);
     procedure historialClienteClick(Sender: TObject);
@@ -81,6 +88,12 @@ type
     procedure IngresosServicios1Click(Sender: TObject);
     procedure Usuario1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure EditarEntidadesClick(Sender: TObject);
+    procedure Habitacin2Click(Sender: TObject);
+    procedure Servicio2Click(Sender: TObject);
+    procedure emporada1Click(Sender: TObject);
+    procedure Usuario2Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -97,6 +110,8 @@ type
     BotonesHabitaciones : Array of TButton;
     HabitacionSeleccionada: integer;
     HabitacionesBD : Array of integer; //contiene los nº de habitaciones
+
+    login1 : boolean;  //controlar si se ha producido un login
 implementation
 
 {$R *.dfm}
@@ -109,15 +124,44 @@ implementation
 
 //procedimientos del menú superior
 
+
+
+//CREAR HABITACION, ETC
+procedure TPrincipal.Habitacin1Click(Sender: TObject);
+begin
+  NuevaHabitacion.modo := 'crear';
+  NuevaHabitacion.ShowModal;
+end;
+
+  procedure TPrincipal.creartempClick(Sender: TObject);
+begin
+   CrearTemporada.showmodal;
+end;
+
+procedure TPrincipal.Servicio1Click(Sender: TObject);
+begin
+  AltaServicio.modo := 'crear';
+  AltaServicio.showmodal;
+end;
+
+
+procedure TPrincipal.Usuario1Click(Sender: TObject);
+begin
+  AltaUsuario.permisos := 'admin';
+  AltaUsuario.showmodal;
+end;
+
+
+
+
+
+
+//INFORMES
 procedure TPrincipal.Factura1Click(Sender: TObject);
 begin
   FacturaParametros.showmodal;
 end;
 
-procedure TPrincipal.Habitacin1Click(Sender: TObject);
-begin
-  NuevaHabitacion.ShowModal;
-end;
 
 procedure TPrincipal.historialClienteClick(Sender: TObject);
 var
@@ -127,7 +171,16 @@ apellido: string;
 stringcliente: string;
   begin
   //la idea es reutilizar factura, para ello vamos a cambiar la consulta 'fdquery2' para filtrar por cliente
-     idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
+     if Tablas.perfil = 'admin' then
+      begin
+        idcliente := inputbox('ID cliente', 'Introduzca el ID del cliente', '');
+      end;
+     if Tablas.perfil = 'cliente' then      //si un cliente esta logeado, solo puede ver su propio historial.
+      begin
+        idcliente := Tablas.cliente;
+      end;
+
+
      if idcliente <> '' then
      begin
 
@@ -174,26 +227,17 @@ begin
   ItinerarioServicios.quickreport1.Preview;
 end;
 
-procedure TPrincipal.Servicio1Click(Sender: TObject);
-begin
-  AltaServicio.showmodal;
-end;
 
-procedure TPrincipal.Usuario1Click(Sender: TObject);
-begin
-  AltaUsuario.showmodal;
-end;
 
-procedure TPrincipal.creartempClick(Sender: TObject);
-begin
-   CrearTemporada.showmodal;
-end;
 
-procedure TPrincipal.Clientes1Click(Sender: TObject);
+procedure TPrincipal.TodosClientesClick(Sender: TObject);
 begin
   Tablas.FDTableClientes.IndexFieldNames := 'apellidos';
   InformeClientes.QuickRep1.Preview;
 end;
+
+
+//GRAFICOS
 
  procedure TPrincipal.IngresosReservas1Click(Sender: TObject);
 begin
@@ -209,12 +253,125 @@ end;
 
 
 
+//EDITAR HABITACIONES, ETC
+
+procedure TPrincipal.Habitacin2Click(Sender: TObject);
+var
+ numero: string;
+begin
+    numero := inputbox('Nº Habitación', 'Introduzca el número de la habitación a editar', '');
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from habitaciones where numero='+numero;
+    Tablas.FDQuery1.Open;
+
+    if Tablas.FDQuery1.RecordCount = 1 then
+    begin
+      NuevaHabitacion.modo := 'editar';
+      NuevaHabitacion.habitacionEdit := numero;
+      NuevaHabitacion.ShowModal;
+    end
+    else showmessage('No existe una habitación con ese número.');
+
+end;
+
+procedure TPrincipal.Servicio2Click(Sender: TObject);
+var
+nombre: string;
+begin
+    nombre := inputbox('Nombre de servicio', 'Introduzca el nombre del servicio a editar', '');
+    Tablas.FDQuery1.Close;
+    Tablas.FDQuery1.SQL.Text := 'select * from servicios where nombreservicio='+quotedstr(nombre);
+    Tablas.FDQuery1.Open;
+
+if Tablas.FDQuery1.RecordCount = 1 then
+    begin
+      AltaServicio.modo := 'editar';
+      AltaServicio.servicioEdit := nombre;
+      AltaServicio.precioEdit := Tablas.FDQuery1.FieldByName('precioservicio').Value;
+      AltaServicio.showmodal;
+    end
+    else showmessage('No existe un servicio con ese nombre.');
+
+
+end;
+
+
+procedure TPrincipal.emporada1Click(Sender: TObject);
+var
+fecha: Tdate;
+begin
+  try
+    fecha := strToDate(inputbox('Fecha de temporada', 'Introduzca una fecha para borrar la temporada a la que pertenece', '01/01/2000'));
+
+
+     Tablas.FDQuery1.Close;
+      Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedstr(Tablas.formatearFechaSQL(fecha))+
+            ' and fechafin>='+quotedstr(Tablas.formatearFechaSQL(fecha));
+      Tablas.FDQuery1.Open;
+
+      if fecha <> strToDate('01/01/2000') then
+        begin
+         if Tablas.FDTableTemporadas.Locate('fechainicio', Tablas.FDQuery1.FieldByName('fechainicio').Value,[]) then
+         begin
+             Tablas.FDTableTemporadas.Delete;
+             showmessage('Se ha borrado la temporada a la que pertenece la fecha indicada.');
+         end else
+         begin
+          showmessage('No se ha encontrado una temporada para le fecha indicada');
+         end;
+
+        end;
+
+  except
+    showmessage('Formato de fecha incorrecto.');
+  end;
+
+end;
+
+procedure TPrincipal.Usuario2Click(Sender: TObject);
+var
+dni: string;
+nombre: string;
+apellidos: string;
+begin
+  dni := inputbox('Identificador de cliente', 'Introduzca el ID del cliente a editar', '');
+  if Tablas.FDTableClientes.Locate('identificador', dni, []) then
+    begin
+       nombre := inputbox('Nombre', 'Nuevo nombre', Tablas.FDTableClientesnombre.Value);
+       apellidos := inputbox('Apellidos', 'Nuevos apellidos', Tablas.FDTableClientesapellidos.Value);
+
+       Tablas.FDTableClientes.Edit;
+       Tablas.FDTableClientesnombre.Value := nombre;
+       Tablas.FDTableClientesapellidos.Value:= apellidos;
+       Tablas.FDTableClientes.Post;
+
+       showmessage('Se ha editado el cliente.');
+    end;
+end;
+
+
+
+
+
+
+
+procedure TPrincipal.FormCreate(Sender: TObject);
+begin
+   login1 := false;
+end;
 
 
 //abrimos las tablas e inicializamos las fechas, creamos los paneles y los coloreamos
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
+    if login1 = false then
+      begin
+        //para enseñar el login primero de todo, lo mostramos con showmodal mientras se activa el principal. Hay que meterlo en esta
+        //condicion porque al cerrar algunas ventanas de informes,se reactiva el principal y por tanto se muestra el login otra vez.
+         Login.ShowModal;
+         login1 := true;
+      end;
 
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
@@ -243,7 +400,28 @@ begin
 
     Label6.Caption := Tablas.usuario;
     Label7.Caption := Tablas.perfil;
-    Login.hide;
+    Label9.Caption := Tablas.cliente;
+
+    //escondemos o mostramos el menu en función del perfil.
+    if Tablas.perfil = 'cliente' then
+      begin
+        CrearEntidades.Visible := false;
+        graficos.Visible := false;
+        ItinerariodeServicios1.Visible := false;
+        TodosClientes.Visible :=false;
+        Informedinmico1.Visible :=false;
+        EditarEntidades.Visible := false;
+      end;
+
+    if Tablas.perfil = 'admin' then
+      begin
+        CrearEntidades.Visible := true;
+        graficos.Visible := true;
+        ItinerariodeServicios1.Visible := true;
+        TodosClientes.Visible :=true;
+        Informedinmico1.Visible := true;
+        EditarEntidades.Visible := true;
+      end;
 end;
 
 
@@ -375,6 +553,8 @@ end;
 
 
 
+
+
 procedure TPrincipal.CalendarView1Change(Sender: TObject);
 var
 fecharespaldo: TDate;
@@ -495,10 +675,11 @@ begin
   FormularioPeriodo.showmodal;
 end;
 
-
+ //básicamente, reinicia la aplicación.
 procedure TPrincipal.Button4Click(Sender: TObject);
 begin
-  Login.ShowModal;
+  ShellExecute(Handle, nil, PChar(Application.ExeName), nil, nil, SW_SHOWNORMAL);
+  Application.Terminate; // or, if this is the main form, simply Close;
 end;
 
 //usamos estas funciones para pasar la habitacion y fecha al otro form (pantalla mes)
@@ -511,6 +692,12 @@ end;
 function TPrincipal.DevolverHabitacionSeleccionada(): Integer;
 begin
     DevolverHabitacionSeleccionada := HabitacionSeleccionada;
+end;
+
+
+procedure TPrincipal.EditarEntidadesClick(Sender: TObject);
+begin
+
 end;
 
 
@@ -636,5 +823,4 @@ end;
 
 
 
-
- end.
+end.

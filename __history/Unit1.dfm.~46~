@@ -16,8 +16,10 @@ object Principal: TPrincipal
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poMainFormCenter
+  StyleElements = [seClient, seBorder]
   OnActivate = FormActivate
   OnClose = FormClose
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
@@ -49,8 +51,50 @@ object Principal: TPrincipal
     Height = 13
     Caption = 'Saltar al d'#237'a:'
   end
+  object Label4: TLabel
+    Left = 8
+    Top = 592
+    Width = 40
+    Height = 13
+    Caption = 'Usuario:'
+  end
+  object Label5: TLabel
+    Left = 8
+    Top = 609
+    Width = 28
+    Height = 13
+    Caption = 'Perfil:'
+  end
+  object Label6: TLabel
+    Left = 54
+    Top = 592
+    Width = 31
+    Height = 13
+    Caption = 'Label6'
+  end
+  object Label7: TLabel
+    Left = 54
+    Top = 609
+    Width = 31
+    Height = 13
+    Caption = 'Label7'
+  end
+  object Label8: TLabel
+    Left = 8
+    Top = 625
+    Width = 37
+    Height = 13
+    Caption = 'Cliente:'
+  end
+  object Label9: TLabel
+    Left = 54
+    Top = 625
+    Width = 31
+    Height = 13
+    Caption = 'Label9'
+  end
   object ScrollBox1: TScrollBox
-    Left = 200
+    Left = 183
     Top = 120
     Width = 577
     Height = 449
@@ -99,7 +143,7 @@ object Principal: TPrincipal
   end
   object Button2: TButton
     Left = 48
-    Top = 424
+    Top = 408
     Width = 129
     Height = 49
     Caption = '&Reservar periodo'
@@ -108,7 +152,7 @@ object Principal: TPrincipal
   end
   object Button3: TButton
     Left = 48
-    Top = 488
+    Top = 463
     Width = 129
     Height = 49
     Caption = '&Anular periodo'
@@ -140,6 +184,15 @@ object Principal: TPrincipal
     ParentFont = False
     TabOrder = 7
   end
+  object Button4: TButton
+    Left = 10
+    Top = 561
+    Width = 63
+    Height = 25
+    Caption = 'Logout'
+    TabOrder = 8
+    OnClick = Button4Click
+  end
   object PopupMenu1: TPopupMenu
     Left = 912
     Top = 392
@@ -159,7 +212,7 @@ object Principal: TPrincipal
   object MainMenu1: TMainMenu
     Left = 48
     Top = 40
-    object CrearTemporada1: TMenuItem
+    object CrearEntidades: TMenuItem
       Caption = '&Crear'
       object Habitacin1: TMenuItem
         Caption = 'Habitaci'#243'n'
@@ -181,6 +234,25 @@ object Principal: TPrincipal
         Caption = '-'
       end
     end
+    object EditarEntidades: TMenuItem
+      Caption = '&Editar'
+      OnClick = EditarEntidadesClick
+      object Habitacin2: TMenuItem
+        Caption = 'Habitaci'#243'n'
+        OnClick = Habitacin2Click
+      end
+      object Servicio2: TMenuItem
+        Caption = 'Servicio'
+        OnClick = Servicio2Click
+      end
+      object Usuario2: TMenuItem
+        Caption = 'Cliente'
+      end
+      object emporada1: TMenuItem
+        Caption = 'Borrar Temporada'
+        OnClick = emporada1Click
+      end
+    end
     object Creartemp1: TMenuItem
       Caption = '&Informes'
       object Factura1: TMenuItem
@@ -194,9 +266,9 @@ object Principal: TPrincipal
       object N2: TMenuItem
         Caption = '-'
       end
-      object Clientes1: TMenuItem
+      object TodosClientes: TMenuItem
         Caption = '&Clientes'
-        OnClick = Clientes1Click
+        OnClick = TodosClientesClick
       end
       object historialCliente: TMenuItem
         Caption = '&Historial por cliente'
@@ -210,7 +282,7 @@ object Principal: TPrincipal
         OnClick = Informedinmico1Click
       end
     end
-    object G1: TMenuItem
+    object graficos: TMenuItem
       Caption = '&Gr'#225'ficos'
       object IngresosReservas1: TMenuItem
         Caption = 'Ingresos - &Reservas'

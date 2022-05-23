@@ -245,13 +245,13 @@ object Principal: TPrincipal
         Caption = 'Servicio'
         OnClick = Servicio2Click
       end
-      object emporada1: TMenuItem
-        Caption = 'Temporada'
-        OnClick = emporada1Click
-      end
       object Usuario2: TMenuItem
-        Caption = 'Usuario'
+        Caption = 'Cliente'
         OnClick = Usuario2Click
+      end
+      object emporada1: TMenuItem
+        Caption = 'Borrar Temporada'
+        OnClick = emporada1Click
       end
     end
     object Creartemp1: TMenuItem

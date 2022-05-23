@@ -154,6 +154,8 @@ end;
 
 
 
+
+
 //INFORMES
 procedure TPrincipal.Factura1Click(Sender: TObject);
 begin
@@ -295,16 +297,62 @@ end;
 
 
 procedure TPrincipal.emporada1Click(Sender: TObject);
+var
+fecha: Tdate;
 begin
-    CrearTemporada.showmodal;
-end;
+  try
+    fecha := strToDate(inputbox('Fecha de temporada', 'Introduzca una fecha para borrar la temporada a la que pertenece', '01/01/2000'));
 
+
+     Tablas.FDQuery1.Close;
+      Tablas.FDQuery1.SQL.Text := 'select * from temporadas where fechainicio<='+quotedstr(Tablas.formatearFechaSQL(fecha))+
+            ' and fechafin>='+quotedstr(Tablas.formatearFechaSQL(fecha));
+      Tablas.FDQuery1.Open;
+
+      if fecha <> strToDate('01/01/2000') then
+        begin
+         if Tablas.FDTableTemporadas.Locate('fechainicio', Tablas.FDQuery1.FieldByName('fechainicio').Value,[]) then
+         begin
+             Tablas.FDTableTemporadas.Delete;
+             showmessage('Se ha borrado la temporada a la que pertenece la fecha indicada.');
+         end else
+         begin
+          showmessage('No se ha encontrado una temporada para le fecha indicada');
+         end;
+
+        end;
+
+  except
+    showmessage('Formato de fecha incorrecto.');
+  end;
+
+end;
 
 procedure TPrincipal.Usuario2Click(Sender: TObject);
+var
+dni: string;
+nombre: string;
+apellidos: string;
 begin
-    AltaUsuario.permisos := 'admin';
-  AltaUsuario.showmodal;
+  dni := inputbox('Identificador de cliente', 'Introduzca el ID del cliente a editar', '');
+  if Tablas.FDTableClientes.Locate('identificador', dni, []) then
+    begin
+       nombre := inputbox('Nombre', 'Nuevo nombre', Tablas.FDTableClientesnombre.Value);
+       apellidos := inputbox('Apellidos', 'Nuevos apellidos', Tablas.FDTableClientesapellidos.Value);
+
+       Tablas.FDTableClientes.Edit;
+       Tablas.FDTableClientesnombre.Value := nombre;
+       Tablas.FDTableClientesapellidos.Value:= apellidos;
+       Tablas.FDTableClientes.Post;
+
+       showmessage('Se ha editado el cliente.');
+    end else
+    begin
+      showmessage('No se ha encontrado un cliente con el ID especificado.');
+    end;
 end;
+
+
 
 
 
