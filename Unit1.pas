@@ -368,6 +368,9 @@ end;
 
 procedure TPrincipal.FormActivate(Sender: TObject);
 begin
+
+  Tablas.passwordcorreo := '689196A338B739E5BDA0FB';
+
     if login1 = false then
       begin
         //para enseñar el login primero de todo, lo mostramos con showmodal mientras se activa el principal. Hay que meterlo en esta
@@ -375,6 +378,9 @@ begin
          Login.ShowModal;
          login1 := true;
       end;
+
+
+
 
  //apertura de tablas
     Tablas.FDTableHabitaciones.Open;
@@ -684,6 +690,9 @@ begin
   ShellExecute(Handle, nil, PChar(Application.ExeName), nil, nil, SW_SHOWNORMAL);
   Application.Terminate; // or, if this is the main form, simply Close;
 end;
+
+
+
 
 //usamos estas funciones para pasar la habitacion y fecha al otro form (pantalla mes)
 
