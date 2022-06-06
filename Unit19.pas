@@ -222,7 +222,8 @@ begin
           IdSMTP1.Disconnect();
        except on e:Exception do
           begin
-            ShowMessage(e.Message);
+            //ShowMessage(e.Message);
+            Showmessage('No se ha podido enviar el correo.');
             IdSMTP1.Disconnect();
           end;
        END;

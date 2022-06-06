@@ -1,9 +1,9 @@
-object NuevaHabitacion: TNuevaHabitacion
+object AltaHabitacion: TAltaHabitacion
   Left = 0
   Top = 0
   BorderIcons = []
   BorderStyle = bsSingle
-  Caption = 'NuevaHabitacion'
+  Caption = 'AltaHabitacion'
   ClientHeight = 252
   ClientWidth = 229
   Color = clBtnFace

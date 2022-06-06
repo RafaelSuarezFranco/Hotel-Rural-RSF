@@ -1,9 +1,9 @@
-object CrearTemporada: TCrearTemporada
+object AltaTemporada: TAltaTemporada
   Left = 0
   Top = 0
   BorderIcons = []
   BorderStyle = bsSingle
-  Caption = 'CrearTemporada'
+  Caption = 'AltaTemporada'
   ClientHeight = 285
   ClientWidth = 521
   Color = clBtnFace

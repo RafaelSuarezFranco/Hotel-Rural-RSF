@@ -161,11 +161,11 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Unit7.pas">
-            <Form>NuevaHabitacion</Form>
+            <Form>AltaHabitacion</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Unit8.pas">
-            <Form>CrearTemporada</Form>
+            <Form>AltaTemporada</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Unit9.pas">

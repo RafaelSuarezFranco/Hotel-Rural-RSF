@@ -129,13 +129,13 @@ implementation
 //CREAR HABITACION, ETC
 procedure TPrincipal.Habitacin1Click(Sender: TObject);
 begin
-  NuevaHabitacion.modo := 'crear';
-  NuevaHabitacion.ShowModal;
+  AltaHabitacion.modo := 'crear';
+  AltaHabitacion.ShowModal;
 end;
 
   procedure TPrincipal.creartempClick(Sender: TObject);
 begin
-   CrearTemporada.showmodal;
+   AltaTemporada.showmodal;
 end;
 
 procedure TPrincipal.Servicio1Click(Sender: TObject);
@@ -266,9 +266,9 @@ begin
 
     if Tablas.FDQuery1.RecordCount = 1 then
     begin
-      NuevaHabitacion.modo := 'editar';
-      NuevaHabitacion.habitacionEdit := numero;
-      NuevaHabitacion.ShowModal;
+      AltaHabitacion.modo := 'editar';
+      AltaHabitacion.habitacionEdit := numero;
+      AltaHabitacion.ShowModal;
     end
     else showmessage('No existe una habitación con ese número.');
 
@@ -593,7 +593,7 @@ begin
 
        if seleccion = mrOK then
        begin
-          NuevaHabitacion.ShowModal;
+          AltaHabitacion.ShowModal;
        end;
     //crear habitación
 end;

@@ -8,7 +8,7 @@ uses
   Vcl.ExtCtrls, Vcl.WinXPickers, Data.DB, Vcl.Grids, Vcl.DBGrids;
 
 type
-  TCrearTemporada = class(TForm)
+  TAltaTemporada = class(TForm)
     DatePicker1: TDatePicker;
     DatePicker2: TDatePicker;
     Label1: TLabel;
@@ -29,7 +29,7 @@ type
   end;
 
 var
-  CrearTemporada: TCrearTemporada;
+  AltaTemporada: TAltaTemporada;
 
 implementation
 
@@ -42,7 +42,7 @@ uses
 
 //botón para confirmar la creación de temporada
 
-procedure TCrearTemporada.Button1Click(Sender: TObject);
+procedure TAltaTemporada.Button1Click(Sender: TObject);
 var
 fechainicio: TDate;
 fechafin: TDate;
@@ -108,7 +108,7 @@ begin
       Tablas.FDTableTemporadasprecioadicional.Value := precio;
       Tablas.FDTableTemporadas.Post;
 
-      CrearTemporada.Close;
+      AltaTemporada.Close;
     end else
     begin
       showmessage('El periodo introducido se cruza con una temporada existente.');
@@ -120,21 +120,21 @@ end;
 
 
 
-procedure TCrearTemporada.Button2Click(Sender: TObject);
+procedure TAltaTemporada.Button2Click(Sender: TObject);
 begin
-  CrearTemporada.Close;
+  AltaTemporada.Close;
 end;
 
-procedure TCrearTemporada.FormActivate(Sender: TObject);
+procedure TAltaTemporada.FormActivate(Sender: TObject);
 begin
   Datepicker1.Date := Now();
   Datepicker2.Date := Now();
 end;
 
-procedure TCrearTemporada.FormKeyUp(Sender: TObject; var Key: Word;
+procedure TAltaTemporada.FormKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = VK_ESCAPE then  CrearTemporada.Close;
+  if Key = VK_ESCAPE then  AltaTemporada.Close;
 end;
 
 end.

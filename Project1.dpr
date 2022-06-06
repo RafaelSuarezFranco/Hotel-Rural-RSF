@@ -10,8 +10,8 @@ uses
   Vcl.Styles,
   Unit5 in 'Unit5.pas' {FormularioPeriodo},
   Unit6 in 'Unit6.pas' {AltaCliente},
-  Unit7 in 'Unit7.pas' {NuevaHabitacion},
-  Unit8 in 'Unit8.pas' {CrearTemporada},
+  Unit7 in 'Unit7.pas' {AltaHabitacion},
+  Unit8 in 'Unit8.pas' {AltaTemporada},
   Unit9 in 'Unit9.pas' {AltaServicio},
   Unit10 in 'Unit10.pas' {InformeClientes},
   Unit11 in 'Unit11.pas' {Factura},
@@ -37,8 +37,8 @@ begin
   Application.CreateForm(TFormularioDiario, FormularioDiario);
   Application.CreateForm(TFormularioPeriodo, FormularioPeriodo);
   Application.CreateForm(TAltaCliente, AltaCliente);
-  Application.CreateForm(TNuevaHabitacion, NuevaHabitacion);
-  Application.CreateForm(TCrearTemporada, CrearTemporada);
+  Application.CreateForm(TAltaHabitacion, AltaHabitacion);
+  Application.CreateForm(TAltaTemporada, AltaTemporada);
   Application.CreateForm(TAltaServicio, AltaServicio);
   Application.CreateForm(TInformeClientes, InformeClientes);
   Application.CreateForm(TFactura, Factura);

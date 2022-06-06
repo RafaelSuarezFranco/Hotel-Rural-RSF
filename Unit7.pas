@@ -8,7 +8,7 @@ uses
   Vcl.Mask, Vcl.DBCtrls;
 
 type
-  TNuevaHabitacion = class(TForm)
+  TAltaHabitacion = class(TForm)
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -30,7 +30,7 @@ type
   end;
 
 var
-  NuevaHabitacion: TNuevaHabitacion;
+  AltaHabitacion: TAltaHabitacion;
 
 implementation
 
@@ -42,7 +42,7 @@ implementation
 
 //botón para confirmar la creación de la habitación.
 
-procedure TNuevaHabitacion.Button1Click(Sender: TObject);
+procedure TAltaHabitacion.Button1Click(Sender: TObject);
 var
 nhabitacion: integer;
 precio: double;
@@ -91,7 +91,7 @@ begin
       Tablas.FDTableHabitacionestipo.Value := Edit2.Text;
       Tablas.FDTableHabitacionespreciobase.Value := precio;
       Tablas.FDTableHabitaciones.Post;
-      NuevaHabitacion.Close;
+      AltaHabitacion.Close;
       //refrescamos la pantalla principal para que se vea la nueva habitación
       Principal.CrearPanelesHabitaciones;
       Principal.CargarDia;
@@ -105,7 +105,7 @@ begin
         Tablas.FDTableHabitacionespreciobase.Value := StrToInt(Edit1.Text);
         Tablas.FDTableHabitacionestipo.Value := Edit2.Text;
         Tablas.FDTableHabitaciones.Post;
-        NuevaHabitacion.Close;
+        AltaHabitacion.Close;
         Principal.CrearPanelesHabitaciones;
         Principal.CargarDia;
       end;
@@ -113,13 +113,13 @@ begin
 
 end;
 
-procedure TNuevaHabitacion.Button2Click(Sender: TObject);
+procedure TAltaHabitacion.Button2Click(Sender: TObject);
 begin
-     NuevaHabitacion.Close;
+     AltaHabitacion.Close;
 end;
 
 
-procedure TNuevaHabitacion.FormActivate(Sender: TObject);
+procedure TAltaHabitacion.FormActivate(Sender: TObject);
 begin
     if modo = 'editar' then
       begin
@@ -143,10 +143,10 @@ begin
       end;
 end;
 
-procedure TNuevaHabitacion.FormKeyUp(Sender: TObject; var Key: Word;
+procedure TAltaHabitacion.FormKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    if Key = VK_ESCAPE then  NuevaHabitacion.Close;
+    if Key = VK_ESCAPE then  AltaHabitacion.Close;
 end;
 
 end.
