@@ -9,6 +9,7 @@ posibilidad.
 
 <h3>Pantalla principal</h3>
 
+- Acceder como cliente o administrador.
 - Visualizar el estado de las habitaciones día por día.
 - Cambiar el estado de una habitación para un día concreto.
 - Reservar un periodo concreto.
@@ -16,14 +17,17 @@ posibilidad.
 - Crear nuevas temporadas.
 - Crear nuevas habitaciones.
 - Crear nuevos servicios.
+- Crear nuevos usuarios y clientes.
 - Crear informes.
 - Crear gráficos.
 - Acceder a la vista mensual de una habitación.
 
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/login.png)
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/principal.png)
 
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/nuevahabitacion.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/creartemporada.png)
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altaservicio.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altausuario.png)
 <h3>Pantalla mensual</h3>
 
 - Visualizar el estado de una habitación mes a mes.
