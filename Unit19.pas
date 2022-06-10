@@ -197,7 +197,7 @@ begin
   IdSMTP1.Host := 'smtp.gmail.com';
   IdSMTP1.Port := 587;
   IdSMTP1.Username := 'hotelrafaelsuarezfranco@gmail.com'; // please change to your gmail address //
-  IdSMTP1.Password := Tablas.DesencriptarString(Tablas.passwordcorreo, 127); //'hotelrsf127';
+  IdSMTP1.Password := Tablas.DesencriptarString(Tablas.passwordcorreo, 127); //'hotelrsf127'    'zytizzgexjyeqzcx'; //
   IdSMTP1.IOHandler := IdSSLIOHandlerSocketOpenSSL1;
   //IdSMTP1.AuthType := satDefault;
   IdSMTP1.UseTLS := utUseExplicitTLS;
