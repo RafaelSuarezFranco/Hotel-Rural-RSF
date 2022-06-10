@@ -9,6 +9,7 @@ posibilidad.
 
 <h3>Pantalla principal</h3>
 
+- Acceder como cliente o administrador.
 - Visualizar el estado de las habitaciones día por día.
 - Cambiar el estado de una habitación para un día concreto.
 - Reservar un periodo concreto.
@@ -16,14 +17,17 @@ posibilidad.
 - Crear nuevas temporadas.
 - Crear nuevas habitaciones.
 - Crear nuevos servicios.
+- Crear nuevos usuarios y clientes.
 - Crear informes.
 - Crear gráficos.
 - Acceder a la vista mensual de una habitación.
 
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/login.png)
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/principal.png)
 
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/nuevahabitacion.png) ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/creartemporada.png)
 ![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altaservicio.png)
+![alt text](https://github.com/RafaelSuarezFranco/Hotel-Rural-RSF/blob/main/Capturas%20hotel/altausuario.png)
 <h3>Pantalla mensual</h3>
 
 - Visualizar el estado de una habitación mes a mes.
@@ -78,8 +82,9 @@ Por días:
 
 Utilizamos distintos colores para distinguir a simple vista el estado de las habitaciones:
 
-- ![#FF0000](https://via.placeholder.com/15/FF0000/000000?text=+) `Rojo` 'clRed': ocupado.
-- ![#FFFF00](https://via.placeholder.com/15/FFFF00/000000?text=+) `Amarillo` 'clyellow': reservado.
-- ![#7cfc00](https://via.placeholder.com/15/7cfc00/000000?text=+) `Verde césped` 'clWebLawnGreen': libre - temporada baja.
-- ![#32cd32](https://via.placeholder.com/15/32cd32/000000?text=+) `Verde lima` 'clWebLimeGreen' (algo más oscuro que el anterior): libre - temporada media.
-- ![#228b22](https://via.placeholder.com/15/228b22/000000?text=+) `Verde bosque` 'clWebForestGreen' (más oscuro que los anteriores): libre - temporada alta.
+- 🟥 `Rojo` 'clRed': ocupado.
+- 🟨 `Amarillo` 'clyellow': reservado.
+- 🟩 `Verde césped` 'clWebLawnGreen': libre - temporada baja.
+- `Verde lima` 'clWebLimeGreen' (algo más oscuro que el anterior): libre - temporada media.
+- `Verde bosque` 'clWebForestGreen' (más oscuro que los anteriores): libre - temporada alta.
+
