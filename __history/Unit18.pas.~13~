@@ -251,13 +251,6 @@ begin
            //codigoVerificacion := inttostr(RandomRange(100000, 999999));
            //codigoInput := inputbox('Introduzca el código de verificación', 'Hemos mandado un código a su correo.', codigoVerificacion);
            //showmessage(codigoVerificacion);
-        end else  //si somos administradores
-        begin
-           Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
-
-           Tablas.FDTableUsuarios.Post;
-           showmessage('Usuario creado con éxito.');
-           AltaUsuario.Close;
         end;
 
           // convertimos la passwd en hash md5
@@ -268,6 +261,13 @@ begin
           showmessage('Usuario creado con éxito.');
           AltaUsuario.Close;
           }
+    end else  //si somos administradores
+    begin
+         Tablas.FDTableUsuariospassword.value:= Tablas.passwordHash(Edit1.Text);
+
+         Tablas.FDTableUsuarios.Post;
+         showmessage('Usuario creado con éxito.');
+         AltaUsuario.Close;
     end;
 
 end;
