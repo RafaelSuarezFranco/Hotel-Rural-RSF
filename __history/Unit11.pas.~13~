@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QuickRpt, QRCtrls, Vcl.ExtCtrls, System.DateUtils,
-  qrpctrls;
+  qrpctrls, SGExpBarChart, VclTee.TeeGDIPlus, VCLTee.TeEngine, VCLTee.TeeProcs,
+  VCLTee.Chart, VCLTee.Series;
 
 type
   TFactura = class(TForm)
@@ -38,15 +39,27 @@ type
     QRLabel8: TQRLabel;
     QRLabel11: TQRLabel;
     QRSysData2: TQRSysData;
+    QRBand4: TQRBand;
+    QRLabel12: TQRLabel;
+    QRLabel13: TQRLabel;
+    QRLabel14: TQRLabel;
+    QRLabel15: TQRLabel;
+    QRLabel16: TQRLabel;
     procedure QRBand3BeforePrint(Sender: TQRCustomBand; var PrintBand: Boolean);
     procedure FormActivate(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure QRSubDetail1BeforePrint(Sender: TQRCustomBand;
       var PrintBand: Boolean);
+    procedure imprimirFechas(fecha1: TDate; fecha2: TDate);
+    procedure imprimirCliente(cliente: string);
+
   private
     { Private declarations }
   public
     { Public declarations }
+      CostoTotal: Double;
+      CantidadDias: integer;
+      Fechainicio: String;
+      Fechafin: String;
   end;
 
 var
@@ -60,62 +73,70 @@ implementation
 
 procedure TFactura.FormActivate(Sender: TObject);
 begin
-   showmessage('');
-  Tablas.FDQuery2.Open;
-  Tablas.FDQuery3.Open;
-  showmessage(Tablas.FDQuery2.SQL.Text);
 
-  Tablas.FDQuery2.close;
-  Tablas.FDQuery2.SQL.Text := 'select numerohabitacion as numero, fecha as fechaentrada, estado, cliente, preciofinal from entradas where fecha > ":fechai" and fecha < ":fechaf" and numerohabitacion = :numeroh';
-  Tablas.FDQuery2.ParamByName('fechai').AsString := '2022-01-01';
-  Tablas.FDQuery2.ParamByName('fechaf').AsString := '2022-04-01';
-  Tablas.FDQuery2.ParamByName('numeroh').AsInteger := 3;
-  Tablas.FDQuery2.ExecSQL;
-   Tablas.FDQuery2.open;
-  // Tablas.FDQuery2.ExecSQL;
-  showmessage(Tablas.FDQuery2.SQL.Text);
 end;
 
-procedure TFactura.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-   Tablas.FDQuery2.close;
-   Tablas.FDQuery3.close;
-end;
+
+//este informe vale tanto para una factura de una habitación como para el historial de un cliente
+
+
+//para hacer agrupaciones, la idea es recorrer la tabla con los datos por los que vamos a agrupar, y por cada registro,
+//con esos datos, hacemos una consulta para rellenar los subdetalles. Es un group by artesanal, por así decirlo.
 
 procedure TFactura.QRBand3BeforePrint(Sender: TQRCustomBand;
   var PrintBand: Boolean);
   var
   fecha: TDate;
   habitacion: integer;
-  diabusqueda: String;
-  mesbusqueda: String;
+  precio: double;
   fechabusqueda: String;
+  estado: String;
+
+  banda : TQRBand;
 begin
+  //la consulta principal viene dada desde fuera, pero la subconsulta la construimos aquí, dado que debe
+  //cambiar según la información obtenida de la consulta principal
+
   fecha := Tablas.FDQuery2.FieldByName('fechaentrada').Value;
   habitacion := Tablas.FDQuery2.FieldByName('numero').Value;
+  precio := Tablas.FDQuery2.FieldByName('preciofinal').Value;
+  estado := Tablas.FDQuery2.FieldByName('estado').Value;
 
+  CostoTotal:= CostoTotal + precio;
+  CantidadDias:= CantidadDias + 1;
 
+  QRLabel13.Caption := FloatToStr(Round(CostoTotal*100)/100);
+  QRLabel15.Caption := inttostr(CantidadDias);
 
-  diabusqueda := IntToStr(DayOfTheMonth(fecha));
-  mesbusqueda := IntToStr(MonthOfTheYear(fecha));
-  if length(diabusqueda) < 2 then
-    diabusqueda:= '0'+ diabusqueda;
-    if length(mesbusqueda) < 2 then
-    mesbusqueda:= '0'+ mesbusqueda;
-  fechabusqueda:= IntToStr(YearOf(fecha))+'-'+mesbusqueda+'-'+diabusqueda;  //fecha formateada para buscarla con SQL
+  fechabusqueda:= Tablas.formatearFechaSQL(fecha);
 
   Tablas.FDQuery3.close;
   Tablas.FDQuery3.SQL.Text := 'SELECT numerohabitacion AS numerohservicio, fecha AS fechaservicio, e.nombreservicio, precioservicio FROM entradasservicios e, servicios s WHERE e.nombreservicio = s.nombreservicio';
   Tablas.FDQuery3.SQL.Text := Tablas.FDQuery3.SQL.Text + ' and numerohabitacion = '+inttostr(habitacion)+' and fecha = '+quotedstr(fechabusqueda);
-  //showmessage(Tablas.FDQuery3.SQL.Text);
-
-  //Tablas.FDQuery3.SQL.Text := 'SELECT numerohabitacion AS numerohservicio, fecha AS fechaservicio, e.nombreservicio, precioservicio FROM entradasservicios e, servicios s WHERE e.nombreservicio = s.nombreservicio  AND numerohabitacion = 3 and fecha = "2022-03-01"';
-
-
 
   Tablas.FDQuery3.open;
 
+
+  //cambiar el color de la banda en función de si está ocupada o reservada
+
+banda := TQRBand(Sender);
+  if estado = 'reservada' then
+    begin
+      banda.Color:= TColor(RGB(252,252,166));
+    end;
+  if estado = 'ocupada' then
+    begin
+     banda.Color:=  TColor(RGB(255,150,150));
+    end;
+
+
+
 end;
+
+
+
+
+//muestra un mensaje si una reserva/ocupación no tiene servicios asociados
 
 procedure TFactura.QRSubDetail1BeforePrint(Sender: TQRCustomBand;
   var PrintBand: Boolean);
@@ -135,5 +156,22 @@ banda := TQRBand(Sender);
 
 
 end;
+
+
+
+//muestra las fechas seleccionadas
+
+ procedure TFactura.imprimirFechas(fecha1: TDate; fecha2: TDate);
+ begin
+    QRLabel1.Caption := 'FACTURA - INFORME POR PERIODO';
+    QRLabel16.Caption := 'Del día ' +  DatetoStr(fecha1) + ' al ' + DatetoStr(fecha2);
+ end;
+
+ //muestra el cliente seleccionado
+  procedure TFactura.imprimirCliente(cliente: String);
+ begin
+    QRLabel1.Caption := 'HISTORIAL DE CLIENTE';
+    QRLabel16.Caption := 'Del cliente: '+ cliente;
+ end;
 
 end.

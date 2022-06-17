@@ -165,6 +165,7 @@ end;
  begin
     QRLabel1.Caption := 'FACTURA - INFORME POR PERIODO';
     QRLabel16.Caption := 'Del día ' +  DatetoStr(fecha1) + ' al ' + DatetoStr(fecha2);
+    CostoTotal := 0;
  end;
 
  //muestra el cliente seleccionado
@@ -172,6 +173,7 @@ end;
  begin
     QRLabel1.Caption := 'HISTORIAL DE CLIENTE';
     QRLabel16.Caption := 'Del cliente: '+ cliente;
+    CostoTotal := 0;
  end;
 
 end.
